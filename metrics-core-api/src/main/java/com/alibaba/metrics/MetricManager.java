@@ -158,6 +158,37 @@ public class MetricManager {
     }
 
     /**
+     * Create a {@link ClusterHistogram} metric in given group, and name
+     * if not exist, an instance will be created.
+     * 根据给定的group和name, 获取一个{@link ClusterHistogram}实例，如果不存在则会创建
+     * {@link ClusterHistogram}, 主要用于集群分位数统计
+     *
+     * @param group the group of MetricRegistry
+     * @param name the name of the metric
+     * @return an instance of {@link ClusterHistogram}
+     */
+    public static ClusterHistogram getClusterHistogram(String group, MetricName name, long[] buckets) {
+        IMetricManager manager = getIMetricManager();
+        return manager.getClusterHistogram(group, name, buckets);
+    }
+
+    /**
+     * Create a {@link ClusterHistogram} metric in given group, and name
+     * if not exist, an instance will be created.
+     * 根据给定的group和name, 获取一个{@link ClusterHistogram}实例，如果不存在则会创建
+     * {@link ClusterHistogram}, 主要用于集群分位数统计
+     *
+     * @param group the group of MetricRegistry
+     * @param name the name of the metric
+     * @return an instance of {@link ClusterHistogram}
+     */
+    public static ClusterHistogram getClusterHistogram(String group, MetricName name) {
+        IMetricManager manager = getIMetricManager();
+        return manager.getClusterHistogram(group, name, null);
+    }
+
+
+    /**
      * Register a customized metric to specified group.
      * @param group the group name of MetricRegistry
      * @param metric the metric to register

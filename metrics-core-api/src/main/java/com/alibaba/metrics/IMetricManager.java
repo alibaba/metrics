@@ -99,6 +99,17 @@ public interface IMetricManager {
      */
     FastCompass getFastCompass(String group, MetricName name);
 
+
+    /**
+     * Create a {@link ClusterHistogram} metric in give group, name, and type
+     * if not exist, an instance will be created.
+     * @param group the group of MetricRegistry
+     * @param name the name of the metric
+     * @param buckets if the buckets is null, a default bucket will be created.
+     * @return an instance of {@link ClusterHistogram}
+     */
+    ClusterHistogram getClusterHistogram(String group, MetricName name, long[] buckets);
+
     /**
      * Register a customized metric to specified group.
      * @param group: the group name of MetricRegistry

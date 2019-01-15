@@ -236,6 +236,15 @@ public class MetricRegistryImpl extends MetricRegistry {
         return compass;
     }
 
+    @Override
+    public ClusterHistogram clusterHistogram(MetricName name, long[] buckets) {
+        ClusterHistogram clusterHistogram = getOrAddClusterHistogram(name, CLUSTER_HISTOGRAM_BUILDER, buckets);
+        if (clusterHistogram == null) {
+            return NOPMetricManager.NOP_CLUSTER_HISTOGRAM;
+        }
+        return clusterHistogram;
+    }
+
     /**
      * Removes the metric with the given name.
      *
@@ -496,6 +505,28 @@ public class MetricRegistryImpl extends MetricRegistry {
     }
 
     @SuppressWarnings("unchecked")
+    private <T extends Metric> T getOrAddClusterHistogram(MetricName name, ClusterHistogramBuilder<T> builder, long[] buckets) {
+        final Metric metric = metrics.get(name);
+        if (builder.isInstance(metric)) {
+            return (T) metric;
+        } else if (metric == null) {
+            try {
+                T newMetric = builder.newMetric(name, buckets);
+                if (newMetric == null) return null;
+                return register(name, newMetric);
+            } catch (IllegalArgumentException e) {
+                final Metric added = metrics.get(name);
+                if (builder.isInstance(added)) {
+                    return (T) added;
+                } else {
+                    throw e;
+                }
+            }
+        }
+        throw new IllegalArgumentException(name + " is already used for a different type of metric");
+    }
+
+    @SuppressWarnings("unchecked")
     private <T extends Metric> SortedMap<MetricName, T> getMetrics(Class<T> klass, MetricFilter filter) {
         final TreeMap<MetricName, T> timers = new TreeMap<MetricName, T>();
         for (Map.Entry<MetricName, Metric> entry : metrics.entrySet()) {
@@ -709,6 +740,31 @@ public class MetricRegistryImpl extends MetricRegistry {
         @Override
         public boolean isInstance(Metric metric) {
             return FastCompass.class.isInstance(metric);
+        }
+    };
+
+    private ClusterHistogramBuilder<ClusterHistogram> CLUSTER_HISTOGRAM_BUILDER = new ClusterHistogramBuilder<ClusterHistogram>() {
+        @Override
+        public ClusterHistogram newMetric(MetricName name, long[] buckets) {
+            // 当已注册的metric数量太多时，返回一个空实现
+            if (metrics.size() >= maxMetricCount) {
+                return null;
+            }
+            return new ClusterHistogramImpl(buckets, config.period(name.getMetricLevel()), Clock.defaultClock());
+        }
+
+        @Override
+        public ClusterHistogram newMetric(MetricName name) {
+            // 当已注册的metric数量太多时，返回一个空实现
+            if (metrics.size() >= maxMetricCount) {
+                return null;
+            }
+            return new ClusterHistogramImpl(config.period(name.getMetricLevel()), Clock.defaultClock());
+        }
+
+        @Override
+        public boolean isInstance(Metric metric) {
+            return metric instanceof ClusterHistogram;
         }
     };
 

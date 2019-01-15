@@ -99,6 +99,14 @@ public class AliMetricManager implements IMetricManager {
     }
 
     @Override
+    public ClusterHistogram getClusterHistogram(String group, MetricName name, long[] buckets) {
+        if (!this.enabled) {
+            return MetricManager.NOP_METRIC_MANAGER.getClusterHistogram(group, name, buckets);
+        }
+        return getMetricRegistryByGroup(group).clusterHistogram(name, buckets);
+    }
+
+    @Override
     public List<String> listMetricGroups() {
         if (!this.enabled) {
             return Collections.emptyList();

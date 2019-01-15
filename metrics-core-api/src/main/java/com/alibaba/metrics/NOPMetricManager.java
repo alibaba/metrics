@@ -69,6 +69,11 @@ public class NOPMetricManager implements IMetricManager {
     }
 
     @Override
+    public ClusterHistogram getClusterHistogram(String group, MetricName name, long[] buckets) {
+        return NOP_CLUSTER_HISTOGRAM;
+    }
+
+    @Override
     public List<String> listMetricGroups() {
         return Collections.emptyList();
     }
@@ -626,6 +631,23 @@ public class NOPMetricManager implements IMetricManager {
         }
     };
 
+    static final ClusterHistogram NOP_CLUSTER_HISTOGRAM = new ClusterHistogram() {
+        @Override
+        public void update(long value) {
+
+        }
+
+        @Override
+        public Map<Long, Map<Long, Long>> getBucketValues(long startTime) {
+            return emptyMap;
+        }
+
+        @Override
+        public long lastUpdateTime() {
+            return 0;
+        }
+    };
+
     private static final MetricRegistry NOP_REGISTRY = new MetricRegistry() {
         @Override
         public <T extends Metric> T register(String name, T metric) throws IllegalArgumentException {
@@ -710,6 +732,11 @@ public class NOPMetricManager implements IMetricManager {
         @Override
         public FastCompass fastCompass(MetricName name) {
             return NOP_FAST_COMPASS;
+        }
+
+        @Override
+        public ClusterHistogram clusterHistogram(MetricName name, long[] buckets) {
+            return NOP_CLUSTER_HISTOGRAM;
         }
 
         @Override

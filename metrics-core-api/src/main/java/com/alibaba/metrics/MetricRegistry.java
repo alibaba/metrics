@@ -199,6 +199,16 @@ public abstract class MetricRegistry implements MetricSet {
 
 
     /**
+     * Creates a new {@link ClusterHistogram} and registers it under the given name.
+     *
+     * @param name the name of the metric
+     * @param buckets the array of long values for buckets
+     * @return a new {@link ClusterHistogram}
+     */
+    public abstract ClusterHistogram clusterHistogram(MetricName name, long[] buckets);
+
+
+    /**
      * Removes the metric with the given name.
      *
      * @param name the name of the metric
