@@ -63,30 +63,28 @@ public class SystemLoadGaugeSet extends CachedMetricSet {
 
     @Override
     protected void getValueInternal() {
-
         double[] load = null;
         try {
             load = sigar.getLoadAverage();
         } catch (Throwable e) {
+            // ignore
         }
 
-        if (load != null){
-
-            if (load.length > 0){
-                loadAvg[LoadAvg.ONE_MIN.ordinal()] = (float) load[0];
-            }
-
-            if (load.length > 1){
-                loadAvg[LoadAvg.FIVE_MIN.ordinal()] = (float) load[1];
-            }
-
-            if (load.length > 2){
-                loadAvg[LoadAvg.FIFTEEN_MIN.ordinal()] = (float) load[2];
-            } else {
-                load = new double[3];
-            }
+        if (load == null) {
+            return;
         }
 
+        if (load.length > 0){
+            loadAvg[LoadAvg.ONE_MIN.ordinal()] = (float) load[0];
+        }
+
+        if (load.length > 1){
+            loadAvg[LoadAvg.FIVE_MIN.ordinal()] = (float) load[1];
+        }
+
+        if (load.length > 2){
+            loadAvg[LoadAvg.FIFTEEN_MIN.ordinal()] = (float) load[2];
+        }
     }
 
 }

@@ -101,6 +101,7 @@ public class CpuUsageGaugeSet extends CachedMetricSet {
         try {
             cpu = sigar.getCpu();
         } catch (SigarException e) {
+
         }
 
         if (cpu == null){
