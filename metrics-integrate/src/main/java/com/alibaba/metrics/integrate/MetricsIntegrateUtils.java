@@ -11,6 +11,7 @@ import com.alibaba.metrics.druid.DruidMetricsGaugeSet;
 import com.alibaba.metrics.jvm.BufferPoolMetricSet;
 import com.alibaba.metrics.jvm.ClassLoadingGaugeSet;
 import com.alibaba.metrics.jvm.CompilationGauge;
+import com.alibaba.metrics.jvm.FileDescriptorGauge;
 import com.alibaba.metrics.jvm.FileDescriptorRatioGauge;
 import com.alibaba.metrics.jvm.GarbageCollectorMetricSet;
 import com.alibaba.metrics.jvm.JvmAttributeGaugeSet;
@@ -140,6 +141,9 @@ public class MetricsIntegrateUtils {
             MetricManager.register("jvm", MetricName.build("jvm.file_descriptor.open_ratio").level(jvmFileDescLevel),
                     new FileDescriptorRatioGauge(ManagementFactory.getOperatingSystemMXBean(),
                             cachedTimeForLevel(jvmFileDescLevel), TimeUnit.SECONDS));
+            MetricManager.register("jvm", MetricName.build("jvm.file_descriptor.open_count").level(jvmFileDescLevel),
+                    new FileDescriptorGauge(cachedTimeForLevel(jvmFileDescLevel), TimeUnit.SECONDS, ManagementFactory.getOperatingSystemMXBean()));
+            
         }
 
         if (isEnabled(metricsConfig, JVM_THREAD_STATE_FIELD)) {

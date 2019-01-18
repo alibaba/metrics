@@ -23,7 +23,9 @@ public class GarbageCollectorMetricSet implements MetricSet {
     private static final Pattern WHITESPACE = Pattern.compile("[\\s]+");
 
     private final List<GarbageCollectorMXBean> garbageCollectors;
-
+    private final List<Long> lastGarbageCountCollectors;
+    private final List<Long> lastGarbageTimeCollectors;
+    
     /**
      * Creates a new set of gauges for all discoverable garbage collectors.
      */
@@ -38,13 +40,21 @@ public class GarbageCollectorMetricSet implements MetricSet {
      */
     public GarbageCollectorMetricSet(Collection<GarbageCollectorMXBean> garbageCollectors) {
         this.garbageCollectors = new ArrayList<GarbageCollectorMXBean>(garbageCollectors);
+        this.lastGarbageCountCollectors = new ArrayList<Long>(){{
+            add(0L);add(0L);add(0L);add(0L);add(0L);add(0L);add(0L);add(0L);add(0L);add(0L);
+        }};
+        this.lastGarbageTimeCollectors = new ArrayList<Long>(){{
+            add(0L);add(0L);add(0L);add(0L);add(0L);add(0L);add(0L);add(0L);add(0L);add(0L);
+        }};
     }
 
     @Override
     public Map<MetricName, Metric> getMetrics() {
         final Map<MetricName, Metric> gauges = new HashMap<MetricName, Metric>();
+        int index = 0;
         for (final GarbageCollectorMXBean gc : garbageCollectors) {
             final String name = WHITESPACE.matcher(gc.getName()).replaceAll("_").toLowerCase();
+            final int i = index;
             gauges.put(MetricRegistry.name(name, "count"), new PersistentGauge<Long>() {
                 @Override
                 public Long getValue() {
@@ -58,6 +68,28 @@ public class GarbageCollectorMetricSet implements MetricSet {
                     return gc.getCollectionTime();
                 }
             });
+            
+            gauges.put(MetricRegistry.name(name, "count.delta"), new PersistentGauge<Long>() {
+                @Override
+                public Long getValue() {
+                    long current = gc.getCollectionCount();
+                    long result = current - lastGarbageCountCollectors.get(i);
+                    lastGarbageCountCollectors.set(i, current);
+                    return result;
+                }
+            });
+            
+            gauges.put(MetricRegistry.name(name, "time.delta"), new PersistentGauge<Long>() {
+                @Override
+                public Long getValue() {
+                    long current = gc.getCollectionTime();
+                    long result = current - lastGarbageTimeCollectors.get(i);
+                    lastGarbageTimeCollectors.set(i, current);
+                    return result;
+                }
+            });
+            
+            index = i + 1;
         }
         return Collections.unmodifiableMap(gauges);
     }

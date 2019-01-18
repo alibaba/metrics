@@ -18,6 +18,8 @@ public class GarbageCollectorMetricSetTest {
 
     private static final MetricName PS_OLDGEN_TIME = MetricName.build("ps_oldgen.time");
     private static final MetricName PS_OLDGEN_COUNT = MetricName.build("ps_oldgen.count");
+    private static final MetricName PS_OLDGEN_TIME_DELTA = MetricName.build("ps_oldgen.time.delta");
+    private static final MetricName PS_OLDGEN_COUNT_DELTA = MetricName.build("ps_oldgen.count.delta");
 
     @Before
     public void setUp() throws Exception {
@@ -29,7 +31,7 @@ public class GarbageCollectorMetricSetTest {
     @Test
     public void hasGaugesForGcCountsAndElapsedTimes() throws Exception {
         assertThat(metrics.getMetrics().keySet())
-                .containsOnly(PS_OLDGEN_TIME, PS_OLDGEN_COUNT);
+                .containsOnly(PS_OLDGEN_TIME, PS_OLDGEN_COUNT, PS_OLDGEN_TIME_DELTA, PS_OLDGEN_COUNT_DELTA);
     }
 
     @Test

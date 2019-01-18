@@ -120,6 +120,9 @@ public class NetTrafficGaugeSet extends CachedMetricSet {
                         try {
                             long count = Long.parseLong(stats[i]);
                             long delta = count - countByFace.get(face)[i];
+                            if (countByFace.get(face)[i] == 0){
+                                delta = 0;
+                            }
                             countByFace.get(face)[i] = count;
                             long duration = clock.getTime() - lastCollectTime.get();
                             rateByFace.get(face)[i] = 1000.0d * delta / duration;
