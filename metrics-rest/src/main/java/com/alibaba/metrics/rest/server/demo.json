@@ -1,0 +1,16 @@
+{
+  data: [
+    {
+      interval: 15,
+      metric: "jvm.buffer_pool.direct.count",
+      metricLevel: "NORMAL",
+      metricType: "GAUGE",
+      tags: { },
+      timestamp: 1548058350794,
+      value: 5
+    }
+  ],
+  success: true,
+  message: "",
+  timestamp: 1548058350795
+}

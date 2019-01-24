@@ -1,0 +1,85 @@
+@startuml
+
+interface Metric
+interface Counting {
++ long getCount()
+}
+interface Sampling {
++ Snapshot getSnapshot()
+}
+interface Metered {
++ long getCount()
++ double getFifteenMinuteRate()
++ double getFiveMinuteRate()
++ double getOneMinuteRate()
++ double getMeanRate()
+}
+
+interface Timer {
++ Context time()
++ void update()
+}
+
+interface Histogram {
++ void update()
+}
+
+interface Meter {
++ void mark()
+}
+
+interface Counter {
++ void inc()
++ void dec()
+}
+
+interface Gauge {
++ T getValue()
+}
+
+abstract class MetricRegistry {
++ Counter getCounter()
++ Histogram getHistogram()
++ Meter getMeter()
++ Timer getTimer()
+}
+
+Counting -[hidden]> Metric
+Sampling -[hidden]> Metric
+
+interface Metered -up-|> Metric
+interface Metered -up-|> Counting
+
+interface Gauge -up--|> Metric
+
+interface Counter -up--|> Metric
+interface Counter -up-|> Counting
+
+interface Histogram -up--|> Metric
+interface Histogram -up-|> Counting
+interface Histogram -up-|> Sampling
+interface Meter -up-|> Metered
+interface Timer -up-|> Metered
+interface Timer -up-|> Sampling
+
+interface MetricSet -left-|> Metric
+
+'interface DynamicMetricSet -up-|> Metric
+
+MetricRegistry -up-|> MetricSet
+
+'Metered <|-up- interface Compass
+'Gauge <|.up. abstract class RatioGauge
+'Gauge <|.. abstract class CachedGauge
+
+MetricRegistry ..> Histogram
+MetricRegistry ..> Timer
+MetricRegistry ..> Counter
+MetricRegistry ..> Gauge
+MetricRegistry ..> Meter
+
+
+'
+'interface DynamicMetricSet ---|> Metric
+
+@enduml
