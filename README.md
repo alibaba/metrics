@@ -40,7 +40,7 @@ tag的存在使得时间序列数据库中的数据聚合变得非常灵活。�
 | department.dubbo.consumer.service.qps     |  service=org.apache.xxxServer      |
 
 
-### <a href="#metric-level" />Metric的等级
+### Metric的等级
 
 构建metric的时候，可以传入一个等级，用于表征指标的重要程度, 默认是`NORMAL`。
 目前有5个级别，按照重要性程度从高到低排列依次为：
