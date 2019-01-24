@@ -28,7 +28,7 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.hyperic</groupId>
+            <groupId>com.github.votoanthuan</groupId>
             <artifactId>sigar</artifactId>
             <version>1.6.4</version>
         </dependency>
