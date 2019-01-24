@@ -1,12 +1,12 @@
-Dubbo Metrics简介
+# Dubbo Metrics简介
 
-
+[![Build Status](https://travis-ci.org/dubbo/dubbo-metrics.svg?branch=master)](https://travis-ci.org/dubbo/dubbo-metrics)
+[![codecov](https://codecov.io/gh/dubbo/dubbo-metrics/branch/master/graph/badge.svg)](https://codecov.io/gh/dubbo/dubbo-metrics)
 ![license](https://img.shields.io/github/license/dubbo/dubbo-metrics.svg)
-===
+
 Dubbo Metrics是一套标准度量库， 用于提供对从操作系统， 虚拟机， 容器，到应用的全方位, 多维度, 实时, 准确的度量服务。
 
-Metrics命名规范
-===
+## Metrics命名规范
 
 我们把一个metric的名字抽象为MetricName， 它由两部分组成， key和tag。
 
