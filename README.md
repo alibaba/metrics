@@ -106,7 +106,7 @@ Metric等级的一个重要用途是控制落盘的频率， 默认情况下频�
 
 ### 使用方法和Demo
 
-具体的使用方法，[metrics-demo](http://gitlab.alibaba-inc.com/middleware-container/dubbo-metrics/wikis/demo)
+具体的使用方法，[metrics-demo](https://github.com/dubbo/dubbo-metrics/wiki/demo)
 
 
 
