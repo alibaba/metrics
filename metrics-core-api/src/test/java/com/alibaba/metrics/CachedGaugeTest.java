@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class CachedGaugeTest {
     private final AtomicInteger value = new AtomicInteger(0);
-    private final Gauge<Integer> gauge = new CachedGauge<Integer>(100, TimeUnit.MILLISECONDS) {
+    private final Gauge<Integer> gauge = new CachedGauge<Integer>(1000, TimeUnit.MILLISECONDS) {
         @Override
         protected Integer loadValue() {
             return value.incrementAndGet();
@@ -29,7 +29,7 @@ public class CachedGaugeTest {
         assertThat(gauge.getValue())
                 .isEqualTo(1);
 
-        Thread.sleep(150);
+        Thread.sleep(1500);
 
         assertThat(gauge.getValue())
                 .isEqualTo(2);
