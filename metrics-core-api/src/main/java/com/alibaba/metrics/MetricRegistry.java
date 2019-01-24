@@ -355,6 +355,15 @@ public abstract class MetricRegistry implements MetricSet {
      */
     public abstract SortedMap<MetricName, FastCompass> getFastCompasses(MetricFilter filter);
 
+    /**
+     * Returns a map of all the {@link ClusterHistogram} in the registry and their names which match the given filter.
+     *
+     * @param filter    the metric filter to match
+     * @return all the {@link ClusterHistogram} in the registry
+     */
+    public abstract SortedMap<MetricName, ClusterHistogram> getClusterHistograms(MetricFilter filter);
+
+
 
     /**
      * Returns a map of all the metrics in the registry and their names which match the given filter

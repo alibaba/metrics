@@ -1,6 +1,7 @@
 package com.alibaba.metrics.common;
 
 import com.alibaba.metrics.BucketCounter;
+import com.alibaba.metrics.ClusterHistogram;
 import com.alibaba.metrics.Compass;
 import com.alibaba.metrics.Counter;
 import com.alibaba.metrics.FastCompass;
@@ -46,6 +47,7 @@ public class ClassifiedMetricsCollector extends MetricsCollector {
     private static String TIMER_NAME = "Timer";
     private static String COMPASS_NAME = "Compass";
     private static String FASTCOMPASS_NAME = "FastCompass";
+    private static String CLUSTER_HISTOGRAM_NAME = "ClusterHistogram";
 
     ClassifiedMetricsCollector(Map<String, String> globalTags, double rateFactor, double durationFactor,
             MetricFilter filter) {
@@ -467,8 +469,32 @@ public class ClassifiedMetricsCollector extends MetricsCollector {
 
     }
 
+    @Override
+    public void collect(MetricName name, ClusterHistogram clusterHistogram, long timestamp) {
+        int interval = metricsCollectPeriodConfig.period(name.getMetricLevel()) * 1000;
+        long startTime = lastTimestamp.get(name.getMetricLevel()) + interval;
+        long endTime = (timestamp / interval - 1) * interval;
+        startTime = adjustStartTime(startTime, endTime, interval, name.getMetricLevel());
+        Map<Long, Map<Long, Long>> bucketValues = clusterHistogram.getBucketValues(startTime);
+        for (long curTime = startTime; curTime <= endTime; curTime = curTime + interval) {
+            if (!bucketValues.containsKey(curTime)) {
+                continue;
+            }
+            Map<Long, Long> bucketAndValues= bucketValues.get(curTime);
+            long[] buckets = clusterHistogram.getBuckets();
+            for (long bucket : buckets) {
+                this.addMetric(name.tagged("bucket", Long.toString(bucket)), "cluster_percentile",
+                        bucketAndValues.containsKey(bucket) ? bucketAndValues.get(bucket) : 0L, curTime,
+                        MetricObject.MetricType.PERCENTILE);
+            }
+            this.addMetric(name.tagged("bucket", "Inf"), "cluster_percentile",
+                    bucketAndValues.containsKey(Long.MAX_VALUE) ? bucketAndValues.get(Long.MAX_VALUE) : 0L, curTime,
+                    MetricObject.MetricType.PERCENTILE);
+        }
+    }
+
     public MetricsCollector addMetric(MetricName name, String suffix, Object value, long timestamp,
-            MetricObject.MetricType type, String meterName) {
+                                      MetricObject.MetricType type, String meterName) {
         MetricName fullName = name.resolve(suffix);
         return addMetric(fullName, value, timestamp, type, meterName);
     }

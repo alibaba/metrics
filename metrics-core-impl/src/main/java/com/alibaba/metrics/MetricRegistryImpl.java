@@ -424,6 +424,12 @@ public class MetricRegistryImpl extends MetricRegistry {
         return getMetrics(FastCompass.class, filter);
     }
 
+
+    @Override
+    public SortedMap<MetricName, ClusterHistogram> getClusterHistograms(MetricFilter filter) {
+        return getMetrics(ClusterHistogram.class, filter);
+    }
+
     @Override
     public SortedMap<MetricName, Metric> getMetrics(MetricFilter filter) {
         final TreeMap<MetricName, Metric> filteredMetrics = new TreeMap<MetricName, Metric>();

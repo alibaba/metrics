@@ -19,4 +19,6 @@ public interface Collector {
     void collect(MetricName name, Compass compass, long timestamp);
 
     void collect(MetricName name, FastCompass fastCompass, long timestamp);
+
+    void collect(MetricName name, ClusterHistogram clusterHistogram, long timestamp);
 }

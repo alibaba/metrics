@@ -1,6 +1,7 @@
 package com.alibaba.metrics.rest;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.metrics.ClusterHistogram;
 import com.alibaba.metrics.Compass;
 import com.alibaba.metrics.Counter;
 import com.alibaba.metrics.FastCompass;
@@ -38,6 +39,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -384,6 +386,12 @@ public class MetricsResource {
         SortedMap<MetricName, FastCompass> fastCompasses = filter == null ?
                 registry.getFastCompasses() : registry.getFastCompasses(filter);
         for (Map.Entry<MetricName, FastCompass> entry : fastCompasses.entrySet()) {
+            collector.collect(entry.getKey(), entry.getValue(), ts);
+        }
+
+        SortedMap<MetricName, ClusterHistogram> clusterHistograms = filter == null ?
+                registry.getClusterHistograms(MetricFilter.ALL) : registry.getClusterHistograms(filter);
+        for (Map.Entry<MetricName, ClusterHistogram> entry : clusterHistograms.entrySet()) {
             collector.collect(entry.getKey(), entry.getValue(), ts);
         }
 

@@ -181,5 +181,9 @@ public class MetricObject {
          * 用于争分整秒的计数
          */
         DELTA,
+        /**
+         * 用于集群分位数计算
+         */
+        PERCENTILE
     }
 }

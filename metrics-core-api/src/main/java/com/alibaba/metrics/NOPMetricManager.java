@@ -848,6 +848,11 @@ public class NOPMetricManager implements IMetricManager {
         }
 
         @Override
+        public SortedMap<MetricName, ClusterHistogram> getClusterHistograms(MetricFilter filter) {
+            return emptyMap;
+        }
+
+        @Override
         @SuppressWarnings("unchecked")
         public SortedMap<MetricName, Metric> getMetrics(MetricFilter filter) {
             return emptyMap;

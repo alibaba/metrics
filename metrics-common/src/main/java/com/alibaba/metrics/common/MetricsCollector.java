@@ -1,6 +1,7 @@
 package com.alibaba.metrics.common;
 
 import com.alibaba.metrics.BucketCounter;
+import com.alibaba.metrics.ClusterHistogram;
 import com.alibaba.metrics.Collector;
 import com.alibaba.metrics.Compass;
 import com.alibaba.metrics.FastCompass;
@@ -179,6 +180,24 @@ public abstract class MetricsCollector implements Collector {
             // TODO special case for tair
             this.addMetric(name, "hit_rate", ratio(hitCount, successCount), start,
                     MetricObject.MetricType.GAUGE, bucketInterval);
+        }
+    }
+
+    @Override
+    public void collect(MetricName name, ClusterHistogram clusterHistogram, long timestamp) {
+        long start = getNormalizedStartTime(timestamp, metricsCollectPeriodConfig.period(name.getMetricLevel()));
+        Map<Long, Map<Long, Long>> values= clusterHistogram.getBucketValues(start);
+        long[] buckets = clusterHistogram.getBuckets();
+        for (Map.Entry<Long, Map<Long, Long>> entry: values.entrySet()) {
+            Map<Long, Long> bucketAndValues = entry.getValue();
+            for (long bucket: buckets) {
+                this.addMetric(name.tagged("bucket", Long.toString(bucket)), "cluster_percentile",
+                        bucketAndValues.containsKey(bucket) ? bucketAndValues.get(bucket) : 0L, entry.getKey(),
+                        MetricObject.MetricType.PERCENTILE);
+            }
+            this.addMetric(name.tagged("bucket", "Inf"), "cluster_percentile",
+                    bucketAndValues.containsKey(Long.MAX_VALUE) ? bucketAndValues.get(Long.MAX_VALUE) : 0L, entry.getKey(),
+                    MetricObject.MetricType.PERCENTILE);
         }
     }
 

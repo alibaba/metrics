@@ -1,5 +1,6 @@
 package com.alibaba.metrics.common.filter;
 
+import com.alibaba.metrics.ClusterHistogram;
 import com.alibaba.metrics.Compass;
 import com.alibaba.metrics.Counter;
 import com.alibaba.metrics.FastCompass;
@@ -27,6 +28,7 @@ public class MetricNameSetFilter implements MetricFilter {
     private static final Set<String> compassSuffixSet = new LinkedHashSet<String>();
     private static final Set<String> gaugeSuffixSet = Collections.emptySet();
     private static final Set<String> fastCompassSuffixSet = new LinkedHashSet<String>();
+    private static final Set<String> clusterHistogramSuffixSet = new LinkedHashSet<String>();
 
     static {
         counterSuffixSet.add(".count");
@@ -98,6 +100,8 @@ public class MetricNameSetFilter implements MetricFilter {
         fastCompassSuffixSet.add(".success_rate");
         fastCompassSuffixSet.add(".bucket_count");
         fastCompassSuffixSet.add(".category_bucket_count");
+
+        clusterHistogramSuffixSet.add(".cluster_percentile");
     }
 
     private Set<String> metricNames;
@@ -131,6 +135,8 @@ public class MetricNameSetFilter implements MetricFilter {
                 success = matchInternal(nameToMatch, name, gaugeSuffixSet);
             } else if (metric instanceof FastCompass) {
                 success = matchInternal(nameToMatch, name, fastCompassSuffixSet);
+            } else if (metric instanceof ClusterHistogram) {
+                success = matchInternal(nameToMatch, name, clusterHistogramSuffixSet);
             } else if (metric == null) {
                 /**
                  * Should only come from {@link com.alibaba.metrics.common.MetricsCollector#addMetric(MetricObject)}

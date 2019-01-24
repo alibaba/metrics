@@ -65,7 +65,6 @@ public class MetricNameSetFilterTest {
 
     @Test
     public void testMetricNamePrefixMatch() {
-
         Set<String> names = new HashSet<String>();
         names.add("shared.carts.my_cart");
 
@@ -83,6 +82,14 @@ public class MetricNameSetFilterTest {
         MetricName mn2 = MetricName.build("shared.carts.my_cart.m1");
 
         Assert.assertFalse(filter2.matches(mn2, null));
+    }
 
+    @Test
+    public void testMatchClusterHistogram() {
+        Set<String> names = new HashSet<String>();
+        names.add("shared.carts.rt");
+        MetricNameSetFilter filter = new MetricNameSetFilter(names);
+        MetricName mn = MetricName.build("shared.carts.rt.cluster_percentile");
+        Assert.assertTrue(filter.matches(mn, null));
     }
 }
