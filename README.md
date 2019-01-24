@@ -72,6 +72,7 @@ Metric等级的一个重要用途是控制落盘的频率， 默认情况下频�
 
 ![image](http://git.cn-hangzhou.oss.aliyun-inc.com/uploads/middleware-container/ali-metrics/3a7116b4ea0a58d3bad7d345a4ad4d06/image.png)
 
+
 * metric key：存储当前指标的key
 * metric tag：存储当前指标的tag
 * metric value：存储当前指标的值
