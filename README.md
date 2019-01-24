@@ -1,4 +1,7 @@
 Dubbo Metrics简介
+
+
+![license](https://img.shields.io/github/license/dubbo/dubbo-metrics.svg)
 ===
 Dubbo Metrics是一套标准度量库， 用于提供对从操作系统， 虚拟机， 容器，到应用的全方位, 多维度, 实时, 准确的度量服务。
 
