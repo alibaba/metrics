@@ -12,6 +12,7 @@ public abstract class CachedGauge<T> implements Gauge<T> {
     private final Clock clock;
     private final AtomicLong reloadAt;
     private final long timeoutNS;
+    private long lastUpdate = System.currentTimeMillis();
 
     private volatile T value;
 
@@ -34,7 +35,7 @@ public abstract class CachedGauge<T> implements Gauge<T> {
      */
     protected CachedGauge(Clock clock, long timeout, TimeUnit timeoutUnit) {
         this.clock = clock;
-        this.reloadAt = new AtomicLong(clock.getTime());
+        this.reloadAt = new AtomicLong(clock.getTick());
         this.timeoutNS = timeoutUnit.toNanos(timeout);
     }
 
@@ -48,23 +49,24 @@ public abstract class CachedGauge<T> implements Gauge<T> {
     public T getValue() {
         if (shouldLoad()) {
             this.value = loadValue();
+            lastUpdate = System.currentTimeMillis();
         }
         return value;
     }
 
     @Override
     public long lastUpdateTime() {
-        return reloadAt.get();
+        return lastUpdate;
     }
 
     private boolean shouldLoad() {
         for (; ; ) {
-            final long time = clock.getTick();
-            final long current = reloadAt.get();
-            if (current > time) {
+            final long currentTick = clock.getTick();
+            final long reloadAtTick = reloadAt.get();
+            if (currentTick < reloadAtTick) {
                 return false;
             }
-            if (reloadAt.compareAndSet(current, time + timeoutNS)) {
+            if (reloadAt.compareAndSet(reloadAtTick, currentTick + timeoutNS)) {
                 return true;
             }
         }
