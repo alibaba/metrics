@@ -1,7 +1,6 @@
 import com.alibaba.metrics.ClusterHistogram;
 import com.alibaba.metrics.MetricLevel;
 import com.alibaba.metrics.MetricName;
-import com.alibaba.metrics.common.ClassifiedMetricsCollector;
 import com.alibaba.metrics.common.CollectLevel;
 import com.alibaba.metrics.common.MetricObject;
 import com.alibaba.metrics.common.MetricsCollector;

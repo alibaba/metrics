@@ -1,6 +1,7 @@
 package com.alibaba.metrics.rest;
 
 import com.alibaba.fastjson.support.jaxrs.FastJsonAutoDiscoverable;
+import com.alibaba.metrics.ClusterHistogram;
 import com.alibaba.metrics.Compass;
 import com.alibaba.metrics.CompassImpl;
 import com.alibaba.metrics.Counter;
@@ -318,6 +319,32 @@ public class MetricsResourceTest extends JerseyTest {
         assertResponse("mw.tair.read.rt", 20.0d);
         assertResponse("mw.tair.read.bucket_count", 3L);
         System.out.println("phase 4: " + System.currentTimeMillis());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testClusterHistogram() {
+        ClusterHistogram ch = MetricManager.getClusterHistogram("ch",
+                MetricName.build("mw.ch.rt").level(MetricLevel.NORMAL), new long[]{10, 100, 1000});
+        ch.update(50);
+        ch.update(500);
+        ch.update(5000);
+        System.out.println("phase 1: " + System.currentTimeMillis());
+        try {
+            Thread.sleep(SLEEP_TIME);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("phase 2: " + System.currentTimeMillis());
+        Response hsfResponse = target("metrics/specific")
+                .queryParam("metric", "mw.ch.rt.cluster_percentile")
+                .request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
+        Map<String, Object> res = hsfResponse.readEntity(Map.class);
+
+        Assert.assertEquals(true, res.get("success"));
+        List<LinkedHashMap<String, Object>> objs = (List<LinkedHashMap<String, Object>>)res.get("data");
+        Assert.assertEquals(4, objs.size());
     }
 
     @SuppressWarnings("unchecked")
