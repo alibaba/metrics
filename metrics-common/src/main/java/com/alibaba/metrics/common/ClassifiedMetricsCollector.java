@@ -483,13 +483,10 @@ public class ClassifiedMetricsCollector extends MetricsCollector {
             Map<Long, Long> bucketAndValues= bucketValues.get(curTime);
             long[] buckets = clusterHistogram.getBuckets();
             for (long bucket : buckets) {
-                this.addMetric(name.tagged("bucket", Long.toString(bucket)), "cluster_percentile",
-                        bucketAndValues.containsKey(bucket) ? bucketAndValues.get(bucket) : 0L, curTime,
-                        MetricObject.MetricType.PERCENTILE);
+                this.addMetric(name.tagged("bucket", bucket == Long.MAX_VALUE ? "+Inf" : Long.toString(bucket)),
+                        "cluster_percentile", bucketAndValues.containsKey(bucket) ? bucketAndValues.get(bucket) : 0L,
+                        curTime, MetricObject.MetricType.PERCENTILE);
             }
-            this.addMetric(name.tagged("bucket", "Inf"), "cluster_percentile",
-                    bucketAndValues.containsKey(Long.MAX_VALUE) ? bucketAndValues.get(Long.MAX_VALUE) : 0L, curTime,
-                    MetricObject.MetricType.PERCENTILE);
         }
     }
 

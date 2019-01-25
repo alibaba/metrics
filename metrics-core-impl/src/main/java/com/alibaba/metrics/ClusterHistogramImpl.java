@@ -26,17 +26,20 @@ public class ClusterHistogramImpl extends ClusterHistogram {
 
     @Override
     public void update(long value) {
-        // TODO use binary search to improve performance
-        for (int i = 0; i < values.length; i++) {
-            if (i == buckets.length) {
+        int low = 0;
+        int high = buckets.length - 1;
+        int i = 0;
+        while (low <= high) {
+            i = low + (high - low) / 2;
+            if (value < buckets[i] && (i == 0 || value >= buckets[i-1])) {
                 values[i].update();
                 break;
             }
-            if (value < buckets[i]) {
-                values[i].update();
-                break;
+            if (value >= buckets[i]) {
+                low = i + 1;
+            } else {
+                high = i - 1;
             }
-
         }
     }
 
@@ -51,7 +54,7 @@ public class ClusterHistogramImpl extends ClusterHistogram {
                     result.put(entry.getKey(), new HashMap<Long, Long>());
                 }
                 Map<Long, Long> bucketAndValue = result.get(entry.getKey());
-                bucketAndValue.put(i == buckets.length ? Long.MAX_VALUE : buckets[i], entry.getValue());
+                bucketAndValue.put(buckets[i], entry.getValue());
             }
         }
         return result;
@@ -59,7 +62,12 @@ public class ClusterHistogramImpl extends ClusterHistogram {
 
     @Override
     public long lastUpdateTime() {
-        // TODO implement this
-        return 0;
+        long latest = 0;
+        for (BucketCounter value : values) {
+            if (value.lastUpdateTime() > latest) {
+                latest = value.lastUpdateTime();
+            }
+        }
+        return latest;
     }
 }

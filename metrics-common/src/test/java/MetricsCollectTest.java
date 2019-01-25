@@ -34,9 +34,10 @@ public class MetricsCollectTest {
         mockedBuckets.put(10L, 1L);
         mockedBuckets.put(100L, 2L);
         mockedBuckets.put(1000L, 3L);
+        mockedBuckets.put(Long.MAX_VALUE, 4L);
         mockData.put(105000L, mockedBuckets);
         when(ch.getBucketValues(105000L)).thenReturn(mockData);
-        when(ch.getBuckets()).thenReturn(new long[]{10L, 100L, 1000L});
+        when(ch.getBuckets()).thenReturn(new long[]{10L, 100L, 1000L, Long.MAX_VALUE});
         collector.collect(MetricName.build("test"), ch, 120000L);
         List<MetricObject> objects = collector.build();
 

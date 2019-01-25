@@ -1,5 +1,6 @@
 package com.alibaba.metrics;
 
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -14,7 +15,7 @@ public abstract class ClusterHistogram implements Metric {
 
     protected long[] buckets;
 
-    public ClusterHistogram(long[] buckets) {
+    public ClusterHistogram(final long[] buckets) {
         if (buckets == null) {
             this.buckets = new long[]{1, 5, 10, 25, 50, 75, 100, 250, 500, 750, 1000};
         } else if (buckets.length == 0) {
@@ -23,6 +24,13 @@ public abstract class ClusterHistogram implements Metric {
             throw new IllegalStateException("The number of buckets should be no larger than " + MAX_BUCKET_COUNT);
         } else {
             this.buckets = buckets;
+            this.buckets = new long[buckets.length+1];
+            for (int i = 0; i < buckets.length; i++) {
+                this.buckets[i] = buckets[i];
+            }
+            this.buckets[buckets.length] = Long.MAX_VALUE;
+            // ensure the input array is in ascending order
+            Arrays.sort(this.buckets);
         }
     }
 
