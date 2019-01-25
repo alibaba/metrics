@@ -20,6 +20,7 @@ import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.TracingConfig;
 
 import javax.ws.rs.core.UriBuilder;
+import java.lang.reflect.Field;
 import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -111,6 +112,15 @@ public class MetricsHttpServer {
         if (System.getProperty("sun.net.httpserver.maxRspTime") == null) {
             // set max time in seconds to wait for a response to finished
             System.setProperty("sun.net.httpserver.maxRspTime", "30");
+        }
+
+        try {
+            Class fastJsonAutoDiscoverClass = MetricsHttpServer.class.getClassLoader()
+                    .loadClass("com.alibaba.fastjson.support.jaxrs.FastJsonAutoDiscoverable");
+            Field autoDscoverField = fastJsonAutoDiscoverClass.getField("autoDiscover");
+            autoDscoverField.set(null, false);
+        } catch (Exception e) {
+            // ignore
         }
 
         httpServer = HttpServerFactory.createHttpServer(baseUri, bindingHost, corePoolSize, maxPoolSize,

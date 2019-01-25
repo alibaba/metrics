@@ -39,7 +39,6 @@ public class Bootstrap {
     }
 
     private static void startHttpServer() {
-        FastJsonAutoDiscoverable.autoDiscover = false;
         metricsHttpServer = new MetricsHttpServer();
         metricsHttpServer.start();
     }
