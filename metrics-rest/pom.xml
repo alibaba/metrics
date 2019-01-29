@@ -49,6 +49,15 @@
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-jdk-http</artifactId>
         </dependency>
+        <!-- for jdk11 middleware-container/pandora#36092 -->
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>javax.activation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+        </dependency>
         <!-- Test dependencies -->
         <dependency>
             <groupId>com.alibaba.middleware</groupId>
