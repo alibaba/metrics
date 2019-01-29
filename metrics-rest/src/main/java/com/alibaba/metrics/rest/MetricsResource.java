@@ -299,6 +299,9 @@ public class MetricsResource {
         try {
             MetricsSearchService service = MetricsSearchService.getInstance();
             return Response.ok(service.search(metricsSearch)).build();
+        } catch (Throwable e) {
+            logger.error("Error during handing search request: ", e);
+            return Response.serverError().build();
         } finally {
             context.stop();
         }

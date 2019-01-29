@@ -313,11 +313,11 @@ public class LogDescriptionManager {
             return result;
         }
 
-        try{
+        try {
             result = indexFile.read(diskStartTime, diskEndTime);
-        }catch (Throwable e) {
+        } catch (Throwable e) {
             logger.error("Read indexfile error!", e);
-        }finally{
+        } finally {
             try {
                 indexFile.close();
             } catch (IOException e) {

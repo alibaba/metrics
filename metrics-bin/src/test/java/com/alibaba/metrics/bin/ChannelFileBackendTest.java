@@ -12,16 +12,14 @@ public class ChannelFileBackendTest {
 
 	@Test
 	public void mainTest() throws IOException{
-
-	    try{
-	        testBigBytesWrite();
-	        testLittleBytesWrite();
-	    }catch(Exception e){
-	        e.printStackTrace();
-	    }finally {
-	        clear();
-        }
-
+		try {
+			testBigBytesWrite();
+			testLittleBytesWrite();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			clear();
+		}
 	}
 
 	private void testBigBytesWrite() throws IOException{
