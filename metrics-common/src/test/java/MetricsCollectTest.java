@@ -35,7 +35,13 @@ public class MetricsCollectTest {
         mockedBuckets.put(100L, 2L);
         mockedBuckets.put(1000L, 3L);
         mockedBuckets.put(Long.MAX_VALUE, 4L);
+        Map<Long, Long> mockedBuckets2 = new HashMap<Long, Long>();
+        mockedBuckets2.put(10L, 5L);
+        mockedBuckets2.put(100L, 4L);
+        mockedBuckets2.put(1000L, 8L);
+        mockedBuckets2.put(Long.MAX_VALUE, 7L);
         mockData.put(105000L, mockedBuckets);
+        mockData.put(120000L, mockedBuckets2);
         when(ch.getBucketValues(105000L)).thenReturn(mockData);
         when(ch.getBuckets()).thenReturn(new long[]{10L, 100L, 1000L, Long.MAX_VALUE});
         collector.collect(MetricName.build("test"), ch, 120000L);

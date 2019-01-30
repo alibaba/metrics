@@ -188,13 +188,15 @@ public abstract class MetricsCollector implements Collector {
         long start = getNormalizedStartTime(timestamp, metricsCollectPeriodConfig.period(name.getMetricLevel()));
         Map<Long, Map<Long, Long>> values= clusterHistogram.getBucketValues(start);
         long[] buckets = clusterHistogram.getBuckets();
-        for (Map.Entry<Long, Map<Long, Long>> entry: values.entrySet()) {
-            Map<Long, Long> bucketAndValues = entry.getValue();
+        if (values.containsKey(start)) {
+            Map<Long, Long> bucketAndValues = values.get(start);
             for (long bucket: buckets) {
                 this.addMetric(name.tagged("bucket", bucket == Long.MAX_VALUE ? "+Inf" : Long.toString(bucket)),
                         "cluster_percentile", bucketAndValues.containsKey(bucket) ? bucketAndValues.get(bucket) : 0L,
-                        entry.getKey(), MetricObject.MetricType.PERCENTILE);
+                        start, MetricObject.MetricType.PERCENTILE);
             }
+        } else {
+            this.addMetric(name, "cluster_percentile", 0L, start, MetricObject.MetricType.PERCENTILE);
         }
     }
 
