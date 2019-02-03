@@ -40,10 +40,16 @@ public class ConsoleReporterTest {
             .convertDurationsTo(TimeUnit.MILLISECONDS)
             .filter(MetricFilter.ALL)
             .build();
+    private String dateHeader;
 
     @Before
     public void setUp() throws Exception {
         when(clock.getTime()).thenReturn(1363568676000L);
+        // JDK9 has changed the java.text.DateFormat API implementation according to Unicode.
+        // See http://mail.openjdk.java.net/pipermail/jdk9-dev/2017-April/005732.html
+        dateHeader = System.getProperty("java.version").startsWith("1.8") ?
+                "3/17/13 6:04:36 PM =============================================================" :
+                "3/17/13, 6:04:36 PM ============================================================";
     }
 
     @Test
@@ -59,7 +65,7 @@ public class ConsoleReporterTest {
 
         Assertions.assertThat(consoleOutput())
                 .isEqualTo(lines(
-                        "3/17/13 6:04:36 PM =============================================================",
+                        dateHeader,
                         "",
                         "-- Gauges ----------------------------------------------------------------------",
                         "gauge",
@@ -82,7 +88,7 @@ public class ConsoleReporterTest {
 
         Assertions.assertThat(consoleOutput())
                 .isEqualTo(lines(
-                        "3/17/13 6:04:36 PM =============================================================",
+                        dateHeader,
                         "",
                         "-- Counters --------------------------------------------------------------------",
                         "test.counter",
@@ -119,7 +125,7 @@ public class ConsoleReporterTest {
 
         Assertions.assertThat(consoleOutput())
                 .isEqualTo(lines(
-                        "3/17/13 6:04:36 PM =============================================================",
+                        dateHeader,
                         "",
                         "-- Histograms ------------------------------------------------------------------",
                         "test.histogram",
@@ -156,7 +162,7 @@ public class ConsoleReporterTest {
 
         Assertions.assertThat(consoleOutput())
                 .isEqualTo(lines(
-                        "3/17/13 6:04:36 PM =============================================================",
+                        dateHeader,
                         "",
                         "-- Meters ----------------------------------------------------------------------",
                         "test.meter",
@@ -202,7 +208,7 @@ public class ConsoleReporterTest {
 
         Assertions.assertThat(consoleOutput())
                 .isEqualTo(lines(
-                        "3/17/13 6:04:36 PM =============================================================",
+                        dateHeader,
                         "",
                         "-- Timers ----------------------------------------------------------------------",
                         "test.another.timer",

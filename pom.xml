@@ -24,7 +24,7 @@
         <maven.compiler.source>1.6</maven.compiler.source>
         <maven.compiler.target>1.6</maven.compiler.target>
         <metrics.version>1.7.7-SNAPSHOT</metrics.version>
-        <jersey.version>2.6</jersey.version>
+        <jersey.version>2.27</jersey.version>
         <fastjson.version>1.2.48</fastjson.version>
         <!-- be careful that higher version might not support JDK6 -->
         <jmh.version>1.10.3</jmh.version>
@@ -148,7 +148,7 @@
             <dependency>
                 <groupId>javax.ws.rs</groupId>
                 <artifactId>javax.ws.rs-api</artifactId>
-                <version>2.0</version>
+                <version>2.1.1</version>
             </dependency>
             <dependency>
                 <groupId>com.esotericsoftware.yamlbeans</groupId>
@@ -158,6 +158,16 @@
             <dependency>
                 <groupId>org.glassfish.jersey.core</groupId>
                 <artifactId>jersey-client</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.core</groupId>
+                <artifactId>jersey-client</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.inject</groupId>
+                <artifactId>jersey-hk2</artifactId>
                 <version>${jersey.version}</version>
             </dependency>
             <dependency>

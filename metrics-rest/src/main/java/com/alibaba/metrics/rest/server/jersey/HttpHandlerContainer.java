@@ -1,25 +1,5 @@
 package com.alibaba.metrics.rest.server.jersey;
 
-import com.sun.net.httpserver.Headers;
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpServer;
-import com.sun.net.httpserver.HttpsExchange;
-import org.glassfish.jersey.internal.MapPropertiesDelegate;
-import org.glassfish.jersey.jdkhttp.internal.LocalizationMessages;
-import org.glassfish.jersey.server.ApplicationHandler;
-import org.glassfish.jersey.server.ContainerException;
-import org.glassfish.jersey.server.ContainerRequest;
-import org.glassfish.jersey.server.ContainerResponse;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.server.internal.ConfigHelper;
-import org.glassfish.jersey.server.spi.Container;
-import org.glassfish.jersey.server.spi.ContainerLifecycleListener;
-import org.glassfish.jersey.server.spi.ContainerResponseWriter;
-
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
@@ -32,23 +12,57 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ws.rs.core.Application;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriBuilder;
 
+import org.glassfish.jersey.internal.MapPropertiesDelegate;
+import org.glassfish.jersey.jdkhttp.internal.LocalizationMessages;
+import org.glassfish.jersey.server.ApplicationHandler;
+import org.glassfish.jersey.server.ContainerException;
+import org.glassfish.jersey.server.ContainerRequest;
+import org.glassfish.jersey.server.ContainerResponse;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.spi.Container;
+import org.glassfish.jersey.server.spi.ContainerResponseWriter;
+
+import com.sun.net.httpserver.Headers;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
+import com.sun.net.httpserver.HttpsExchange;
+
+/**
+ * Jersey {@code Container} implementation based on Java SE {@link HttpServer}.
+ *
+ * @author Miroslav Fuksa
+ * @author Marek Potociar (marek.potociar at oracle.com)
+ */
 public class HttpHandlerContainer implements HttpHandler, Container {
 
     private static final Logger LOGGER = Logger.getLogger(HttpHandlerContainer.class.getName());
 
     private volatile ApplicationHandler appHandler;
-    private volatile ContainerLifecycleListener containerListener;
 
     /**
-     * Creates a new Container connected to given {@link ApplicationHandler Jersey application}.
+     * Create new lightweight Java SE HTTP server container.
      *
-     * @param appHandler Jersey application handler for which the container should be
-     *                   initialized.
+     * @param application JAX-RS / Jersey application to be deployed on the container.
      */
-    HttpHandlerContainer(ApplicationHandler appHandler) {
-        this.appHandler = appHandler;
-        this.containerListener = ConfigHelper.getContainerLifecycleListener(appHandler);
+    HttpHandlerContainer(final Application application) {
+        this.appHandler = new ApplicationHandler(application);
+    }
+
+    /**
+     * Create new lightweight Java SE HTTP server container.
+     *
+     * @param application   JAX-RS / Jersey application to be deployed on the container.
+     * @param parentContext DI provider specific context with application's registered bindings.
+     */
+    HttpHandlerContainer(final Application application, final Object parentContext) {
+        this.appHandler = new ApplicationHandler(application, null, parentContext);
     }
 
     @Override
@@ -75,8 +89,8 @@ public class HttpHandlerContainer implements HttpHandler, Container {
                  *
                  * TODO support redirection in accordance with resource configuration feature.
                  */
-                exchangeUri = UriBuilder.fromUri(exchangeUri).
-                        path("/").build();
+                exchangeUri = UriBuilder.fromUri(exchangeUri)
+                        .path("/").build();
             }
             decodedBasePath += "/";
         }
@@ -88,28 +102,13 @@ public class HttpHandlerContainer implements HttpHandler, Container {
          * TODO this is missing the user information component, how can this be obtained?
          */
         final boolean isSecure = exchange instanceof HttpsExchange;
-        String scheme = isSecure ? "https" : "http";
+        final String scheme = isSecure ? "https" : "http";
 
-        URI baseUri;
-        try {
-            List<String> hostHeader = exchange.getRequestHeaders().get("Host");
-            if (hostHeader != null) {
-                StringBuilder sb = new StringBuilder(scheme);
-                sb.append("://").append(hostHeader.get(0)).append(decodedBasePath);
-                baseUri = new URI(sb.toString());
-            } else {
-                InetSocketAddress addr = exchange.getLocalAddress();
-                baseUri = new URI(scheme, null, addr.getHostName(), addr.getPort(),
-                        decodedBasePath, null, null);
-            }
-        } catch (URISyntaxException ex) {
-            throw new IllegalArgumentException(ex);
-        }
-
-        final URI requestUri = baseUri.resolve(exchangeUri);
+        final URI baseUri = getBaseUri(exchange, decodedBasePath, scheme);
+        final URI requestUri = getRequestUri(exchange, baseUri);
 
         final ResponseWriter responseWriter = new ResponseWriter(exchange);
-        ContainerRequest requestContext = new ContainerRequest(baseUri, requestUri,
+        final ContainerRequest requestContext = new ContainerRequest(baseUri, requestUri,
                 exchange.getRequestMethod(), getSecurityContext(exchange.getPrincipal(), isSecure),
                 new MapPropertiesDelegate());
         requestContext.setEntityStream(exchange.getRequestBody());
@@ -126,11 +125,40 @@ public class HttpHandlerContainer implements HttpHandler, Container {
         }
     }
 
+    private URI getBaseUri(final HttpExchange exchange, final String decodedBasePath, final String scheme) {
+        final URI baseUri;
+        try {
+            final List<String> hostHeader = exchange.getRequestHeaders().get("Host");
+            if (hostHeader != null) {
+                baseUri = new URI(scheme + "://" + hostHeader.get(0) + decodedBasePath);
+            } else {
+                final InetSocketAddress addr = exchange.getLocalAddress();
+                baseUri = new URI(scheme, null, addr.getHostName(), addr.getPort(),
+                        decodedBasePath, null, null);
+            }
+        } catch (final URISyntaxException ex) {
+            throw new IllegalArgumentException(ex);
+        }
+        return baseUri;
+    }
+
+    private URI getRequestUri(final HttpExchange exchange, final URI baseUri) {
+        try {
+            return new URI(getServerAddress(baseUri) + exchange.getRequestURI());
+        } catch (URISyntaxException ex) {
+            throw new IllegalArgumentException(ex);
+        }
+    }
+
+    private String getServerAddress(final URI baseUri) throws URISyntaxException {
+        return new URI(baseUri.getScheme(), null,  baseUri.getHost(), baseUri.getPort(), null, null, null).toString();
+    }
+
     private SecurityContext getSecurityContext(final Principal principal, final boolean isSecure) {
         return new SecurityContext() {
 
             @Override
-            public boolean isUserInRole(String role) {
+            public boolean isUserInRole(final String role) {
                 return false;
             }
 
@@ -162,12 +190,17 @@ public class HttpHandlerContainer implements HttpHandler, Container {
     }
 
     @Override
-    public void reload(ResourceConfig configuration) {
-        containerListener.onShutdown(this);
+    public void reload(final ResourceConfig configuration) {
+        appHandler.onShutdown(this);
+
         appHandler = new ApplicationHandler(configuration);
-        containerListener = ConfigHelper.getContainerLifecycleListener(appHandler);
-        containerListener.onReload(this);
-        containerListener.onStartup(this);
+        appHandler.onReload(this);
+        appHandler.onStartup(this);
+    }
+
+    @Override
+    public ApplicationHandler getApplicationHandler() {
+        return appHandler;
     }
 
     /**
@@ -176,7 +209,7 @@ public class HttpHandlerContainer implements HttpHandler, Container {
      * This method must be implicitly called after the server containing this container is started.
      */
     void onServerStart() {
-        this.containerListener.onStartup(this);
+        this.appHandler.onStartup(this);
     }
 
     /**
@@ -185,10 +218,10 @@ public class HttpHandlerContainer implements HttpHandler, Container {
      * This method must be implicitly called before the server containing this container is stopped.
      */
     void onServerStop() {
-        this.containerListener.onShutdown(this);
+        this.appHandler.onShutdown(this);
     }
 
-    private final static class ResponseWriter implements ContainerResponseWriter {
+    private static final class ResponseWriter implements ContainerResponseWriter {
 
         private final HttpExchange exchange;
         private final AtomicBoolean closed;
@@ -198,24 +231,24 @@ public class HttpHandlerContainer implements HttpHandler, Container {
          *
          * @param exchange Exchange of the {@link HttpServer JDK Http Server}
          */
-        ResponseWriter(HttpExchange exchange) {
+        ResponseWriter(final HttpExchange exchange) {
             this.exchange = exchange;
             this.closed = new AtomicBoolean(false);
         }
 
         @Override
-        public OutputStream writeResponseStatusAndHeaders(long contentLength, ContainerResponse context)
+        public OutputStream writeResponseStatusAndHeaders(final long contentLength, final ContainerResponse context)
                 throws ContainerException {
             final MultivaluedMap<String, String> responseHeaders = context.getStringHeaders();
             final Headers serverHeaders = exchange.getResponseHeaders();
             for (final Map.Entry<String, List<String>> e : responseHeaders.entrySet()) {
-                for (String value : e.getValue()) {
+                for (final String value : e.getValue()) {
                     serverHeaders.add(e.getKey(), value);
                 }
             }
 
             try {
-                if (context.getStatus() == 204) {
+                if (context.getStatus() == Response.Status.NO_CONTENT.getStatusCode()) {
                     // Work around bug in LW HTTP server
                     // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6886436
                     exchange.sendResponseHeaders(context.getStatus(), -1);
@@ -223,14 +256,14 @@ public class HttpHandlerContainer implements HttpHandler, Container {
                     exchange.sendResponseHeaders(context.getStatus(),
                             getResponseLength(contentLength));
                 }
-            } catch (IOException ioe) {
-                throw new ContainerException("Error during writing out the response headers.", ioe);
+            } catch (final IOException ioe) {
+                throw new ContainerException(LocalizationMessages.ERROR_RESPONSEWRITER_WRITING_HEADERS(), ioe);
             }
 
             return exchange.getResponseBody();
         }
 
-        private long getResponseLength(long contentLength) {
+        private long getResponseLength(final long contentLength) {
             if (contentLength == 0) {
                 return -1;
             }
@@ -241,21 +274,21 @@ public class HttpHandlerContainer implements HttpHandler, Container {
         }
 
         @Override
-        public boolean suspend(long timeOut, TimeUnit timeUnit, TimeoutHandler timeoutHandler) {
-            throw new UnsupportedOperationException("Method suspend is not support by the container.");
+        public boolean suspend(final long timeOut, final TimeUnit timeUnit, final TimeoutHandler timeoutHandler) {
+            throw new UnsupportedOperationException("Method suspend is not supported by the container.");
         }
 
         @Override
-        public void setSuspendTimeout(long timeOut, TimeUnit timeUnit) throws IllegalStateException {
-            throw new UnsupportedOperationException("Method suspend is not support by the container.");
+        public void setSuspendTimeout(final long timeOut, final TimeUnit timeUnit) throws IllegalStateException {
+            throw new UnsupportedOperationException("Method setSuspendTimeout is not supported by the container.");
         }
 
         @Override
-        public void failure(Throwable error) {
+        public void failure(final Throwable error) {
             try {
-                exchange.sendResponseHeaders(500, getResponseLength(0));
-            } catch (IOException e) {
-                LOGGER.log(Level.WARNING, "Unable to send a failure response.", e);
+                exchange.sendResponseHeaders(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), getResponseLength(0));
+            } catch (final IOException e) {
+                LOGGER.log(Level.WARNING, LocalizationMessages.ERROR_RESPONSEWRITER_SENDING_FAILURE_RESPONSE(), e);
             } finally {
                 commit();
                 rethrow(error);
@@ -279,7 +312,7 @@ public class HttpHandlerContainer implements HttpHandler, Container {
          *
          * @param error throwable to be re-thrown
          */
-        private void rethrow(Throwable error) {
+        private void rethrow(final Throwable error) {
             if (error instanceof RuntimeException) {
                 throw (RuntimeException) error;
             } else {
@@ -300,5 +333,4 @@ public class HttpHandlerContainer implements HttpHandler, Container {
             }
         }
     }
-
 }

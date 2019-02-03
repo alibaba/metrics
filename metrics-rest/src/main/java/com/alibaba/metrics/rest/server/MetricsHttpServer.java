@@ -14,7 +14,7 @@ import com.alibaba.metrics.rest.server.jersey.FastJsonFeature;
 import com.alibaba.metrics.rest.server.jersey.HttpServerFactory;
 import com.alibaba.metrics.rest.server.jersey.JerseyEventListener;
 import com.sun.net.httpserver.HttpServer;
-import org.glassfish.jersey.filter.LoggingFilter;
+import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.TracingConfig;
@@ -90,13 +90,14 @@ public class MetricsHttpServer {
     public void start() {
         URI baseUri = UriBuilder.fromUri("http://localhost/").port(getPort()).build();
 
-        Logger jerseyLogger = Logger.getLogger(LoggingFilter.class.getName());
+        Logger jerseyLogger = Logger.getLogger("org.glassfish.jersey");
         jerseyLogger.setLevel(Level.WARNING);
 
         resourceConfig.register(MetricsResource.class)
                 .register(MetricsController.class)
                 .property(ServerProperties.TRACING, TracingConfig.ON_DEMAND.name())
-                .register(new LoggingFilter(jerseyLogger, false))
+//                .register(new LoggingFilter(jerseyLogger, false))
+                .register(new LoggingFeature(jerseyLogger))
                 .register(JerseyEventListener.class)
                 .register(FastJsonFeature.class);
 

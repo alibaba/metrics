@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.alibaba.metrics.CachedGauge;
 import com.alibaba.metrics.RatioGauge;
+import com.sun.management.UnixOperatingSystemMXBean;
 
 /**
  * A gauge for the ratio of used to total file descriptors.
@@ -49,16 +50,22 @@ public class FileDescriptorRatioGauge extends RatioGauge {
     }
 
     private Ratio getRatioInternal() {
-        try {
-            return Ratio.of(invoke("getOpenFileDescriptorCount"),
-                    invoke("getMaxFileDescriptorCount"));
-        } catch (NoSuchMethodException e) {
-            return Ratio.of(Double.NaN, Double.NaN);
-        } catch (IllegalAccessException e) {
-            return Ratio.of(Double.NaN, Double.NaN);
-        } catch (InvocationTargetException e) {
+        if (os instanceof UnixOperatingSystemMXBean) {
+            final UnixOperatingSystemMXBean unixOs = (UnixOperatingSystemMXBean) os;
+            return Ratio.of(unixOs.getOpenFileDescriptorCount(), unixOs.getMaxFileDescriptorCount());
+        } else {
             return Ratio.of(Double.NaN, Double.NaN);
         }
+//        try {
+//            return Ratio.of(invoke("getOpenFileDescriptorCount"),
+//                    invoke("getMaxFileDescriptorCount"));
+//        } catch (NoSuchMethodException e) {
+//            return Ratio.of(Double.NaN, Double.NaN);
+//        } catch (IllegalAccessException e) {
+//            return Ratio.of(Double.NaN, Double.NaN);
+//        } catch (InvocationTargetException e) {
+//            return Ratio.of(Double.NaN, Double.NaN);
+//        }
     }
 
     private long invoke(String name) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {

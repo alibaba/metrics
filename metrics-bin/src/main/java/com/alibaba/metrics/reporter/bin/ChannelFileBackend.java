@@ -1,18 +1,43 @@
 package com.alibaba.metrics.reporter.bin;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sun.jvm.hotspot.classfile.ClassLoaderDataGraph;
 import sun.nio.ch.DirectBuffer;
+
+import javax.print.attribute.standard.Finishings;
 
 public class ChannelFileBackend extends RandomAccessFileBackend {
 
     private final static int BUFFER_SIZE = 8192;
 
+    private final static Logger logger = LoggerFactory.getLogger(ChannelFileBackend.class);
     private FileChannel channel = randomAccessFile.getChannel();
     private ByteBuffer byteBuffer = ByteBuffer.allocateDirect(BUFFER_SIZE);
 
+    private static Method invokeCleaner;
+
+    private static Object theUnsafeObject;
+
+    static {
+        try {
+            final Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
+            invokeCleaner = unsafeClass.getMethod("invokeCleaner", ByteBuffer.class);
+            Field theUnsafe = unsafeClass.getDeclaredField("theUnsafe");
+            theUnsafe.setAccessible(true);
+            theUnsafeObject = theUnsafe.get(null);
+
+
+        } catch (Throwable throwable) {
+
+        }
+    }
     public ChannelFileBackend(String path, boolean readOnly) throws IOException {
         super(path, readOnly);
     }
@@ -113,7 +138,18 @@ public class ChannelFileBackend extends RandomAccessFileBackend {
     }
 
     private void clean() {
-        if (byteBuffer.isDirect()) {
+        if (!byteBuffer.isDirect()) {
+            return;
+        }
+        if (invokeCleaner != null && theUnsafeObject != null) {
+            // we should be running on Java 9 or above
+            try {
+                invokeCleaner.invoke(theUnsafeObject, byteBuffer);
+            } catch (Throwable e) {
+                logger.error("Error during clean direct byte buffer: ", e);
+            }
+        } else {
+            // this should work on Java 8 or below
             ((DirectBuffer) byteBuffer).cleaner().clean();
         }
     }
