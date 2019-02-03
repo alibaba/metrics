@@ -1,11 +1,5 @@
 package com.alibaba.metrics.common;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import com.alibaba.metrics.BucketCounter;
 import com.alibaba.metrics.Compass;
 import com.alibaba.metrics.Counter;
@@ -18,6 +12,12 @@ import com.alibaba.metrics.MetricLevel;
 import com.alibaba.metrics.MetricName;
 import com.alibaba.metrics.Snapshot;
 import com.alibaba.metrics.Timer;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class ClassifiedMetricsCollector extends MetricsCollector {
 

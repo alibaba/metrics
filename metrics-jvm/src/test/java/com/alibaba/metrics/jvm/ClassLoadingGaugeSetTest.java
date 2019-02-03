@@ -1,16 +1,15 @@
 package com.alibaba.metrics.jvm;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.lang.management.ClassLoadingMXBean;
-
+import com.alibaba.metrics.Gauge;
+import com.alibaba.metrics.MetricName;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.alibaba.metrics.Gauge;
-import com.alibaba.metrics.MetricName;
+import java.lang.management.ClassLoadingMXBean;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ClassLoadingGaugeSetTest {
 

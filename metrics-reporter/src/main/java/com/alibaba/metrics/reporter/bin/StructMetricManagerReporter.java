@@ -1,19 +1,5 @@
 package com.alibaba.metrics.reporter.bin;
 
-import java.nio.charset.Charset;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.TimeUnit;
-
-import com.alibaba.metrics.reporter.file.FileAppender;
-import com.alibaba.metrics.reporter.file.JsonMetricFormat;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.alibaba.metrics.Clock;
 import com.alibaba.metrics.Compass;
 import com.alibaba.metrics.Counter;
@@ -34,8 +20,21 @@ import com.alibaba.metrics.common.MetricsCollectorFactory;
 import com.alibaba.metrics.common.config.MetricsCollectPeriodConfig;
 import com.alibaba.metrics.common.filter.BucketMetricLevelFilter;
 import com.alibaba.metrics.reporter.MetricManagerReporter;
+import com.alibaba.metrics.reporter.file.FileAppender;
+import com.alibaba.metrics.reporter.file.JsonMetricFormat;
 import com.alibaba.metrics.reporter.file.MetricFormat;
 import com.alibaba.metrics.status.LogDescriptionManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.nio.charset.Charset;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 
 public class StructMetricManagerReporter extends MetricManagerReporter {
 

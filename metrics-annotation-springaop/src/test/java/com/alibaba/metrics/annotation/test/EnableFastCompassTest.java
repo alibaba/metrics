@@ -1,11 +1,8 @@
 package com.alibaba.metrics.annotation.test;
 
-import java.util.Map;
-
 import com.alibaba.metrics.FastCompass;
 import com.alibaba.metrics.MetricManager;
 import com.alibaba.metrics.MetricName;
-
 import com.alibaba.metrics.annotation.MetricsAnnotationInterceptor;
 import junit.framework.TestCase;
 import org.junit.Test;
@@ -13,6 +10,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.Map;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { MetricsAnnotationInterceptor.class, TestConfig.class })

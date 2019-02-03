@@ -1,9 +1,9 @@
 package com.alibaba.metrics;
 
-import java.io.IOException;
 import javax.management.JMException;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
 
 /**

@@ -1,21 +1,10 @@
 package com.alibaba.metrics.bin;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.junit.Ignore;
-import org.junit.Test;
-
-import com.alibaba.fastjson.JSON;
 import com.alibaba.metrics.MetricLevel;
 import com.alibaba.metrics.bean.MetricSearch;
 import com.alibaba.metrics.bean.MetricsSearchRequest;
 import com.alibaba.metrics.bean.MetricsSearchResponse;
 import com.alibaba.metrics.common.MetricObject;
-import com.alibaba.metrics.common.MetricObject.Builder;
 import com.alibaba.metrics.common.MetricObject.MetricType;
 import com.alibaba.metrics.common.config.MetricsCollectPeriodConfig;
 import com.alibaba.metrics.reporter.bin.BinAppender;
@@ -23,9 +12,17 @@ import com.alibaba.metrics.server.MetricsMemoryCache;
 import com.alibaba.metrics.server.MetricsOnDisk;
 import com.alibaba.metrics.server.MetricsSearchService;
 import com.alibaba.metrics.status.LogDescriptionManager;
-import com.alibaba.metrics.utils.FileUtil;
 import com.alibaba.metrics.utils.Constants;
 import com.alibaba.metrics.utils.FigureUtil;
+import com.alibaba.metrics.utils.FileUtil;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MetricsSearchServiceTest {
 

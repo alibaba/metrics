@@ -1,5 +1,7 @@
 package com.alibaba.metrics;
 
+import com.alibaba.metrics.WeightedSnapshot.WeightedSample;
+
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -10,8 +12,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import static com.alibaba.metrics.Constants.NOT_AVAILABLE;
 import static java.lang.Math.exp;
 import static java.lang.Math.min;
-
-import com.alibaba.metrics.WeightedSnapshot.WeightedSample;
 
 /**
  * An exponentially-decaying random reservoir of {@code long}s. Uses Cormode et al's

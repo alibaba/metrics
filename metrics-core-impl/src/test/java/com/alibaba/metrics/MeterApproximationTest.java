@@ -1,9 +1,9 @@
 package com.alibaba.metrics;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.junit.runner.RunWith;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -17,18 +17,18 @@ public class MeterApproximationTest {
 
     @Parameters
     public static Collection<Object[]> ratesPerMinute() {
-        Object[][] data = new Object[][] { 
+        Object[][] data = new Object[][] {
             { 15 }, { 60 }, { 600 }, { 6000 }
         };
         return Arrays.asList(data);
-    }    
-    
+    }
+
     private final long ratePerMinute;
-    
+
     public MeterApproximationTest(long ratePerMinute) {
         this.ratePerMinute = ratePerMinute;
     }
-    
+
     @Test
     public void controlMeter1MinuteMeanApproximation() throws Exception {
         final Meter meter = simulateMetronome(
@@ -62,21 +62,21 @@ public class MeterApproximationTest {
     private Meter simulateMetronome(
             long introDelay, TimeUnit introDelayUnit,
             long duration, TimeUnit durationUnit) {
-        
+
         final ManualClock clock = new ManualClock();
         final Meter meter = new MeterImpl(clock);
-        
+
         clock.addNanos(introDelayUnit.toNanos(introDelay));
-        
+
         final long endTick = clock.getTick() + durationUnit.toNanos(duration);
         final long marksIntervalInNanos = TimeUnit.MINUTES.toNanos(1) / ratePerMinute;
-        
+
         while (clock.getTick() <= endTick) {
             clock.addNanos(marksIntervalInNanos);
             meter.mark();
         }
-        
+
         return meter;
     }
-    
+
 }

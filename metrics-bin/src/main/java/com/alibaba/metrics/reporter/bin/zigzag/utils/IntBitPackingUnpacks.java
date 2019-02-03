@@ -1,9 +1,9 @@
 package com.alibaba.metrics.reporter.bin.zigzag.utils;
 
-import java.nio.IntBuffer;
-
 import com.alibaba.metrics.reporter.bin.zigzag.filters.IntFilter;
 import com.alibaba.metrics.reporter.bin.zigzag.io.IntOutputStream;
+
+import java.nio.IntBuffer;
 
 // This class was generated automatically, don't modify.
 public class IntBitPackingUnpacks

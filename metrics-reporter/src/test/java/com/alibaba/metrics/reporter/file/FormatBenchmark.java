@@ -1,12 +1,12 @@
 package com.alibaba.metrics.reporter.file;
 
+import com.alibaba.metrics.common.MetricObject;
+import org.apache.commons.lang3.time.StopWatch;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
-
-import com.alibaba.metrics.common.MetricObject;
-import org.apache.commons.lang3.time.StopWatch;
 
 public class FormatBenchmark {
 

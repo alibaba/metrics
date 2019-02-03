@@ -3,9 +3,7 @@ package com.alibaba.metrics.jvm;
 import com.sun.management.UnixOperatingSystemMXBean;
 import org.junit.Test;
 
-
 import javax.management.ObjectName;
-
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 

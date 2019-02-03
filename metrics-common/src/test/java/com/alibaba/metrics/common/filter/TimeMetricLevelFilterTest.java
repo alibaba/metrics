@@ -1,15 +1,14 @@
 package com.alibaba.metrics.common.filter;
 
-import java.util.concurrent.TimeUnit;
-
 import com.alibaba.metrics.Counter;
 import com.alibaba.metrics.Metric;
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.alibaba.metrics.MetricLevel;
 import com.alibaba.metrics.MetricName;
 import com.alibaba.metrics.common.config.MetricsCollectPeriodConfig;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.concurrent.TimeUnit;
 
 public class TimeMetricLevelFilterTest {
 

@@ -1,9 +1,9 @@
 package com.alibaba.metrics.reporter.bin.zigzag;
 
+import com.alibaba.metrics.reporter.bin.zigzag.io.IntOutputStream;
+
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-
-import com.alibaba.metrics.reporter.bin.zigzag.io.IntOutputStream;
 
 public class IntJustCopy extends IntCodec
 {

@@ -1,8 +1,5 @@
 package com.alibaba.metrics.annotation;
 
-import java.lang.reflect.Method;
-import java.util.Map;
-
 import com.alibaba.metrics.Compass;
 import com.alibaba.metrics.Counter;
 import com.alibaba.metrics.FastCompass;
@@ -13,11 +10,13 @@ import com.alibaba.metrics.MetricManager;
 import com.alibaba.metrics.MetricName;
 import com.alibaba.metrics.ReservoirType;
 import com.alibaba.metrics.Timer;
-
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Method;
+import java.util.Map;
 
 /**
  * 除Gauge类型度量指标注解外的其他注解对应的切面逻辑

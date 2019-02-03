@@ -1,4 +1,12 @@
 package com.alibaba.metrics.jvm;
+
+import com.alibaba.metrics.Metric;
+import com.alibaba.metrics.MetricName;
+import com.alibaba.metrics.MetricRegistry;
+import com.alibaba.metrics.MetricSet;
+import com.alibaba.metrics.PersistentGauge;
+import com.alibaba.metrics.RatioGauge;
+
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.MemoryPoolMXBean;
@@ -10,14 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-
-import com.alibaba.metrics.Gauge;
-import com.alibaba.metrics.Metric;
-import com.alibaba.metrics.MetricName;
-import com.alibaba.metrics.MetricRegistry;
-import com.alibaba.metrics.MetricSet;
-import com.alibaba.metrics.PersistentGauge;
-import com.alibaba.metrics.RatioGauge;
 
 /**
  * A set of gauges for JVM memory usage, including stats on heap vs. non-heap memory, plus

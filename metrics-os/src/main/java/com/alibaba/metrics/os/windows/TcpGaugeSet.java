@@ -1,20 +1,16 @@
 package com.alibaba.metrics.os.windows;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
-import org.hyperic.sigar.NetInterfaceStat;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.alibaba.metrics.CachedMetricSet;
 import com.alibaba.metrics.Clock;
 import com.alibaba.metrics.Metric;
 import com.alibaba.metrics.MetricName;
 import com.alibaba.metrics.PersistentGauge;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import static com.alibaba.metrics.os.utils.SystemInfoUtils.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class TcpGaugeSet extends CachedMetricSet{
 

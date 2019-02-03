@@ -1,7 +1,5 @@
 package com.alibaba.metrics.utils;
 
-import java.util.Comparator;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;

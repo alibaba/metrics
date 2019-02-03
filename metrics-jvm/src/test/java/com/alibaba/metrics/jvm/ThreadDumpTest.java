@@ -3,7 +3,6 @@ package com.alibaba.metrics.jvm;
 import org.junit.Before;
 import org.junit.Test;
 
-
 import java.io.ByteArrayOutputStream;
 import java.lang.management.LockInfo;
 import java.lang.management.MonitorInfo;

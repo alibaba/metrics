@@ -1,18 +1,17 @@
 package com.alibaba.metrics.utils;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
 
-import com.alibaba.metrics.common.MetricObject;
-
-import static com.alibaba.metrics.common.MetricObject.*;
-import static com.alibaba.metrics.utils.Constants.*;
+import static com.alibaba.metrics.utils.Constants.DOUBLE_LENGTH;
+import static com.alibaba.metrics.utils.Constants.FLOAT_LENGTH;
+import static com.alibaba.metrics.utils.Constants.INT_LENGTH;
+import static com.alibaba.metrics.utils.Constants.LONG_LENGTH;
+import static com.alibaba.metrics.utils.Constants.TYPE_DOUBLE;
+import static com.alibaba.metrics.utils.Constants.TYPE_FLOAT;
+import static com.alibaba.metrics.utils.Constants.TYPE_INT;
+import static com.alibaba.metrics.utils.Constants.TYPE_LONG;
 
 public class FigureUtil {
 

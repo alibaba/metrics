@@ -1,25 +1,20 @@
 package com.alibaba.metrics.reporter.bin;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.metrics.MetricLevel;
 import com.alibaba.metrics.StringUtils;
 import com.alibaba.metrics.common.MetricObject;
-import com.alibaba.metrics.status.LogDescriptionManager;
 import com.alibaba.metrics.status.LogDescriptionRegister;
-import com.alibaba.metrics.utils.FigureUtil;
 import com.alibaba.metrics.utils.FileUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import static com.alibaba.metrics.utils.Constants.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
+
+import static com.alibaba.metrics.utils.Constants.LINE_FEED_SEPARATOR;
+import static com.alibaba.metrics.utils.Constants.LONG_LENGTH;
 import static com.alibaba.metrics.utils.FileUtil.MAX_FILE_SIZE;
 
 public class DataSourceFile {
@@ -44,7 +39,7 @@ public class DataSourceFile {
     public void init() throws IOException {
         init(false);
     }
-    
+
     public void init(boolean readOnly) throws IOException{
         backend = new ChannelFileBackend(path, readOnly);
     }

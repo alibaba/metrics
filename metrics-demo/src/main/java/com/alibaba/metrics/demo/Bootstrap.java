@@ -1,7 +1,6 @@
 package com.alibaba.metrics.demo;
 
 
-import com.alibaba.fastjson.support.jaxrs.FastJsonAutoDiscoverable;
 import com.alibaba.metrics.integrate.ConfigFields;
 import com.alibaba.metrics.integrate.LoggerProvider;
 import com.alibaba.metrics.integrate.MetricsIntegrateUtils;

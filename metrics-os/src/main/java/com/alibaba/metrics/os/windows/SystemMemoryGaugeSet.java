@@ -1,19 +1,5 @@
 package com.alibaba.metrics.os.windows;
 
-import java.lang.management.ManagementFactory;
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
-//import org.hyperic.sigar.CpuInfo;
-//import org.hyperic.sigar.CpuPerc;
-//import org.hyperic.sigar.Sigar;
-//import org.hyperic.sigar.SigarException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.alibaba.metrics.CachedMetricSet;
 import com.alibaba.metrics.Clock;
 import com.alibaba.metrics.Gauge;
@@ -22,6 +8,18 @@ import com.alibaba.metrics.MetricName;
 import com.alibaba.metrics.PersistentGauge;
 import com.alibaba.metrics.RatioGauge;
 import com.sun.management.OperatingSystemMXBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.management.ManagementFactory;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+//import org.hyperic.sigar.CpuInfo;
+//import org.hyperic.sigar.CpuPerc;
+//import org.hyperic.sigar.Sigar;
+//import org.hyperic.sigar.SigarException;
 
 public class SystemMemoryGaugeSet extends CachedMetricSet{
 

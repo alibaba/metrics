@@ -1,8 +1,7 @@
 package com.alibaba.metrics.bin;
 
-import org.junit.Test;
-
 import com.alibaba.metrics.utils.FIFOMap;
+import org.junit.Test;
 
 public class FIFOMapTest {
 

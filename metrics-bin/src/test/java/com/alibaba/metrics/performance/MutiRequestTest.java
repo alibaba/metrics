@@ -1,10 +1,10 @@
 package com.alibaba.metrics.performance;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.atomic.AtomicLong;
-
 import org.junit.Ignore;
 import org.junit.Test;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class MutiRequestTest {
 

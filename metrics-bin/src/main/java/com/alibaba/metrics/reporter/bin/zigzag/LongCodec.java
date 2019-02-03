@@ -1,16 +1,15 @@
 package com.alibaba.metrics.reporter.bin.zigzag;
 
-import java.nio.ByteBuffer;
-import java.nio.LongBuffer;
-import java.util.Arrays;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.alibaba.metrics.reporter.bin.zigzag.io.ByteArrayLongOutputStream;
 import com.alibaba.metrics.reporter.bin.zigzag.io.LongArrayOutputStream;
 import com.alibaba.metrics.reporter.bin.zigzag.io.LongInputStream;
 import com.alibaba.metrics.reporter.bin.zigzag.io.LongOutputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.nio.ByteBuffer;
+import java.nio.LongBuffer;
+import java.util.Arrays;
 
 /**
  * LongCodec interface.
@@ -20,7 +19,7 @@ import com.alibaba.metrics.reporter.bin.zigzag.io.LongOutputStream;
 public abstract class LongCodec {
 
     private static final Logger logger = LoggerFactory.getLogger(LongDZBP.class);
-    
+
     public abstract void compress(LongBuffer src, LongOutputStream dst);
 
     public abstract void decompress(LongBuffer src, LongOutputStream dst);
@@ -42,7 +41,7 @@ public abstract class LongCodec {
         compress(LongBuffer.wrap(src), dst);
         return dst.toByteArray();
     }
-    
+
     public byte[] compress(long[] src, int offset, int length) {
         ByteArrayLongOutputStream dst = new ByteArrayLongOutputStream();
         compress(LongBuffer.wrap(src, offset, length), dst);

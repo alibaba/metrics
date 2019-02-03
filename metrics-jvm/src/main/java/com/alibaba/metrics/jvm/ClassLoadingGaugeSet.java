@@ -1,14 +1,14 @@
 package com.alibaba.metrics.jvm;
-import java.lang.management.ClassLoadingMXBean;
-import java.lang.management.ManagementFactory;
-import java.util.HashMap;
-import java.util.Map;
 
-import com.alibaba.metrics.Gauge;
 import com.alibaba.metrics.Metric;
 import com.alibaba.metrics.MetricName;
 import com.alibaba.metrics.MetricSet;
 import com.alibaba.metrics.PersistentGauge;
+
+import java.lang.management.ClassLoadingMXBean;
+import java.lang.management.ManagementFactory;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A set of gauges for JVM classloader usage.

@@ -1,9 +1,5 @@
 package com.alibaba.metrics.reporter.bin.zigzag.utils;
 
-import java.nio.IntBuffer;
-import java.nio.LongBuffer;
-import java.util.Arrays;
-
 import com.alibaba.metrics.reporter.bin.zigzag.filters.IntFilter;
 import com.alibaba.metrics.reporter.bin.zigzag.filters.IntFilterFactory;
 import com.alibaba.metrics.reporter.bin.zigzag.filters.LongFilter;
@@ -14,6 +10,10 @@ import com.alibaba.metrics.reporter.bin.zigzag.io.LongBufferOutputStream;
 import com.alibaba.metrics.reporter.bin.zigzag.io.LongOutputStream;
 import com.alibaba.metrics.reporter.bin.zigzag.packers.IntBitPacking;
 import com.alibaba.metrics.reporter.bin.zigzag.packers.LongBitPacking;
+
+import java.nio.IntBuffer;
+import java.nio.LongBuffer;
+import java.util.Arrays;
 
 public final class CodecUtils {
 

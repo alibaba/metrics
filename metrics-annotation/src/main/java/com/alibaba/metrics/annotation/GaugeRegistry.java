@@ -1,18 +1,17 @@
 package com.alibaba.metrics.annotation;
 
+import com.alibaba.metrics.Gauge;
+import com.alibaba.metrics.MetricLevel;
+import com.alibaba.metrics.MetricManager;
+import com.alibaba.metrics.MetricName;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import com.alibaba.metrics.Gauge;
-import com.alibaba.metrics.MetricLevel;
-import com.alibaba.metrics.MetricManager;
-import com.alibaba.metrics.MetricName;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * EnableGauge注解对应的Gauge类型度量指标的注册入口类

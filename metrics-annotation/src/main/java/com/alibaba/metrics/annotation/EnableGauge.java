@@ -1,12 +1,12 @@
 package com.alibaba.metrics.annotation;
 
+import com.alibaba.metrics.MetricLevel;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import com.alibaba.metrics.MetricLevel;
 
 /**
  * Gauge类型对应的方法注解

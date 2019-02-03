@@ -1,15 +1,13 @@
 package com.alibaba.metrics.bin;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.metrics.bean.MetricSearch;
+import com.alibaba.metrics.bean.MetricsSearchRequest;
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import org.junit.Test;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.metrics.MetricName;
-import com.alibaba.metrics.bean.MetricSearch;
-import com.alibaba.metrics.bean.MetricsSearchRequest;
 
 public class MetricRequestTest {
 

@@ -1,9 +1,8 @@
 package com.alibaba.metrics.os.linux;
 
-import com.alibaba.metrics.Gauge;
+import com.alibaba.metrics.CachedMetricSet;
 import com.alibaba.metrics.Metric;
 import com.alibaba.metrics.MetricName;
-import com.alibaba.metrics.CachedMetricSet;
 import com.alibaba.metrics.PersistentGauge;
 import com.alibaba.metrics.os.utils.FileUtils;
 import com.alibaba.metrics.os.utils.FormatUtils;

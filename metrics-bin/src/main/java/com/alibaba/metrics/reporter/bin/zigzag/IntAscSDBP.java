@@ -1,10 +1,5 @@
 package com.alibaba.metrics.reporter.bin.zigzag;
 
-import java.nio.IntBuffer;
-import java.nio.ByteBuffer;
-import java.util.Iterator;
-import java.util.List;
-
 import com.alibaba.metrics.reporter.bin.zigzag.encodings.DeltaEncoding;
 import com.alibaba.metrics.reporter.bin.zigzag.filters.IntEncodingFilter;
 import com.alibaba.metrics.reporter.bin.zigzag.filters.IntFilterFactory;
@@ -17,7 +12,11 @@ import com.alibaba.metrics.reporter.bin.zigzag.utils.CodecUtils;
 import com.alibaba.metrics.reporter.bin.zigzag.utils.Jaccard;
 import com.alibaba.metrics.reporter.bin.zigzag.utils.ReaderIterator;
 
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Int Ascending Sorted Delta Bit Packing.

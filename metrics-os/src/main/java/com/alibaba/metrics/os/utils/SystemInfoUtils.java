@@ -1,6 +1,10 @@
 package com.alibaba.metrics.os.utils;
 
 
+import com.alibaba.metrics.os.linux.CpuUsageGaugeSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -8,11 +12,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.net.URL;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.alibaba.metrics.os.linux.CpuUsageGaugeSet;
 
 public class SystemInfoUtils {
 

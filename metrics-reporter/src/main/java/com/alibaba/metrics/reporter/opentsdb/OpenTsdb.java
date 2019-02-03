@@ -15,19 +15,19 @@
  */
 package com.alibaba.metrics.reporter.opentsdb;
 
+import org.glassfish.jersey.client.ClientProperties;
+import org.glassfish.jersey.jackson.JacksonFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.core.MediaType;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
-import org.glassfish.jersey.client.ClientProperties;
-import org.glassfish.jersey.jackson.JacksonFeature;
+import javax.ws.rs.core.MediaType;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * OpenTSDB 2.0 jersey based REST client

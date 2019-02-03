@@ -2,8 +2,6 @@ package com.alibaba.metrics.bean;
 
 import java.util.List;
 
-import com.alibaba.metrics.MetricName;
-
 public class MetricsSearchRequest {
 
 	private long startTime;

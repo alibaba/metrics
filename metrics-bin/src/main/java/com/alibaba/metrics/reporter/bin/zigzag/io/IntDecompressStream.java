@@ -1,12 +1,11 @@
 package com.alibaba.metrics.reporter.bin.zigzag.io;
 
-import java.nio.BufferUnderflowException;
-import java.nio.IntBuffer;
-import java.util.Arrays;
-
 import com.alibaba.metrics.reporter.bin.zigzag.filters.IntFilter;
 import com.alibaba.metrics.reporter.bin.zigzag.filters.IntFilterFactory;
 import com.alibaba.metrics.reporter.bin.zigzag.packers.IntBitPacking;
+
+import java.nio.BufferUnderflowException;
+import java.nio.IntBuffer;
 
 public class IntDecompressStream extends IntBlockedInputStream {
 

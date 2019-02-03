@@ -1,17 +1,16 @@
 package com.alibaba.metrics.jvm;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import com.alibaba.metrics.Gauge;
+import com.alibaba.metrics.MetricName;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.lang.management.GarbageCollectorMXBean;
 import java.util.Arrays;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import com.alibaba.metrics.Gauge;
-import com.alibaba.metrics.MetricName;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class GarbageCollectorMetricSetTest {
     private final GarbageCollectorMXBean gc = mock(GarbageCollectorMXBean.class);

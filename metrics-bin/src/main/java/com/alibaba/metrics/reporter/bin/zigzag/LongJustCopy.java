@@ -1,9 +1,9 @@
 package com.alibaba.metrics.reporter.bin.zigzag;
 
+import com.alibaba.metrics.reporter.bin.zigzag.io.LongOutputStream;
+
 import java.nio.ByteBuffer;
 import java.nio.LongBuffer;
-
-import com.alibaba.metrics.reporter.bin.zigzag.io.LongOutputStream;
 
 public class LongJustCopy extends LongCodec
 {

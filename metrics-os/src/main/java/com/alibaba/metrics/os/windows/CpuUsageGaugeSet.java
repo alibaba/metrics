@@ -1,23 +1,21 @@
 package com.alibaba.metrics.os.windows;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-
-import org.hyperic.sigar.Cpu;
-import org.hyperic.sigar.CpuPerc;
-import org.hyperic.sigar.SigarException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.alibaba.metrics.CachedMetricSet;
 import com.alibaba.metrics.Clock;
 import com.alibaba.metrics.Metric;
 import com.alibaba.metrics.MetricName;
 import com.alibaba.metrics.PersistentGauge;
 import com.alibaba.metrics.os.utils.FormatUtils;
-import static com.alibaba.metrics.os.utils.SystemInfoUtils.*;
+import org.hyperic.sigar.Cpu;
+import org.hyperic.sigar.SigarException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import static com.alibaba.metrics.os.utils.SystemInfoUtils.sigar;
 
 public class CpuUsageGaugeSet extends CachedMetricSet {
 

@@ -1,24 +1,5 @@
 package com.alibaba.metrics.status;
 
-import static com.alibaba.metrics.utils.Constants.INDEX_SEPARATOR;
-import static com.alibaba.metrics.utils.Constants.LINE_FEED_SEPARATOR;
-import static com.alibaba.metrics.utils.Constants.LONG_LENGTH;
-import static com.alibaba.metrics.utils.Constants.SITUATION_GROUP;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.metrics.Compass;
 import com.alibaba.metrics.Counter;
@@ -34,6 +15,23 @@ import com.alibaba.metrics.reporter.bin.IndexFile;
 import com.alibaba.metrics.utils.Constants;
 import com.alibaba.metrics.utils.FigureUtil;
 import com.alibaba.metrics.utils.FileUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static com.alibaba.metrics.utils.Constants.LINE_FEED_SEPARATOR;
+import static com.alibaba.metrics.utils.Constants.LONG_LENGTH;
+import static com.alibaba.metrics.utils.Constants.SITUATION_GROUP;
 
 public class LogDescriptionManager {
 

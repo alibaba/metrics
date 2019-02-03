@@ -1,13 +1,13 @@
 package com.alibaba.metrics.reporter;
 
+import org.junit.Ignore;
+import org.junit.Test;
+
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-
-import org.junit.Ignore;
-import org.junit.Test;
 
 public class ScheduledAndDelayTest {
 

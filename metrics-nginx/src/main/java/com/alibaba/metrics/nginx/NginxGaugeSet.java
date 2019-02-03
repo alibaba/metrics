@@ -3,7 +3,6 @@ package com.alibaba.metrics.nginx;
 import com.alibaba.metrics.CachedMetricSet;
 import com.alibaba.metrics.Clock;
 import com.alibaba.metrics.Constants;
-import com.alibaba.metrics.Gauge;
 import com.alibaba.metrics.Metric;
 import com.alibaba.metrics.MetricName;
 import com.alibaba.metrics.PersistentGauge;

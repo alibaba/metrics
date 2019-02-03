@@ -1,18 +1,17 @@
 package com.alibaba.metrics.jvm;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import com.alibaba.metrics.Gauge;
+import com.alibaba.metrics.MetricName;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.management.InstanceNotFoundException;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import com.alibaba.metrics.Gauge;
-import com.alibaba.metrics.MetricName;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 
 public class BufferPoolMetricSetTest {

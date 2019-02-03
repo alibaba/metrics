@@ -1,4 +1,11 @@
 package com.alibaba.metrics.jvm;
+
+import com.alibaba.metrics.Metric;
+import com.alibaba.metrics.MetricName;
+import com.alibaba.metrics.MetricRegistry;
+import com.alibaba.metrics.MetricSet;
+import com.alibaba.metrics.PersistentGauge;
+
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
@@ -8,13 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-
-import com.alibaba.metrics.Gauge;
-import com.alibaba.metrics.Metric;
-import com.alibaba.metrics.MetricName;
-import com.alibaba.metrics.MetricRegistry;
-import com.alibaba.metrics.MetricSet;
-import com.alibaba.metrics.PersistentGauge;
 
 /**
  * A set of gauges for the counts and elapsed times of garbage collections.

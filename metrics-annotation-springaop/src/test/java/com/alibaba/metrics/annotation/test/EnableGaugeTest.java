@@ -1,19 +1,18 @@
 package com.alibaba.metrics.annotation.test;
 
-import java.util.Map.Entry;
-import java.util.SortedMap;
-
 import com.alibaba.metrics.Gauge;
 import com.alibaba.metrics.MetricFilter;
 import com.alibaba.metrics.MetricManager;
 import com.alibaba.metrics.MetricName;
-
 import com.alibaba.metrics.annotation.MetricsAnnotationInterceptor;
 import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.Map.Entry;
+import java.util.SortedMap;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { MetricsAnnotationInterceptor.class, TestConfig.class })

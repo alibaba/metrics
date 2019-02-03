@@ -1,28 +1,24 @@
 package com.alibaba.metrics.server;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
-import java.util.concurrent.ConcurrentNavigableMap;
-import java.util.Map.Entry;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.alibaba.metrics.MetricLevel;
 import com.alibaba.metrics.bean.MetricResult;
-import com.alibaba.metrics.bean.MetricSearch;
 import com.alibaba.metrics.reporter.bin.AbstractFileBackend;
-import com.alibaba.metrics.reporter.bin.BinAppender;
 import com.alibaba.metrics.reporter.bin.ChannelFileBackend;
 import com.alibaba.metrics.reporter.bin.DataSource;
 import com.alibaba.metrics.reporter.bin.IndexData;
 import com.alibaba.metrics.reporter.bin.zigzag.LongDZBP;
 import com.alibaba.metrics.utils.Constants;
 import com.alibaba.metrics.utils.FileUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 public class MetricsOnDisk extends MetricsDataStore {
 

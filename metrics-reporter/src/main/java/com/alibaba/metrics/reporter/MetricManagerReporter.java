@@ -1,15 +1,5 @@
 package com.alibaba.metrics.reporter;
 
-import java.io.Closeable;
-import java.util.Locale;
-import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import com.alibaba.metrics.Compass;
 import com.alibaba.metrics.Counter;
 import com.alibaba.metrics.FastCompass;
@@ -21,11 +11,21 @@ import com.alibaba.metrics.Metric;
 import com.alibaba.metrics.MetricFilter;
 import com.alibaba.metrics.MetricName;
 import com.alibaba.metrics.Timer;
-import com.alibaba.metrics.common.filter.CompositeMetricFilter;
 import com.alibaba.metrics.common.config.MetricsCollectPeriodConfig;
+import com.alibaba.metrics.common.filter.CompositeMetricFilter;
 import com.alibaba.metrics.common.filter.TimeMetricLevelFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.Closeable;
+import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * report MetricManager 里所有的metrics

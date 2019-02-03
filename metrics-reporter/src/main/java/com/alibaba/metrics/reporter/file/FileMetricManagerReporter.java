@@ -1,23 +1,7 @@
 package com.alibaba.metrics.reporter.file;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.TimeUnit;
-
-import com.alibaba.metrics.Compass;
-import com.alibaba.metrics.common.CollectLevel;
-import com.alibaba.metrics.common.MetricObject;
-import com.alibaba.metrics.common.MetricsCollector;
-import com.alibaba.metrics.common.MetricsCollectorFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.alibaba.metrics.Clock;
+import com.alibaba.metrics.Compass;
 import com.alibaba.metrics.Counter;
 import com.alibaba.metrics.FastCompass;
 import com.alibaba.metrics.Gauge;
@@ -27,8 +11,23 @@ import com.alibaba.metrics.Meter;
 import com.alibaba.metrics.MetricFilter;
 import com.alibaba.metrics.MetricName;
 import com.alibaba.metrics.Timer;
-import com.alibaba.metrics.reporter.MetricManagerReporter;
+import com.alibaba.metrics.common.CollectLevel;
+import com.alibaba.metrics.common.MetricObject;
+import com.alibaba.metrics.common.MetricsCollector;
+import com.alibaba.metrics.common.MetricsCollectorFactory;
 import com.alibaba.metrics.common.config.MetricsCollectPeriodConfig;
+import com.alibaba.metrics.reporter.MetricManagerReporter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 
 public class FileMetricManagerReporter extends MetricManagerReporter {
 

@@ -1,14 +1,5 @@
 package com.alibaba.metrics.bin;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedMap;
-
-import org.junit.Test;
-
 import com.alibaba.metrics.MetricLevel;
 import com.alibaba.metrics.bean.MetricResult;
 import com.alibaba.metrics.common.MetricObject.MetricType;
@@ -16,6 +7,14 @@ import com.alibaba.metrics.common.config.MetricsCollectPeriodConfig;
 import com.alibaba.metrics.reporter.bin.DataSource;
 import com.alibaba.metrics.server.MetricsMemoryCache;
 import com.alibaba.metrics.utils.Constants;
+import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedMap;
 
 public class MetricsMemoryCacheTest {
 

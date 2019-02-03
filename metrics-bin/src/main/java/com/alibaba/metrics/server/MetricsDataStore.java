@@ -1,12 +1,5 @@
 package com.alibaba.metrics.server;
 
-import static com.alibaba.metrics.utils.Constants.*;
-
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
 import com.alibaba.metrics.MetricLevel;
 import com.alibaba.metrics.bean.MetricResult;
 import com.alibaba.metrics.bean.ValueStatus;
@@ -14,6 +7,12 @@ import com.alibaba.metrics.common.config.MetricsCollectPeriodConfig;
 import com.alibaba.metrics.reporter.bin.DataSource;
 import com.alibaba.metrics.utils.Constants;
 import com.alibaba.metrics.utils.FigureUtil;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
+import static com.alibaba.metrics.utils.Constants.LONG_LENGTH;
 
 public abstract class MetricsDataStore {
 

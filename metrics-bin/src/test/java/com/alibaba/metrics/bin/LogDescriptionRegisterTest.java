@@ -1,20 +1,17 @@
 package com.alibaba.metrics.bin;
 
+import com.alibaba.metrics.MetricLevel;
+import com.alibaba.metrics.bean.MetricSearch;
+import com.alibaba.metrics.common.MetricObject;
+import com.alibaba.metrics.reporter.bin.DataSource;
+import com.alibaba.metrics.status.LogDescriptionRegister;
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.junit.Test;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.metrics.MetricLevel;
-import com.alibaba.metrics.bean.MetricSearch;
-import com.alibaba.metrics.common.MetricObject;
-import com.alibaba.metrics.reporter.bin.DataSource;
-import com.alibaba.metrics.reporter.bin.LogStatusManager;
-import com.alibaba.metrics.status.LogDescriptionRegister;
 
 public class LogDescriptionRegisterTest {
 

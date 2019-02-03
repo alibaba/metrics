@@ -1,22 +1,16 @@
 package com.alibaba.metrics.reporter.bin;
 
-import static com.alibaba.metrics.utils.Constants.INDEX_SEPARATOR;
-import static com.alibaba.metrics.utils.Constants.LINE_FEED;
-import static com.alibaba.metrics.utils.FileUtil.MAX_FILE_SIZE;
+import com.alibaba.metrics.MetricLevel;
+import com.alibaba.metrics.common.config.MetricsCollectPeriodConfig;
+import com.alibaba.metrics.utils.Constants;
+import com.alibaba.metrics.utils.FigureUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.alibaba.metrics.MetricLevel;
-import com.alibaba.metrics.common.config.MetricsCollectPeriodConfig;
-import com.alibaba.metrics.utils.Constants;
-import com.alibaba.metrics.utils.FigureUtil;
-import com.alibaba.metrics.utils.FileUtil;
 
 public class IndexFile {
 

@@ -1,11 +1,11 @@
 package com.alibaba.metrics.reporter;
 
 
-import javax.management.ObjectName;
-
 import com.alibaba.metrics.MetricName;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
+
+import javax.management.ObjectName;
 
 public class DefaultObjectNameFactoryTest {
 

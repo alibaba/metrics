@@ -4,7 +4,6 @@ import com.alibaba.metrics.Meter;
 import com.alibaba.metrics.MetricManager;
 import com.alibaba.metrics.MetricName;
 import com.alibaba.metrics.annotation.MetricsAnnotationInterceptor;
-
 import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;

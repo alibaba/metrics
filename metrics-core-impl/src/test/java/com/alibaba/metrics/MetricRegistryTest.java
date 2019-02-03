@@ -12,7 +12,9 @@ import java.util.concurrent.TimeUnit;
 import static com.alibaba.metrics.MetricRegistry.name;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 public class MetricRegistryTest {
     private static final MetricName TIMER2 = MetricName.build("timer");

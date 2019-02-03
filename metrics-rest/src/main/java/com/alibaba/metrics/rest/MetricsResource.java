@@ -8,7 +8,6 @@ import com.alibaba.metrics.Gauge;
 import com.alibaba.metrics.Histogram;
 import com.alibaba.metrics.IMetricManager;
 import com.alibaba.metrics.Meter;
-import com.alibaba.metrics.Metric;
 import com.alibaba.metrics.MetricFilter;
 import com.alibaba.metrics.MetricLevel;
 import com.alibaba.metrics.MetricManager;
@@ -16,22 +15,20 @@ import com.alibaba.metrics.MetricName;
 import com.alibaba.metrics.MetricRegistry;
 import com.alibaba.metrics.ReservoirType;
 import com.alibaba.metrics.Timer;
-
 import com.alibaba.metrics.common.CollectLevel;
+import com.alibaba.metrics.common.MetricObject;
 import com.alibaba.metrics.common.MetricsCollector;
 import com.alibaba.metrics.common.MetricsCollectorFactory;
 import com.alibaba.metrics.common.filter.MetricNameSetFilter;
-import com.alibaba.metrics.rest.server.jersey.HttpServerFactory;
 import com.alibaba.metrics.server.MetricsSearchService;
-import com.alibaba.metrics.utils.FigureUtil;
-import com.alibaba.metrics.common.MetricObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
-import javax.ws.rs.HttpMethod;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -41,13 +38,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-
-import org.glassfish.jersey.client.HttpUrlConnectorProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;

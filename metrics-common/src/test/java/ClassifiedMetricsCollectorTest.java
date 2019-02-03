@@ -1,11 +1,10 @@
-import org.junit.Test;
-
 import com.alibaba.metrics.MetricLevel;
 import com.alibaba.metrics.common.ClassifiedMetricsCollector;
 import com.alibaba.metrics.common.CollectLevel;
 import com.alibaba.metrics.common.MetricsCollector;
 import com.alibaba.metrics.common.MetricsCollectorFactory;
 import com.alibaba.metrics.common.config.MetricsCollectPeriodConfig;
+import org.junit.Test;
 
 public class ClassifiedMetricsCollectorTest {
 

@@ -1,7 +1,6 @@
 package com.alibaba.metrics.rest;
 
 import com.alibaba.metrics.Clock;
-import com.alibaba.metrics.Compass;
 import com.alibaba.metrics.Gauge;
 import com.alibaba.metrics.IMetricManager;
 import com.alibaba.metrics.MetricFilter;
@@ -18,13 +17,10 @@ import com.alibaba.metrics.server.MetricsMemoryCache;
 import com.alibaba.metrics.server.MetricsOnDisk;
 import com.alibaba.metrics.server.MetricsSearchService;
 import com.alibaba.metrics.status.LogDescriptionManager;
-import com.alibaba.metrics.status.LogDescriptionRegister;
 import com.alibaba.metrics.utils.Constants;
-
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;

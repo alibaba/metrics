@@ -1,12 +1,9 @@
 package com.alibaba.metrics.bin;
 
-import java.util.Arrays;
-import java.util.List;
-
+import com.alibaba.metrics.utils.FigureUtil;
 import org.junit.Test;
 
-import com.alibaba.metrics.utils.Constants;
-import com.alibaba.metrics.utils.FigureUtil;
+import java.util.List;
 
 public class TempUtilTest {
 

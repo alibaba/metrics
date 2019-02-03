@@ -1,12 +1,11 @@
 package com.alibaba.metrics.reporter.bin.zigzag.io;
 
-import java.nio.BufferUnderflowException;
-import java.nio.LongBuffer;
-import java.util.Arrays;
-
 import com.alibaba.metrics.reporter.bin.zigzag.filters.LongFilter;
 import com.alibaba.metrics.reporter.bin.zigzag.filters.LongFilterFactory;
 import com.alibaba.metrics.reporter.bin.zigzag.packers.LongBitPacking;
+
+import java.nio.BufferUnderflowException;
+import java.nio.LongBuffer;
 
 public class LongDecompressStream extends LongBlockedInputStream {
 

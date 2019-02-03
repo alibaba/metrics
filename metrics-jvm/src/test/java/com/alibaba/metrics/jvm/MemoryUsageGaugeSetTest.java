@@ -1,19 +1,18 @@
 package com.alibaba.metrics.jvm;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import com.alibaba.metrics.Gauge;
+import com.alibaba.metrics.MetricName;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.lang.management.MemoryMXBean;
 import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.MemoryUsage;
 import java.util.Arrays;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import com.alibaba.metrics.Gauge;
-import com.alibaba.metrics.MetricName;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class MemoryUsageGaugeSetTest {
     private final MemoryUsage heap = mock(MemoryUsage.class);

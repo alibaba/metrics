@@ -1,17 +1,15 @@
 package com.alibaba.metrics.reporter.bin.zigzag;
 
-import java.nio.LongBuffer;
-import java.util.Arrays;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.alibaba.metrics.reporter.bin.zigzag.encodings.DeltaZigzagEncoding;
 import com.alibaba.metrics.reporter.bin.zigzag.filters.LongFilter;
 import com.alibaba.metrics.reporter.bin.zigzag.io.LongBufferOutputStream;
 import com.alibaba.metrics.reporter.bin.zigzag.io.LongOutputStream;
 import com.alibaba.metrics.reporter.bin.zigzag.packers.LongBitPacking;
-import com.alibaba.metrics.server.MetricsOnDisk;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.nio.LongBuffer;
+import java.util.Arrays;
 
 /**
  * Long Delta Zigzag Encoded Bit Packing.
@@ -19,7 +17,7 @@ import com.alibaba.metrics.server.MetricsOnDisk;
 public class LongDZBP extends LongCodec
 {
     private static final Logger logger = LoggerFactory.getLogger(LongDZBP.class);
-    
+
     public static class DZEncodeFilter
         extends DeltaZigzagEncoding.LongEncoder
         implements LongFilter

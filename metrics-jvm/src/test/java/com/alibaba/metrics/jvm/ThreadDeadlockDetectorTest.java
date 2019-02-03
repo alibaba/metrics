@@ -2,7 +2,6 @@ package com.alibaba.metrics.jvm;
 
 import org.junit.Test;
 
-
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
 import java.util.Locale;

@@ -1,17 +1,15 @@
 package com.alibaba.metrics.os.windows;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-
-import org.hyperic.sigar.SigarException;
-
 import com.alibaba.metrics.CachedMetricSet;
 import com.alibaba.metrics.Metric;
 import com.alibaba.metrics.MetricName;
 import com.alibaba.metrics.PersistentGauge;
-import static com.alibaba.metrics.os.utils.SystemInfoUtils.*;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import static com.alibaba.metrics.os.utils.SystemInfoUtils.sigar;
 
 public class SystemLoadGaugeSet extends CachedMetricSet {
 

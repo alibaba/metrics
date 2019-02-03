@@ -1,6 +1,9 @@
 package com.alibaba.metrics.instrument;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import com.alibaba.metrics.Meter;
+import com.alibaba.metrics.MetricRegistry;
+import com.alibaba.metrics.MetricRegistryImpl;
+import org.junit.Test;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -9,11 +12,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.alibaba.metrics.Meter;
-import com.alibaba.metrics.MetricRegistry;
-import com.alibaba.metrics.MetricRegistryImpl;
-import com.alibaba.metrics.instrument.InstrumentedThreadFactory;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class InstrumentedThreadFactoryTest {
     private static final int THREAD_COUNT = 10;
@@ -26,7 +25,7 @@ public class InstrumentedThreadFactoryTest {
     /**
      * Tests all parts of the InstrumentedThreadFactory except for termination since that
      * is currently difficult to do without race conditions.
-     * 
+     *
      * TODO: Try not using real threads in a unit test?
      */
     @Test

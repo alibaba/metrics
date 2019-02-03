@@ -1,24 +1,23 @@
 package com.alibaba.metrics.reporter.file;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.concurrent.TimeUnit;
-
 import com.alibaba.metrics.Counter;
+import com.alibaba.metrics.IMetricManager;
+import com.alibaba.metrics.MetricLevel;
+import com.alibaba.metrics.MetricManager;
 import com.alibaba.metrics.MetricName;
+import com.alibaba.metrics.MetricRegistry;
+import com.alibaba.metrics.common.config.MetricsCollectPeriodConfig;
+import com.alibaba.metrics.jvm.GarbageCollectorMetricSet;
+import com.alibaba.metrics.jvm.MemoryUsageGaugeSet;
+import com.alibaba.metrics.reporter.ConsoleReporter;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import com.alibaba.metrics.IMetricManager;
-import com.alibaba.metrics.MetricLevel;
-import com.alibaba.metrics.MetricManager;
-import com.alibaba.metrics.MetricRegistry;
-import com.alibaba.metrics.jvm.GarbageCollectorMetricSet;
-import com.alibaba.metrics.jvm.MemoryUsageGaugeSet;
-import com.alibaba.metrics.reporter.ConsoleReporter;
-import com.alibaba.metrics.common.config.MetricsCollectPeriodConfig;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 public class FileReporterTest {
     @Rule

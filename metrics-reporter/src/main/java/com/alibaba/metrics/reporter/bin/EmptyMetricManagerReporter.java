@@ -1,9 +1,5 @@
 package com.alibaba.metrics.reporter.bin;
 
-import java.util.Map;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 import com.alibaba.metrics.Clock;
 import com.alibaba.metrics.Compass;
 import com.alibaba.metrics.Counter;
@@ -21,7 +17,10 @@ import com.alibaba.metrics.common.filter.BucketMetricLevelFilter;
 import com.alibaba.metrics.common.filter.TimeMetricLevelFilter;
 import com.alibaba.metrics.reporter.MetricManagerReporter;
 import com.alibaba.metrics.reporter.file.MetricFormat;
-import com.alibaba.metrics.status.LogDescriptionManager;
+
+import java.util.Map;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 
 public class EmptyMetricManagerReporter extends MetricManagerReporter {

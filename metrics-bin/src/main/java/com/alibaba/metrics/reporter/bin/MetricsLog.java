@@ -1,17 +1,5 @@
 package com.alibaba.metrics.reporter.bin;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.alibaba.fastjson.JSON;
 import com.alibaba.metrics.MetricLevel;
 import com.alibaba.metrics.common.MetricObject;
 import com.alibaba.metrics.reporter.bin.zigzag.LongDZBP;
@@ -19,13 +7,21 @@ import com.alibaba.metrics.server.MetricsMemoryCache;
 import com.alibaba.metrics.status.LogDescriptionManager;
 import com.alibaba.metrics.status.LogDescriptionRegister;
 import com.alibaba.metrics.utils.Constants;
-import com.alibaba.metrics.utils.FigureUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import static com.alibaba.metrics.utils.Constants.*;
-import static com.alibaba.metrics.utils.FigureUtil.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.alibaba.metrics.utils.Constants.LINE_FEED;
+import static com.alibaba.metrics.utils.Constants.LONG_LENGTH;
+import static com.alibaba.metrics.utils.FigureUtil.convertToLong;
 
 public class MetricsLog {
-	
+
 	private final static Logger logger = LoggerFactory.getLogger(MetricsLog.class);
 
     private MetricsMemoryCache cache;
@@ -47,7 +43,7 @@ public class MetricsLog {
     private String logFileName;
 
     private String basePath;
-    
+
     private long baseTimestamp;
 
     private MetricLevel level;
@@ -95,14 +91,14 @@ public class MetricsLog {
 
         if (dataSourceFile.exists() && indexFile.exists() && dataFile.exists()) {
             try {
-                
+
                 dataSourceDescribe.init();
                 indexDescribe.init();
                 logDescribe.init();
-                
+
                 dataSourceDescribe.read(register);
                 //indexDescribe.read(register, logDescriptionManager);
-                
+
             } catch (IOException e) {
                 logger.error("Init metricslog error when files exist", e.fillInStackTrace());
             }
@@ -150,7 +146,7 @@ public class MetricsLog {
         }
 
         for (MetricObject metricObject : metrics) {
-            
+
             Object o = metricObject.getValue();
             long value = convertToLong(o);
 

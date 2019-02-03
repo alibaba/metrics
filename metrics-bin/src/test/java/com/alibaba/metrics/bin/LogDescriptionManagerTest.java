@@ -1,17 +1,6 @@
 package com.alibaba.metrics.bin;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.alibaba.metrics.Compass;
-import com.alibaba.metrics.Counter;
 import com.alibaba.metrics.MetricLevel;
 import com.alibaba.metrics.MetricManager;
 import com.alibaba.metrics.MetricName;
@@ -22,9 +11,18 @@ import com.alibaba.metrics.reporter.bin.BinAppender;
 import com.alibaba.metrics.server.MetricsMemoryCache;
 import com.alibaba.metrics.status.LogDescriptionManager;
 import com.alibaba.metrics.status.LogDescriptionRegister;
-import com.alibaba.metrics.utils.FileUtil;
 import com.alibaba.metrics.utils.Constants;
 import com.alibaba.metrics.utils.FigureUtil;
+import com.alibaba.metrics.utils.FileUtil;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class LogDescriptionManagerTest {
 

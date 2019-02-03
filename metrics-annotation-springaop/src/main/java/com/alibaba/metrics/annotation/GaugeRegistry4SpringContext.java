@@ -1,14 +1,13 @@
 package com.alibaba.metrics.annotation;
 
-import java.lang.reflect.Method;
-import java.util.Map;
-
 import com.alibaba.metrics.MetricManager;
-
 import org.springframework.aop.support.AopUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+
+import java.lang.reflect.Method;
+import java.util.Map;
 
 /**
  * 扫描spring容器中的所有bean，识别标记有{@linkplain com.alibaba.metrics.annotation.EnableGauge}注解的方法，并将其注册至

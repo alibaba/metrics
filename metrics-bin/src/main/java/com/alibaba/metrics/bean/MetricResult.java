@@ -1,8 +1,8 @@
 package com.alibaba.metrics.bean;
 
-import java.util.Map;
-
 import com.alibaba.metrics.common.MetricObject.MetricType;
+
+import java.util.Map;
 
 public class MetricResult {
 
@@ -17,14 +17,14 @@ public class MetricResult {
 	private Object value;
 
 	private int precision;
-	
+
 	private MetricType metricType;
-	
+
 	private String meterName;
-	
+
 	public MetricResult(String metricName, Map<String, String> tags, ValueStatus valueStatus, Object value,
 			long timestamp, int precision, MetricType metricType, String meterName) {
-		
+
 		this.metricName = metricName;
 		this.tags = tags;
 		this.valueStatus = valueStatus;
@@ -33,7 +33,7 @@ public class MetricResult {
 		this.precision = precision;
 		this.metricType = metricType;
 		this.meterName = meterName;
-		
+
 	}
 
 	public long getTimestamp() {
@@ -83,7 +83,7 @@ public class MetricResult {
 	public void setPrecision(int precision) {
 		this.precision = precision;
 	}
-	
+
     public MetricType getMetricType() {
         return metricType;
     }
@@ -99,5 +99,5 @@ public class MetricResult {
     public void setMeterName(String meterName) {
         this.meterName = meterName;
     }
-	
+
 }

@@ -1,7 +1,15 @@
 package com.alibaba.metrics.reporter.bin;
 
-import static com.alibaba.metrics.utils.Constants.*;
-import static com.alibaba.metrics.utils.FigureUtil.*;
+import com.alibaba.metrics.MetricLevel;
+import com.alibaba.metrics.common.MetricObject;
+import com.alibaba.metrics.common.config.MetricsCollectPeriodConfig;
+import com.alibaba.metrics.server.MetricsMemoryCache;
+import com.alibaba.metrics.status.LogDescriptionManager;
+import com.alibaba.metrics.status.LogDescriptionRegister;
+import com.alibaba.metrics.utils.Constants;
+import com.alibaba.metrics.utils.FileUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,17 +25,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.alibaba.metrics.MetricLevel;
-import com.alibaba.metrics.common.MetricObject;
-import com.alibaba.metrics.common.config.MetricsCollectPeriodConfig;
-import com.alibaba.metrics.server.MetricsMemoryCache;
-import com.alibaba.metrics.status.LogDescriptionManager;
-import com.alibaba.metrics.status.LogDescriptionRegister;
-import com.alibaba.metrics.utils.Constants;
-import com.alibaba.metrics.utils.FileUtil;
+import static com.alibaba.metrics.utils.Constants.CHECK_OUT_OF_DATE_INTERVAL;
+import static com.alibaba.metrics.utils.Constants.CURRENTDATA_REGEX;
+import static com.alibaba.metrics.utils.Constants.DATE_PATH_REGEX;
+import static com.alibaba.metrics.utils.Constants.INDEX_V2_REGEX;
+import static com.alibaba.metrics.utils.FigureUtil.getNextDayStartTimestamp;
+import static com.alibaba.metrics.utils.FigureUtil.getTodayStartTimestamp;
 
 public class BinAppender {
 
@@ -56,13 +59,13 @@ public class BinAppender {
     private MetricsCollectPeriodConfig metricsCollectPeriodConfig;
 
     private String logRootPath;
-    
+
     private int archiveHold;
-    
+
     private int currentHold;
-    
-    private long maxFileSize = Constants.DEFAULT_MAX_FILE_SIZE; 
-    
+
+    private long maxFileSize = Constants.DEFAULT_MAX_FILE_SIZE;
+
     /** 这个appender是否可用 */
     private AtomicBoolean working = new AtomicBoolean(false);
 
@@ -233,7 +236,7 @@ public class BinAppender {
             fileNames.put(level, logFileName);
 
         }
-        
+
         logDescriptionManager.setLogDescriptions(baseTimestamp, logDescriptionRegister);
 
     }
@@ -343,7 +346,7 @@ public class BinAppender {
     public String getPath(){
         return logRootPath;
     }
-    
+
     protected void flush() {
 
     }

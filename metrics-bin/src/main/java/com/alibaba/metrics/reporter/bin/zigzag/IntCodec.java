@@ -1,12 +1,12 @@
 package com.alibaba.metrics.reporter.bin.zigzag;
 
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-
 import com.alibaba.metrics.reporter.bin.zigzag.io.ByteArrayIntOutputStream;
 import com.alibaba.metrics.reporter.bin.zigzag.io.IntArrayOutputStream;
 import com.alibaba.metrics.reporter.bin.zigzag.io.IntInputStream;
 import com.alibaba.metrics.reporter.bin.zigzag.io.IntOutputStream;
+
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 /**
  * IntCodec interface.

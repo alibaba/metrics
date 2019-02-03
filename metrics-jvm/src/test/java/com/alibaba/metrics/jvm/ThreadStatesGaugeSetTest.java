@@ -1,8 +1,10 @@
 package com.alibaba.metrics.jvm;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import com.alibaba.metrics.Gauge;
+import com.alibaba.metrics.ManualClock;
+import com.alibaba.metrics.MetricName;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
@@ -10,12 +12,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import com.alibaba.metrics.ManualClock;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.alibaba.metrics.Gauge;
-import com.alibaba.metrics.MetricName;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ThreadStatesGaugeSetTest {
     private final ThreadMXBean threads = mock(ThreadMXBean.class);

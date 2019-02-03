@@ -1,23 +1,13 @@
 package com.alibaba.metrics.reporter.bin;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.TreeMap;
-
+import com.alibaba.metrics.MetricLevel;
+import com.alibaba.metrics.utils.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.alibaba.metrics.MetricLevel;
-import com.alibaba.metrics.common.MetricObject;
-import com.alibaba.metrics.utils.FileUtil;
+import java.io.File;
+import java.io.IOException;
 
-import static com.alibaba.metrics.utils.Constants.*;
 import static com.alibaba.metrics.utils.FileUtil.MAX_FILE_SIZE;
 
 public class LogFile {

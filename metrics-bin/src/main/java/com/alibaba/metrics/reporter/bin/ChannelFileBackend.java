@@ -1,17 +1,15 @@
 package com.alibaba.metrics.reporter.bin;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sun.nio.ch.DirectBuffer;
+
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import sun.jvm.hotspot.classfile.ClassLoaderDataGraph;
-import sun.nio.ch.DirectBuffer;
-
-import javax.print.attribute.standard.Finishings;
 
 public class ChannelFileBackend extends RandomAccessFileBackend {
 

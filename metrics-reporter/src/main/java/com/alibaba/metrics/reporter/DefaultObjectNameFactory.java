@@ -1,11 +1,11 @@
 package com.alibaba.metrics.reporter;
 
-import javax.management.MalformedObjectNameException;
-import javax.management.ObjectName;
-
 import com.alibaba.metrics.MetricName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
 
 public class DefaultObjectNameFactory implements ObjectNameFactory {
 

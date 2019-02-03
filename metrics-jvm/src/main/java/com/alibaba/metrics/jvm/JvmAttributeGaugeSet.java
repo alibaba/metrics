@@ -1,6 +1,5 @@
 package com.alibaba.metrics.jvm;
 
-import com.alibaba.metrics.Gauge;
 import com.alibaba.metrics.Metric;
 import com.alibaba.metrics.MetricName;
 import com.alibaba.metrics.MetricSet;

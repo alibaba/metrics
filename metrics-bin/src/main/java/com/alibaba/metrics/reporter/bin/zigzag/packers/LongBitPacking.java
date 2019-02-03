@@ -1,11 +1,11 @@
 package com.alibaba.metrics.reporter.bin.zigzag.packers;
 
-import java.nio.LongBuffer;
-
 import com.alibaba.metrics.reporter.bin.zigzag.LongCodec;
 import com.alibaba.metrics.reporter.bin.zigzag.filters.LongFilter;
 import com.alibaba.metrics.reporter.bin.zigzag.filters.ThroughLongFilter;
 import com.alibaba.metrics.reporter.bin.zigzag.io.LongOutputStream;
+
+import java.nio.LongBuffer;
 
 public class LongBitPacking extends LongCodec
 {
@@ -166,7 +166,7 @@ public class LongBitPacking extends LongCodec
 
     public void compress(
             LongBuffer src,
-            LongOutputStream dst, 
+            LongOutputStream dst,
             LongFilter filter)
     {
         int srclen = src.limit() - src.position();
@@ -178,7 +178,7 @@ public class LongBitPacking extends LongCodec
 
     public void compressChunk(
             LongBuffer src,
-            LongOutputStream dst, 
+            LongOutputStream dst,
             LongFilter filter)
     {
         src.mark();
@@ -278,7 +278,7 @@ public class LongBitPacking extends LongCodec
     public static byte[] toBytes(long[] src) {
         return (new LongBitPacking()).compress(src);
     }
-    
+
     public static byte[] toBytes(long[] src, int offset, int length) {
         return (new LongBitPacking()).compress(src, offset, length);
     }

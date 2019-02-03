@@ -6,11 +6,15 @@ import com.alibaba.metrics.Meter;
 import com.alibaba.metrics.MetricRegistry;
 import com.alibaba.metrics.MetricRegistryImpl;
 import com.alibaba.metrics.Timer;
-import com.alibaba.metrics.instrument.InstrumentedScheduledExecutorService;
 import org.junit.After;
 import org.junit.Test;
 
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -1,17 +1,16 @@
 package com.alibaba.metrics.reporter.file;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.concurrent.TimeUnit;
-
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-
 import com.alibaba.metrics.IMetricManager;
 import com.alibaba.metrics.MetricManager;
 import com.alibaba.metrics.MetricName;
 import com.alibaba.metrics.MetricRegistry;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 public class Benchmark {
     @Rule

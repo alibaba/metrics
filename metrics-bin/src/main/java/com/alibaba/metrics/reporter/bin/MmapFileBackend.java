@@ -1,10 +1,10 @@
 package com.alibaba.metrics.reporter.bin;
 
+import sun.nio.ch.DirectBuffer;
+
 import java.io.IOException;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
-
-import sun.nio.ch.DirectBuffer;
 
 public class MmapFileBackend extends RandomAccessFileBackend {
 
@@ -16,7 +16,7 @@ public class MmapFileBackend extends RandomAccessFileBackend {
 		super(path, readOnly);
 		this.size = (int) getLength();
 	}
-	
+
 	@Override
 	public void init() throws IOException{
 		try {
@@ -27,7 +27,7 @@ public class MmapFileBackend extends RandomAccessFileBackend {
 			throw rte;
 		}
 	}
-	
+
 	protected MmapFileBackend(String path, boolean readOnly)
 			throws IOException {
 		super(path, readOnly);
@@ -37,15 +37,15 @@ public class MmapFileBackend extends RandomAccessFileBackend {
 		int length = (int) getLength();
 		mapFile(length);
 	}
-	
+
 	public void mapFile(int length) throws IOException {
 		if (length > 0) {
 			FileChannel.MapMode mapMode = readOnly ? FileChannel.MapMode.READ_ONLY : FileChannel.MapMode.READ_WRITE;
 			byteBuffer = randomAccessFile.getChannel().map(mapMode, 0, length);
 		}
 	}
-	
-	
+
+
 	private void unmapFile() {
 		if (byteBuffer != null) {
 			if (byteBuffer instanceof DirectBuffer) {
@@ -60,7 +60,7 @@ public class MmapFileBackend extends RandomAccessFileBackend {
 			byteBuffer.force();
 		}
 	}
-	
+
 	@Override
     public synchronized void write(long offset, byte[] b, int bytesStart, int length) throws IOException {
         if (byteBuffer != null) {
@@ -83,7 +83,7 @@ public class MmapFileBackend extends RandomAccessFileBackend {
 
 	/**
 	 * 设置文件的大小，磁盘上文件的大小在这里会改变
-	 * 
+	 *
 	 * @param newLength
 	 * @return
 	 */

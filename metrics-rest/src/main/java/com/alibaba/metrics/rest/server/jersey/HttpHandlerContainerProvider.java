@@ -1,7 +1,6 @@
 package com.alibaba.metrics.rest.server.jersey;
 
 import com.sun.net.httpserver.HttpHandler;
-import org.glassfish.jersey.server.ApplicationHandler;
 import org.glassfish.jersey.server.spi.ContainerProvider;
 
 import javax.ws.rs.ProcessingException;

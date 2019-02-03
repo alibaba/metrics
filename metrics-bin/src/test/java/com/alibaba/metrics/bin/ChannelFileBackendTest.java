@@ -1,13 +1,12 @@
 package com.alibaba.metrics.bin;
 
+import com.alibaba.metrics.reporter.bin.ChannelFileBackend;
+import com.alibaba.metrics.utils.FileUtil;
+import org.junit.Test;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
-
-import org.junit.Test;
-
-import com.alibaba.metrics.reporter.bin.ChannelFileBackend;
-import com.alibaba.metrics.utils.FileUtil;
 
 public class ChannelFileBackendTest {
 

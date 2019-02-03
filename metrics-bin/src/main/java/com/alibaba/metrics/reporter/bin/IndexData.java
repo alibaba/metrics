@@ -1,10 +1,5 @@
 package com.alibaba.metrics.reporter.bin;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.alibaba.metrics.MetricLevel;
-
 public class IndexData{
 
 	private long indexStart;

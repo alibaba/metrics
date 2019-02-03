@@ -1,20 +1,19 @@
 package com.alibaba.metrics.reporter.bin;
 
-import static com.alibaba.metrics.utils.Constants.METRICS_SEPARATOR;
-import static com.alibaba.metrics.utils.Constants.TAGS_SEPARATOR;
-import static com.alibaba.metrics.utils.Constants.TAG_KV_SEPARATOR;
-import static com.alibaba.metrics.utils.FigureUtil.getValueType;
-
-import java.nio.ByteBuffer;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.metrics.MetricLevel;
 import com.alibaba.metrics.common.MetricObject;
 import com.alibaba.metrics.common.MetricObject.MetricType;
+
+import java.util.Map;
+import java.util.Map.Entry;
+
+import static com.alibaba.metrics.utils.Constants.METRICS_SEPARATOR;
+import static com.alibaba.metrics.utils.Constants.TAGS_SEPARATOR;
+import static com.alibaba.metrics.utils.Constants.TAG_KV_SEPARATOR;
+import static com.alibaba.metrics.utils.FigureUtil.getValueType;
 
 public class DataSource {
 
@@ -23,7 +22,7 @@ public class DataSource {
 	private Map<String, String> tags;
 
 	private MetricType metricType;
-	
+
 	/** 度量器名称 */
 	private String meterName;
 
@@ -43,17 +42,17 @@ public class DataSource {
 	private int offset;
 
 	/** 方便查询的metricobject */
-	@JSONField(serialize=false)  
+	@JSONField(serialize=false)
 	private MetricObject metricObject;
 
 	/** 日志等级 */
 	private MetricLevel level;
-	
+
 	/** 第一次出现的时间戳，查找的时候需要对比这个时间戳防止误读 */
 	private long addTime;
-	
+
 	public DataSource(){
-		
+
 	}
 
 	public String getMetricName() {
@@ -128,7 +127,7 @@ public class DataSource {
 	public void setLevel(MetricLevel level) {
 		this.level = level;
 	}
-	
+
 	public int getFieldType() {
 		return fieldType;
 	}
@@ -203,12 +202,12 @@ public class DataSource {
 
 		return sb.toString();
 	}
-	
+
 	public void addMetricObject() {
 
 		MetricObject metricObject = MetricObject.named(this.metricName).withTags(this.tags)
 				.withLevel(this.level).withType(this.metricType).build();
-		
+
 		this.metricObject = metricObject;
 	}
 

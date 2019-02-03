@@ -1,5 +1,14 @@
 package com.alibaba.metrics.jvm;
 
+import com.alibaba.metrics.CachedMetricSet;
+import com.alibaba.metrics.Clock;
+import com.alibaba.metrics.Metric;
+import com.alibaba.metrics.MetricName;
+import com.alibaba.metrics.MetricRegistry;
+import com.alibaba.metrics.PersistentGauge;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
@@ -7,16 +16,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
-import com.alibaba.metrics.CachedMetricSet;
-import com.alibaba.metrics.Clock;
-import com.alibaba.metrics.Gauge;
-import com.alibaba.metrics.Metric;
-import com.alibaba.metrics.MetricName;
-import com.alibaba.metrics.MetricRegistry;
-import com.alibaba.metrics.PersistentGauge;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A set of gauges for the number of threads in their various states and deadlock detection.

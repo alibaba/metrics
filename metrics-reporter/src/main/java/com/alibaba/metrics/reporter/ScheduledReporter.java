@@ -1,14 +1,5 @@
 package com.alibaba.metrics.reporter;
 
-import java.io.Closeable;
-import java.util.Locale;
-import java.util.SortedMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import com.alibaba.metrics.Counter;
 import com.alibaba.metrics.Gauge;
 import com.alibaba.metrics.Histogram;
@@ -19,6 +10,15 @@ import com.alibaba.metrics.MetricRegistry;
 import com.alibaba.metrics.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.Closeable;
+import java.util.Locale;
+import java.util.SortedMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * The abstract base class for all scheduled reporters (i.e., reporters which process a registry's

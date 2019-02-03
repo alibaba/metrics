@@ -10,21 +10,23 @@ import com.alibaba.metrics.MetricName;
 import com.alibaba.metrics.MetricRegistry;
 import com.alibaba.metrics.Snapshot;
 import com.alibaba.metrics.Timer;
-import com.alibaba.metrics.reporter.CsvReporter;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.CharBuffer;
 import java.util.Locale;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

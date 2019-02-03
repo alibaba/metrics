@@ -1,5 +1,10 @@
 package com.alibaba.metrics.reporter.bin;
 
+import com.alibaba.metrics.MetricLevel;
+import com.alibaba.metrics.StringUtils;
+import com.alibaba.metrics.bean.MetricSearch;
+import com.alibaba.metrics.common.MetricObject;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -9,12 +14,6 @@ import java.util.NavigableMap;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
-import com.alibaba.metrics.MetricLevel;
-import com.alibaba.metrics.MetricName;
-import com.alibaba.metrics.StringUtils;
-import com.alibaba.metrics.bean.MetricSearch;
-import com.alibaba.metrics.common.MetricObject;
 
 public class LogStatusManager {
 

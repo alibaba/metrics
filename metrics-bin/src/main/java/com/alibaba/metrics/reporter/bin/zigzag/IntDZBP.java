@@ -1,14 +1,13 @@
 package com.alibaba.metrics.reporter.bin.zigzag;
 
-import java.nio.IntBuffer;
-import java.util.Arrays;
-
 import com.alibaba.metrics.reporter.bin.zigzag.encodings.DeltaZigzagEncoding;
 import com.alibaba.metrics.reporter.bin.zigzag.filters.IntFilter;
 import com.alibaba.metrics.reporter.bin.zigzag.filters.IntFilterFactory;
 import com.alibaba.metrics.reporter.bin.zigzag.io.IntOutputStream;
 import com.alibaba.metrics.reporter.bin.zigzag.packers.IntBitPacking;
 import com.alibaba.metrics.reporter.bin.zigzag.utils.CodecUtils;
+
+import java.nio.IntBuffer;
 
 /**
  * Int Delta Zigzag Encoded Bit Packing.

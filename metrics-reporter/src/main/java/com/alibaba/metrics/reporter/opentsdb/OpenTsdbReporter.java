@@ -15,16 +15,6 @@
  */
 package com.alibaba.metrics.reporter.opentsdb;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.concurrent.TimeUnit;
-
 import com.alibaba.metrics.Clock;
 import com.alibaba.metrics.Counter;
 import com.alibaba.metrics.Gauge;
@@ -36,6 +26,16 @@ import com.alibaba.metrics.MetricRegistry;
 import com.alibaba.metrics.Snapshot;
 import com.alibaba.metrics.Timer;
 import com.alibaba.metrics.reporter.ScheduledReporter;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A reporter which publishes metric values to a OpenTSDB server.

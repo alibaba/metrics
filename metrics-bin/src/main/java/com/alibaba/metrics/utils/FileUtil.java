@@ -1,11 +1,11 @@
 package com.alibaba.metrics.utils;
 
+import com.alibaba.metrics.MetricLevel;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
-
-import com.alibaba.metrics.MetricLevel;
 
 public class FileUtil {
 

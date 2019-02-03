@@ -1,14 +1,13 @@
 package com.alibaba.metrics.reporter.opentsdb;
 
-import java.util.Collections;
-import java.util.concurrent.TimeUnit;
-
-import org.junit.Test;
-
 import com.alibaba.metrics.MetricRegistry;
 import com.alibaba.metrics.MetricRegistryImpl;
 import com.alibaba.metrics.jvm.GarbageCollectorMetricSet;
 import com.alibaba.metrics.jvm.MemoryUsageGaugeSet;
+import org.junit.Test;
+
+import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 public class OpenTsdbReporterTest {
 

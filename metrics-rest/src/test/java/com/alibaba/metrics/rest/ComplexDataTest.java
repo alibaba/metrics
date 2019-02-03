@@ -1,11 +1,5 @@
 package com.alibaba.metrics.rest;
 
-import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
-
-import org.junit.Ignore;
-import org.junit.Test;
-
 import com.alibaba.fastjson.support.jaxrs.FastJsonAutoDiscoverable;
 import com.alibaba.metrics.Clock;
 import com.alibaba.metrics.Compass;
@@ -24,6 +18,11 @@ import com.alibaba.metrics.server.MetricsOnDisk;
 import com.alibaba.metrics.server.MetricsSearchService;
 import com.alibaba.metrics.status.LogDescriptionManager;
 import com.alibaba.metrics.utils.Constants;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 public class ComplexDataTest {
 

@@ -1,14 +1,5 @@
 package com.alibaba.metrics.performance;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
-import org.junit.Test;
-
 import com.alibaba.metrics.MetricLevel;
 import com.alibaba.metrics.common.MetricObject;
 import com.alibaba.metrics.common.MetricObject.MetricType;
@@ -20,6 +11,14 @@ import com.alibaba.metrics.status.LogDescriptionManager;
 import com.alibaba.metrics.utils.Constants;
 import com.alibaba.metrics.utils.FigureUtil;
 import com.alibaba.metrics.utils.FileUtil;
+import org.junit.Test;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 public class ConcentratedPerformanceTest {
 

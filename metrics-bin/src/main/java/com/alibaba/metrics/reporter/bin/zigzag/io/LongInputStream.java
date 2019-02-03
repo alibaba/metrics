@@ -1,8 +1,5 @@
 package com.alibaba.metrics.reporter.bin.zigzag.io;
 
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-
 import com.alibaba.metrics.reporter.bin.zigzag.utils.Reader;
 
 public abstract class LongInputStream implements Reader<Long> {

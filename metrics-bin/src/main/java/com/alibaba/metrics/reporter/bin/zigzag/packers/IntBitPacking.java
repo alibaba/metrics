@@ -1,15 +1,76 @@
 package com.alibaba.metrics.reporter.bin.zigzag.packers;
 
-import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.*;
-import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.*;
-
-import java.nio.IntBuffer;
-import java.util.Arrays;
-
 import com.alibaba.metrics.reporter.bin.zigzag.IntCodec;
 import com.alibaba.metrics.reporter.bin.zigzag.filters.IntFilter;
 import com.alibaba.metrics.reporter.bin.zigzag.filters.ThroughIntFilter;
 import com.alibaba.metrics.reporter.bin.zigzag.io.IntOutputStream;
+
+import java.nio.IntBuffer;
+
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.pack1;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.pack10;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.pack11;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.pack12;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.pack13;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.pack14;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.pack15;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.pack16;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.pack17;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.pack18;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.pack19;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.pack2;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.pack20;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.pack21;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.pack22;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.pack23;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.pack24;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.pack25;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.pack26;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.pack27;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.pack28;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.pack29;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.pack3;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.pack30;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.pack31;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.pack32;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.pack4;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.pack5;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.pack6;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.pack7;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.pack8;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingPacks.pack9;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.unpack1;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.unpack10;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.unpack11;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.unpack12;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.unpack13;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.unpack14;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.unpack15;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.unpack16;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.unpack17;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.unpack18;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.unpack19;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.unpack2;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.unpack20;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.unpack21;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.unpack22;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.unpack23;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.unpack24;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.unpack25;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.unpack26;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.unpack27;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.unpack28;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.unpack29;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.unpack3;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.unpack30;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.unpack31;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.unpack32;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.unpack4;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.unpack5;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.unpack6;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.unpack7;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.unpack8;
+import static com.alibaba.metrics.reporter.bin.zigzag.utils.IntBitPackingUnpacks.unpack9;
 
 public class IntBitPacking extends IntCodec
 {
@@ -203,7 +264,7 @@ public class IntBitPacking extends IntCodec
 
     public void compress(
             IntBuffer src,
-            IntOutputStream dst, 
+            IntOutputStream dst,
             IntFilter filter)
     {
         while (src.remaining() >= this.blockLen * this.blockNum) {
@@ -214,7 +275,7 @@ public class IntBitPacking extends IntCodec
 
     public void compressChunk(
             IntBuffer src,
-            IntOutputStream dst, 
+            IntOutputStream dst,
             IntFilter filter)
     {
         src.mark();
