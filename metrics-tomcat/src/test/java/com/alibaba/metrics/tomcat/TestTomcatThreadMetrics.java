@@ -34,6 +34,7 @@ public class TestTomcatThreadMetrics {
         Assert.assertNotNull(registry.getGauges().get(MetricName.build("middleware.tomcat.thread.total_count")));
         Assert.assertNotNull(registry.getGauges().get(MetricName.build("middleware.tomcat.thread.min_pool_size")));
         Assert.assertNotNull(registry.getGauges().get(MetricName.build("middleware.tomcat.thread.max_pool_size")));
+        Assert.assertNotNull(registry.getGauges().get(MetricName.build("middleware.tomcat.thread.thread_pool_queue_size")));
     }
 
     private class TestServlet extends HttpServlet {

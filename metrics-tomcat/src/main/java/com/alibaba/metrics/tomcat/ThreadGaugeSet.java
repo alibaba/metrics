@@ -20,14 +20,15 @@ public class ThreadGaugeSet extends CachedMetricSet {
     private static final Logger logger = LoggerFactory.getLogger(ThreadGaugeSet.class);
 
     private enum ThreadMetrics {
-        BUSY_COUNT, TOTAL_COUNT, MIN_POOL_SIZE, MAX_POOL_SIZE
+        BUSY_COUNT, TOTAL_COUNT, MIN_POOL_SIZE, MAX_POOL_SIZE, THREAD_POOL_QUEUE_SIZE
     }
 
     private static final String[] metricNames = {
             "busy_count",
             "total_count",
             "min_pool_size",
-            "max_pool_size"
+            "max_pool_size",
+            "thread_pool_queue_size"
     };
 
     private int[] threadMetrics;
@@ -73,7 +74,12 @@ public class ThreadGaugeSet extends CachedMetricSet {
             } catch (Exception e) {
                 logger.error("Exception occur when getting connector global stats: ", e);
             }
-
+            try {
+                threadMetrics[ThreadMetrics.THREAD_POOL_QUEUE_SIZE.ordinal()] =
+                        (Integer)mbeanServer.getAttribute(connectorName, "threadPoolTaskQueueSize");
+            } catch (Exception e) {
+                logger.error("Exception occur when getting connector global stats: ", e);
+            }
         }
     }
 
