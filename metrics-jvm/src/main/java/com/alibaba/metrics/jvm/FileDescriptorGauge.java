@@ -1,6 +1,5 @@
 package com.alibaba.metrics.jvm;
 
-import java.lang.management.CompilationMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.lang.reflect.InvocationTargetException;
@@ -8,8 +7,6 @@ import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 
 import com.alibaba.metrics.CachedGauge;
-import com.alibaba.metrics.Gauge;
-import com.alibaba.metrics.RatioGauge.Ratio;
 
 /**
 * @author boshu
