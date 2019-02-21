@@ -22,6 +22,12 @@ public class ChannelFileBackendTest {
 		}
 	}
 
+	@Test
+	public void testClean() throws IOException {
+		ChannelFileBackend channelFileBackend = new ChannelFileBackend("src/test/resources/test", true);
+		channelFileBackend.close();
+	}
+
 	private void testBigBytesWrite() throws IOException{
 
 		int blockSize = 20000;

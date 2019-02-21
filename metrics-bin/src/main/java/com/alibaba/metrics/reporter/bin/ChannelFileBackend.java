@@ -13,14 +13,21 @@ import java.nio.channels.FileChannel;
 
 public class ChannelFileBackend extends RandomAccessFileBackend {
 
+    private final static Logger logger = LoggerFactory.getLogger(ChannelFileBackend.class);
+
     private final static int BUFFER_SIZE = 8192;
 
-    private final static Logger logger = LoggerFactory.getLogger(ChannelFileBackend.class);
-    private FileChannel channel = randomAccessFile.getChannel();
-    private ByteBuffer byteBuffer = ByteBuffer.allocateDirect(BUFFER_SIZE);
-
+    /**
+     * This method is only available since Java 9.
+     * We use sun.misc.Unsafe#invokeCleaner method to test if we are running on Java 9+ or not.
+     * The implementation is inspired by:
+     * https://github.com/apache/lucene-solr/blob/master/lucene/core/src/java/org/apache/lucene/store/MMapDirectory.java#L338-L396
+     */
     private static Method invokeCleaner;
 
+    /**
+     * This is the reference to sun.misc.Unsafe##getUnsafe() object
+     */
     private static Object theUnsafeObject;
 
     static {
@@ -30,12 +37,14 @@ public class ChannelFileBackend extends RandomAccessFileBackend {
             Field theUnsafe = unsafeClass.getDeclaredField("theUnsafe");
             theUnsafe.setAccessible(true);
             theUnsafeObject = theUnsafe.get(null);
-
-
         } catch (Throwable throwable) {
-
+            // ignore
         }
     }
+
+    private FileChannel channel = randomAccessFile.getChannel();
+    private ByteBuffer byteBuffer = ByteBuffer.allocateDirect(BUFFER_SIZE);
+
     public ChannelFileBackend(String path, boolean readOnly) throws IOException {
         super(path, readOnly);
     }
