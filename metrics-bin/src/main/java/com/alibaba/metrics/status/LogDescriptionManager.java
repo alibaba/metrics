@@ -37,8 +37,6 @@ public class LogDescriptionManager {
 
     private static final Logger logger = LoggerFactory.getLogger(LogDescriptionManager.class);
 
-    // private static LogDescriptionManager logDescriptionManager;
-
     private static String path;
 
     /** 保存datasource描述信息和索引信息的引用 */
