@@ -78,7 +78,7 @@ public class BucketCounterTest {
         int ROUND = 1;
         for (int r = 0; r < ROUND; r++) {
             System.out.println("Round: " + r);
-            BucketCounter bucketCounter = new BucketCounterImpl(1, 10, Clock.defaultClock());
+            BucketCounter bucketCounter = new BucketCounterImpl(1, 15, Clock.defaultClock());
             BizThread[] bizThreads = new BizThread[80];
             for (int i = 0; i < bizThreads.length; i++) {
                 bizThreads[i] = new BizThread(bucketCounter);
