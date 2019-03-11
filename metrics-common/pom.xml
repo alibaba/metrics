@@ -7,7 +7,7 @@
 
     <parent>
         <groupId>com.alibaba.middleware</groupId>
-        <artifactId>dubbo-metrics-all</artifactId>
+        <artifactId>metrics-all</artifactId>
         <version>${metrics.version}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>

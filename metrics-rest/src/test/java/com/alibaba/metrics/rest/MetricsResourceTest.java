@@ -66,7 +66,7 @@ public class MetricsResourceTest extends JerseyTest {
     @Test
     public void testListMetrics() {
         MetricManager.getIMetricManager().clear();
-        MetricManager.getCounter("dubbo", MetricName.build("middleware.dubbo.provider"));
+        MetricManager.getCounter("product", MetricName.build("middleware.product.provider"));
         MetricManager.getMeter("test", MetricName.build("shared.carts.my_cart").level(MetricLevel.CRITICAL)).mark();
         MetricManager.getMeter("test", MetricName.build("shared.carts.my_cart")
                 .level(MetricLevel.CRITICAL).tagged("source", "taobao")).mark();
@@ -81,7 +81,7 @@ public class MetricsResourceTest extends JerseyTest {
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Set<MetricObject>> data =
                 mapper.convertValue(result.get("data"), new TypeReference<Map<String, Set<MetricObject>>>(){});
-        Assert.assertTrue(data.get("dubbo").contains(MetricObject.named("middleware.dubbo.provider.count")
+        Assert.assertTrue(data.get("product").contains(MetricObject.named("middleware.product.provider.count")
                 .withType(MetricObject.MetricType.COUNTER).withLevel(MetricLevel.NORMAL).build()));
         Assert.assertEquals(".count/.m1/.m5/.m15/.bucket_count/qps * 2 = 12", 12, data.get("test").size());
         Assert.assertTrue("shared.carts.my_cart.m1 should be CRITICAL level",
@@ -96,15 +96,15 @@ public class MetricsResourceTest extends JerseyTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testGetMetrics() {
-        Counter c1 = MetricManager.getCounter("dubbo111", MetricName.build("middleware.dubbo.provider"));
+        Counter c1 = MetricManager.getCounter("product111", MetricName.build("middleware.product.provider"));
         c1.inc();
         Meter m1 = MetricManager.getMeter("carts111", MetricName.build("shared.carts.my_cart"));
         m1.mark();
         Meter m2 = MetricManager.getMeter("carts111", MetricName.build("shared.carts.my_cart").tagged("source", "taobao"));
         m2.mark(10);
 
-        Response dubboResponse = target("metrics/dubbo111").request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
-        Map<String, Object> res = dubboResponse.readEntity(Map.class);
+        Response productResponse = target("metrics/product111").request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
+        Map<String, Object> res = productResponse.readEntity(Map.class);
 
         Assert.assertEquals(true, res.get("success"));
         List objs = (List)res.get("data");
@@ -122,16 +122,16 @@ public class MetricsResourceTest extends JerseyTest {
     @Test
     @SuppressWarnings("unchecked")
     public void testGetSpecificMetric() {
-        Counter c1 = MetricManager.getCounter("dubbo", MetricName.build("middleware.dubbo.provider.qps"));
+        Counter c1 = MetricManager.getCounter("product", MetricName.build("middleware.product.provider.qps"));
         c1.inc();
         Meter m1 = MetricManager.getMeter("carts", MetricName.build("shared.carts.my_cart"));
         m1.mark();
         Meter m2 = MetricManager.getMeter("carts", MetricName.build("shared.carts.my_cart").tagged("source", "taobao"));
         m2.mark(10);
 
-        Response dubboResponse = target("metrics/specific").queryParam("metric", "shared.carts.my_cart.m1")
+        Response productResponse = target("metrics/specific").queryParam("metric", "shared.carts.my_cart.m1")
                 .request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
-        Map<String, Object> res = dubboResponse.readEntity(Map.class);
+        Map<String, Object> res = productResponse.readEntity(Map.class);
 
         Assert.assertEquals(true, res.get("success"));
         List<LinkedHashMap<String, Object>> objs = (List<LinkedHashMap<String, Object>>)res.get("data");
@@ -214,11 +214,11 @@ public class MetricsResourceTest extends JerseyTest {
 
     @Test
     public void testCounterBucketCount() {
-        Counter c1 = MetricManager.getCounter("dubbo",
-                MetricName.build("aaa.dubbo.provider").level(MetricLevel.NORMAL));
+        Counter c1 = MetricManager.getCounter("product",
+                MetricName.build("aaa.product.provider").level(MetricLevel.NORMAL));
         c1.inc(10);
         System.out.println("phase 1: " + System.currentTimeMillis());
-        assertResponse("aaa.dubbo.provider.count", 10L);
+        assertResponse("aaa.product.provider.count", 10L);
         System.out.println("phase 2: " + System.currentTimeMillis());
         try {
             Thread.sleep(SLEEP_TIME);
@@ -226,14 +226,14 @@ public class MetricsResourceTest extends JerseyTest {
             e.printStackTrace();
         }
         System.out.println("phase 3: " + System.currentTimeMillis());
-        assertResponse("aaa.dubbo.provider.bucket_count", 10L);
+        assertResponse("aaa.product.provider.bucket_count", 10L);
         System.out.println("phase 4: " + System.currentTimeMillis());
     }
 
     @Test
     public void testCompassBucketCount() {
-        Compass c1 = MetricManager.getCompass("dubbo",
-                MetricName.build("bbb.dubbo.provider").level(MetricLevel.NORMAL), ReservoirType.BUCKET);
+        Compass c1 = MetricManager.getCompass("product",
+                MetricName.build("bbb.product.provider").level(MetricLevel.NORMAL), ReservoirType.BUCKET);
         Compass.Context context = c1.time();
         context.success();
         context.markAddon("hit");
@@ -246,18 +246,18 @@ public class MetricsResourceTest extends JerseyTest {
             e.printStackTrace();
         }
         System.out.println("phase 2: " + System.currentTimeMillis());
-        assertResponse("bbb.dubbo.provider.bucket_count", 1L);
-        assertResponse("bbb.dubbo.provider.success_bucket_count", 1L);
-        assertResponse("bbb.dubbo.provider.hit_bucket_count", 1L);
-        assertResponse("bbb.dubbo.provider.error_bucket_count", 1L);
-        assertResponse("bbb.dubbo.provider.hit_rate", 1.0d);
+        assertResponse("bbb.product.provider.bucket_count", 1L);
+        assertResponse("bbb.product.provider.success_bucket_count", 1L);
+        assertResponse("bbb.product.provider.hit_bucket_count", 1L);
+        assertResponse("bbb.product.provider.error_bucket_count", 1L);
+        assertResponse("bbb.product.provider.hit_rate", 1.0d);
         System.out.println("phase 3: " + System.currentTimeMillis());
     }
 
     @Test
     public void testCompatibility() {
-        Compass c1 = MetricManager.getCompass("dubbo",
-                MetricName.build("ccc.dubbo.provider").level(MetricLevel.NORMAL), ReservoirType.BUCKET);
+        Compass c1 = MetricManager.getCompass("product",
+                MetricName.build("ccc.product.provider").level(MetricLevel.NORMAL), ReservoirType.BUCKET);
         Compass.Context context = c1.time();
         context.success();
         context.stop();
@@ -270,15 +270,15 @@ public class MetricsResourceTest extends JerseyTest {
         }
 
         System.out.println("phase 2: " + System.currentTimeMillis());
-        assertResponse("ccc.dubbo.provider.qps", 0.06667d);
+        assertResponse("ccc.product.provider.qps", 0.06667d);
         System.out.println("phase 3: " + System.currentTimeMillis());
-        assertResponse("ccc.dubbo.provider.success_rate", 1.0d);
+        assertResponse("ccc.product.provider.success_rate", 1.0d);
         System.out.println("phase 4: " + System.currentTimeMillis());
     }
 
     @Test
     public void testFastCompass() {
-        FastCompass c1 = MetricManager.getFastCompass("dubbo", MetricName.build("eee.dubbo.provider").level(MetricLevel.NORMAL));
+        FastCompass c1 = MetricManager.getFastCompass("product", MetricName.build("eee.product.provider").level(MetricLevel.NORMAL));
         c1.record(10, "success");
         c1.record(20, "fail");
 
@@ -290,11 +290,11 @@ public class MetricsResourceTest extends JerseyTest {
         }
 
         System.out.println("phase 2: " + System.currentTimeMillis());
-        assertResponse("eee.dubbo.provider.qps", 0.133333d);
+        assertResponse("eee.product.provider.qps", 0.133333d);
         System.out.println("phase 3: " + System.currentTimeMillis());
-        assertResponse("eee.dubbo.provider.success_rate", 0.5d);
-        assertResponse("eee.dubbo.provider.rt", 15.0d);
-        assertResponse("eee.dubbo.provider.bucket_count", 2L);
+        assertResponse("eee.product.provider.success_rate", 0.5d);
+        assertResponse("eee.product.provider.rt", 15.0d);
+        assertResponse("eee.product.provider.bucket_count", 2L);
         System.out.println("phase 4: " + System.currentTimeMillis());
     }
 
@@ -349,10 +349,10 @@ public class MetricsResourceTest extends JerseyTest {
 
     @SuppressWarnings("unchecked")
     private void assertResponse(String metric, Object value) {
-        Response dubboResponse = target("metrics/specific")
+        Response productResponse = target("metrics/specific")
                 .queryParam("metric", metric)
                 .request().accept(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
-        Map<String, Object> res = dubboResponse.readEntity(Map.class);
+        Map<String, Object> res = productResponse.readEntity(Map.class);
 
         Assert.assertEquals(true, res.get("success"));
         List<LinkedHashMap<String, Object>> objs = (List<LinkedHashMap<String, Object>>)res.get("data");

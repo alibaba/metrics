@@ -18,11 +18,11 @@ import java.util.Map;
 public class EnableFastCompassTest {
 
     @Autowired
-    private MetricsAnnotationTestService dubboMetricsTestService;
+    private MetricsAnnotationTestService metricsTestService;
 
     @Test
     public void test() {
-        this.dubboMetricsTestService.testFastCompass1();
+        this.metricsTestService.testFastCompass1();
 
         FastCompass fastCompass = MetricManager.getFastCompass("test",
             MetricName.build("ascp.upcp-scitem.metrics-annotation.fastCompass.test1")
@@ -36,8 +36,8 @@ public class EnableFastCompassTest {
         TestCase.assertNull(exception);
 
         try {
-            this.dubboMetricsTestService.testFastCompass1();
-            this.dubboMetricsTestService.testFastCompass2();
+            this.metricsTestService.testFastCompass1();
+            this.metricsTestService.testFastCompass2();
             TestCase.fail();
         } catch (Exception e) {
             //ignore

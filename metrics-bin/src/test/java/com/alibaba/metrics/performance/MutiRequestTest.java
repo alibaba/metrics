@@ -66,7 +66,7 @@ public class MutiRequestTest {
 //                long startTime = System.currentTimeMillis() - 40000;
 //                long endTime = System.currentTimeMillis() - 20000;
 
-                String postBody = "{\"zeroIgnore\":\"false\", \"startTime\":" + startTime + ", \"endTime\":" + endTime + ",\"limit\":0,\"precision\":60,\"queries\":[{\"key\":\"middleware.metrics.rest.url.m1\"},{\"key\":\"middleware.metrics.rest.url.m5\"},{\"key\":\"DUBBO_PROVIDER_SERVICE.max\"}]}";
+                String postBody = "{\"zeroIgnore\":\"false\", \"startTime\":" + startTime + ", \"endTime\":" + endTime + ",\"limit\":0,\"precision\":60,\"queries\":[{\"key\":\"middleware.metrics.rest.url.m1\"},{\"key\":\"middleware.metrics.rest.url.m5\"},{\"key\":\"PRODUCT_PROVIDER_SERVICE.max\"}]}";
                 HttpRespons hr = request.sendPost("http://localhost:8006/metrics/search", postBody);
                 //HttpRespons hr = request.sendPost("http://11.239.164.32:8006/metrics/search", postBody);
                 //HttpRespons hr = request.sendPost("http://localhost:8006/metrics/search", postBody);

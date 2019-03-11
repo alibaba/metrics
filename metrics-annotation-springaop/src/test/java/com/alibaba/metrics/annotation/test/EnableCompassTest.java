@@ -16,11 +16,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class EnableCompassTest {
 
     @Autowired
-    private MetricsAnnotationTestService dubboMetricsTestService;
+    private MetricsAnnotationTestService metricsTestService;
 
     @Test
     public void test() {
-        this.dubboMetricsTestService.testCompass1();
+        this.metricsTestService.testCompass1();
 
         Compass compass = MetricManager.getCompass("test",
             MetricName.build("ascp.upcp-scitem.metrics-annotation.compass.test1")
@@ -32,8 +32,8 @@ public class EnableCompassTest {
         TestCase.assertEquals(1, count);
 
         try {
-            this.dubboMetricsTestService.testCompass1();
-            this.dubboMetricsTestService.testCompass2();
+            this.metricsTestService.testCompass1();
+            this.metricsTestService.testCompass2();
             TestCase.fail();
         } catch (Exception e) {
             //ignore

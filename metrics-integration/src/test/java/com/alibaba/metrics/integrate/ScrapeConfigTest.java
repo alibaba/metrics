@@ -18,7 +18,7 @@ public class ScrapeConfigTest {
     public void testReadConfig() {
         JSONReader reader = null;
         try {
-            reader = new JSONReader(new FileReader("src/test/resources/.ali_metrics_scrape_config"));
+            reader = new JSONReader(new FileReader("src/test/resources/.metrics_scrape_config"));
             reader.startArray();
             List<ScrapeConfig> configs = new ArrayList<ScrapeConfig>();
             while(reader.hasNext()) {
@@ -40,7 +40,7 @@ public class ScrapeConfigTest {
         JSONReader reader = null;
         try {
             // read in existing config
-            reader = new JSONReader(new FileReader("src/test/resources/.ali_metrics_scrape_config"));
+            reader = new JSONReader(new FileReader("src/test/resources/.metrics_scrape_config"));
             reader.startArray();
             List<ScrapeConfig> configs = new ArrayList<ScrapeConfig>();
             while(reader.hasNext()) {

@@ -16,32 +16,32 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class EnableCounterTest {
 
     @Autowired
-    private MetricsAnnotationTestService dubboMetricsTestService;
+    private MetricsAnnotationTestService metricsTestService;
 
     @Test
     public void test1() {
-        this.dubboMetricsTestService.testCounter1();
+        this.metricsTestService.testCounter1();
 
         Counter counter = MetricManager.getCounter("test",
             MetricName.build("ascp.upcp-scitem.metrics-annotation.counter.test1")
                 .tagged("from", "pc", "type", "dingtalk"));
         TestCase.assertEquals(1, counter.getCount());
 
-        this.dubboMetricsTestService.testCounter1();
-        this.dubboMetricsTestService.testCounter1();
+        this.metricsTestService.testCounter1();
+        this.metricsTestService.testCounter1();
         TestCase.assertEquals(3, counter.getCount());
     }
 
     @Test
     public void test2() {
-        this.dubboMetricsTestService.testCounter2();
+        this.metricsTestService.testCounter2();
 
         Counter counter = MetricManager.getCounter("test",
             MetricName.build("ascp.upcp-scitem.metrics-annotation.counter.test2"));
         TestCase.assertEquals(-3, counter.getCount());
 
-        this.dubboMetricsTestService.testCounter2();
-        this.dubboMetricsTestService.testCounter2();
+        this.metricsTestService.testCounter2();
+        this.metricsTestService.testCounter2();
         TestCase.assertEquals(-9, counter.getCount());
     }
 }

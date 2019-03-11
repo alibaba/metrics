@@ -15,24 +15,24 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(classes = {MetricsAnnotationInterceptor.class, TestConfig.class})
 public class EnableHistogramTest {
     @Autowired
-    private MetricsAnnotationTestService dubboMetricsTestService;
+    private MetricsAnnotationTestService metricsTestService;
 
     @Test
     public void test1() {
-        this.dubboMetricsTestService.testHistogram1();
+        this.metricsTestService.testHistogram1();
 
         Histogram histogram = MetricManager.getHistogram("test",
             MetricName.build("ascp.upcp-scitem.metrics-annotation.histogram.test1")
                 .tagged("purpose", "test"));
         TestCase.assertEquals(1, histogram.getCount());
 
-        this.dubboMetricsTestService.testHistogram2();
+        this.metricsTestService.testHistogram2();
 
-        this.dubboMetricsTestService.testHistogram3();
+        this.metricsTestService.testHistogram3();
 
-        this.dubboMetricsTestService.testHistogram4();
+        this.metricsTestService.testHistogram4();
 
-        this.dubboMetricsTestService.testHistogram5();
+        this.metricsTestService.testHistogram5();
 
         TestCase.assertEquals(5, histogram.getCount());
     }

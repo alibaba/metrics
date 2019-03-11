@@ -33,23 +33,23 @@ public @interface EnableTimer {
     String group();
 
     /**
-     * MetricName中的key，请参考Dubbo-Metrics的命名规范进行命名
+     * MetricName中的key，请参考Metrics的命名规范进行命名
      *
      * @return
      */
     String key();
 
     /**
-     * MetricName中的tag，请参考Dubbo-Metrics的命名规范进行命名
+     * MetricName中的tag，请参考Metrics的命名规范进行命名
      *
-     * 注意：以该注解方式使用Metrics，只能使用静态tag，无法实现根据参数或者返回值进行区别的动态参数，请直接使用Dubbo-Metrics的API实现
+     * 注意：以该注解方式使用Metrics，只能使用静态tag，无法实现根据参数或者返回值进行区别的动态参数，请直接使用Metrics的API实现
      *
      * @return
      */
     String tags() default "";
 
     /**
-     * Metric的等级,默认为{@link MetricLevel#NORMAL},请参考Dubbo-Metrics的命名规范
+     * Metric的等级,默认为{@link MetricLevel#NORMAL},请参考Metrics的命名规范
      *
      * @return
      */

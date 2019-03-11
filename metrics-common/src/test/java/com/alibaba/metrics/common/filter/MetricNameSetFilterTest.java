@@ -17,7 +17,7 @@ public class MetricNameSetFilterTest {
     public void testAccurateMatch() {
 
         Set<String> names = new HashSet<String>();
-        names.add("middleware.dubbo.provider.qps");
+        names.add("middleware.product.provider.qps");
         names.add("shared.carts.my_cart.m1");
         names.add("shared.carts.my_cart1.stddev");
         names.add("shared.carts.my_cart2.error.count");
@@ -42,7 +42,7 @@ public class MetricNameSetFilterTest {
     public void testMetricNameKeyMatch() {
 
         Set<String> names = new HashSet<String>();
-        names.add("middleware.dubbo.provider.qps");
+        names.add("middleware.product.provider.qps");
         names.add("shared.carts.my_cart");
         names.add("shared.carts.my_cart1");
         names.add("shared.carts.my_cart2");

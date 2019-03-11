@@ -20,26 +20,26 @@ public class LogDescriptionRegisterTest {
 	@Test
 	public void logStatusManagerTest(){
 
-		final DataSource dataSource1 = new DataSource("middleware.dubbo.consumer.rt", new HashMap<String, String>(){{
+		final DataSource dataSource1 = new DataSource("middleware.product.consumer.rt", new HashMap<String, String>(){{
 			put("appName","bcp");
 		}}, null, 0, MetricLevel.CRITICAL, 0, 0, 0, 1, 0, "FastCompass");
 
-		final DataSource dataSource2 = new DataSource("middleware.dubbo.consumer.rt", new HashMap<String, String>(){{
+		final DataSource dataSource2 = new DataSource("middleware.product.consumer.rt", new HashMap<String, String>(){{
 			put("appName","bcp");
 			put("serviceName", "recv~65h");
 		}}, null, 0, MetricLevel.CRITICAL, 0, 0, 0, 2, 0, "FastCompass");
 
-		final DataSource dataSource3 = new DataSource("middleware.dubbo.consumer.rt", new HashMap<String, String>(){{
+		final DataSource dataSource3 = new DataSource("middleware.product.consumer.rt", new HashMap<String, String>(){{
 			put("appName","bcp");
 			put("serviceName", "send~65h");
 		}}, null, 0, MetricLevel.CRITICAL, 0, 0, 0, 3, 0, "FastCompass");
 
-		final DataSource dataSource4 = new DataSource("middleware.dubbo.consumer.rt", new HashMap<String, String>(){{
+		final DataSource dataSource4 = new DataSource("middleware.product.consumer.rt", new HashMap<String, String>(){{
 			put("appName","bcp");
 			put("serviceName", "send~63h");
 		}}, null, 0, MetricLevel.CRITICAL, 0, 0, 0, 4, 0, "FastCompass");
 
-		final DataSource dataSource5 = new DataSource("middleware.dubbo.consumer.qps", new HashMap<String, String>(){{
+		final DataSource dataSource5 = new DataSource("middleware.product.consumer.qps", new HashMap<String, String>(){{
 			put("appName","bcp");
 			put("serviceName", "send~65h");
 		}}, null, 0, MetricLevel.CRITICAL, 0, 0, 0, 5, 0, "FastCompass");
@@ -55,7 +55,7 @@ public class LogDescriptionRegisterTest {
 		logDescriptionRegister.addDataSources(dataSources);
 
 
-		final MetricSearch metricSearch1 = new MetricSearch("middleware.dubbo.consumer.rt", new HashMap<String, String>(){{
+		final MetricSearch metricSearch1 = new MetricSearch("middleware.product.consumer.rt", new HashMap<String, String>(){{
 			put("serviceName", "*");
 		}});
 
@@ -69,7 +69,7 @@ public class LogDescriptionRegisterTest {
 			assert (datasource.getOrder() == 3 || datasource.getOrder() == 2 || datasource.getOrder() == 4);
 		}
 
-		final MetricSearch metricSearch2 = new MetricSearch("middleware.dubbo.consumer.rt", new HashMap<String, String>(){{
+		final MetricSearch metricSearch2 = new MetricSearch("middleware.product.consumer.rt", new HashMap<String, String>(){{
 			put("serviceName", null);
 		}});
 

@@ -58,27 +58,27 @@ public class ComplexDataTest {
 		service.build(cache, diskServer, logDescriptionManager);
 
 		new MetricsHttpServer().start();
-		Compass dubboClientSuccess = MetricManager.getCompass("DUBBO_GROUP",
-				new MetricName("DUBBO_PROVIDER", null, MetricLevel.CRITICAL));
+		Compass productClientSuccess = MetricManager.getCompass("PRODUCT_GROUP",
+				new MetricName("PRODUCT_PROVIDER", null, MetricLevel.CRITICAL));
 
-		dubboClientSuccess.time().success();
-		dubboClientSuccess.update(5, TimeUnit.MILLISECONDS);
+		productClientSuccess.time().success();
+		productClientSuccess.update(5, TimeUnit.MILLISECONDS);
 
-		Compass dubboClientSuccessService = MetricManager.getCompass("DUBBO_GROUP",
-				new MetricName("DUBBO_PROVIDER_SERVICE", new HashMap<String, String>() {
+		Compass productClientSuccessService = MetricManager.getCompass("PRODUCT_GROUP",
+				new MetricName("PRODUCT_PROVIDER_SERVICE", new HashMap<String, String>() {
 					{
 						put("service", "success_server_1");
 					}
 				}, MetricLevel.NORMAL));
 
-		dubboClientSuccessService.time().success();
-		dubboClientSuccessService.update(5, TimeUnit.MILLISECONDS);
+		productClientSuccessService.time().success();
+		productClientSuccessService.update(5, TimeUnit.MILLISECONDS);
 
 		while (true) {
 			try {
 				Thread.sleep(1000);
-				dubboClientSuccess.time().success();
-				dubboClientSuccess.update(5, TimeUnit.MILLISECONDS);
+				productClientSuccess.time().success();
+				productClientSuccess.update(5, TimeUnit.MILLISECONDS);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

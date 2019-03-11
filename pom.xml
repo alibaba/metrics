@@ -32,8 +32,8 @@
     </properties>
 
     <groupId>com.alibaba.middleware</groupId>
-    <artifactId>dubbo-metrics-all</artifactId>
-    <name>dubbo-metrics-all</name>
+    <artifactId>metrics-all</artifactId>
+    <name>metrics-all</name>
     <version>${metrics.version}</version>
     <description>The metrics library for Alibaba Group</description>
     <packaging>pom</packaging>
@@ -47,7 +47,7 @@
         <module>metrics-os</module>
         <module>metrics-nginx</module>
         <module>metrics-tomcat</module>
-        <module>metrics-integrate</module>
+        <module>metrics-integration</module>
         <module>metrics-reporter</module>
         <module>metrics-rest</module>
         <module>metrics-benchmark</module>

@@ -1,10 +1,10 @@
-# Dubbo Metrics简介
+# Metrics简介
 
-[![Build Status](https://travis-ci.org/dubbo/dubbo-metrics.svg?branch=master)](https://travis-ci.org/dubbo/dubbo-metrics)
-[![codecov](https://codecov.io/gh/dubbo/dubbo-metrics/branch/master/graph/badge.svg)](https://codecov.io/gh/dubbo/dubbo-metrics)
-![license](https://img.shields.io/github/license/dubbo/dubbo-metrics.svg)
+[![Build Status](https://travis-ci.org/dubbo/metrics.svg?branch=master)](https://travis-ci.org/dubbo/metrics)
+[![codecov](https://codecov.io/gh/dubbo/metrics/branch/master/graph/badge.svg)](https://codecov.io/gh/dubbo/metrics)
+![license](https://img.shields.io/github/license/dubbo/metrics.svg)
 
-Dubbo Metrics是一套标准度量库， 用于提供对从操作系统， 虚拟机， 容器，到应用的全方位, 多维度, 实时, 准确的度量服务。
+Metrics是一套标准度量库， 用于提供对从操作系统， 虚拟机， 容器，到应用的全方位, 多维度, 实时, 准确的度量服务。
 
 ## Metrics命名规范
 
@@ -39,8 +39,8 @@ tag的存在使得时间序列数据库中的数据聚合变得非常灵活。�
 
 | key | tag |
 |------|--------|
-| department.dubbo.consumer.qps     |        |
-| department.dubbo.consumer.service.qps     |  service=org.apache.xxxServer      |
+| department.product.consumer.qps     |        |
+| department.product.consumer.service.qps     |  service=org.apache.xxxServer      |
 
 
 ### Metric的等级
@@ -84,15 +84,15 @@ Metric等级的一个重要用途是控制落盘的频率， 默认情况下频�
 
 不管是内存态的实时数据，还是持久化的数据，都应该通过统一的格式来展示。
 
-这里，dubbo-metrics选用了`JSON`作为其结构化数据的格式，一条持久化后的metrics数据展示如下：
+这里，metrics选用了`JSON`作为其结构化数据的格式，一条持久化后的metrics数据展示如下：
 
 ```
-{"metric":"department.dubbo.read.count","metricType":"COUNTER","tags":{"appName":"sample"},"timestamp":1470298287916,"value":1167126}
+{"metric":"department.product.read.count","metricType":"COUNTER","tags":{"appName":"sample"},"timestamp":1470298287916,"value":1167126}
 ```
 
-### dubbo-metrics Java SDK
+### metrics Java SDK
 
-基于上述的度量场景，dubbo-metrics提供了Java层面的SDK，包含了以下4种基础度量场景
+基于上述的度量场景，metrics提供了Java层面的SDK，包含了以下4种基础度量场景
 
 * Counter： 用于对累加型数据进行度量
 * Gauge：用于对瞬态型数据进行度量
@@ -106,7 +106,7 @@ Metric等级的一个重要用途是控制落盘的频率， 默认情况下频�
 
 ### 使用方法和Demo
 
-具体的使用方法，[metrics-demo](https://github.com/dubbo/dubbo-metrics/wiki/demo)
+具体的使用方法，[metrics-demo](https://github.com/dubbo/metrics/wiki/demo)
 
 
 

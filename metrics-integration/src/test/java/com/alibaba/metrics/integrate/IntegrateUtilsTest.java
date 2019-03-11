@@ -88,7 +88,7 @@ public class IntegrateUtilsTest {
 
     @Test
     public void testGenerateScrapeConfig() throws Exception {
-        String tmpFile = "/tmp/.ali_metrics_scrape_config";
+        String tmpFile = "/tmp/.metrics_scrape_config";
         System.setProperty("com.alibaba.metrics.http.port", "8006");
         Assert.assertTrue(MetricsIntegrateUtils.generateScrapeConfigFile(tmpFile));
         BufferedReader br = new BufferedReader(new FileReader(tmpFile));

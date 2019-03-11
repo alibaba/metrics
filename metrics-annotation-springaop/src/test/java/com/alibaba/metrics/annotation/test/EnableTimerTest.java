@@ -16,19 +16,19 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class EnableTimerTest {
 
     @Autowired
-    private MetricsAnnotationTestService dubboMetricsTestService;
+    private MetricsAnnotationTestService metricsTestService;
 
     @Test
     public void test() {
-        this.dubboMetricsTestService.testTimer1();
+        this.metricsTestService.testTimer1();
 
         Timer timer = MetricManager.getTimer("test",
             MetricName.build("ascp.upcp-scitem.metrics-annotation.timer.test1")
                 .tagged("purpose", "test"));
         TestCase.assertEquals(1, timer.getCount());
 
-        this.dubboMetricsTestService.testTimer1();
-        this.dubboMetricsTestService.testTimer1();
+        this.metricsTestService.testTimer1();
+        this.metricsTestService.testTimer1();
 
         TestCase.assertEquals(3, timer.getCount());
     }

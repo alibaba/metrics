@@ -78,7 +78,7 @@ public class HttpServerFactory {
         // TODO need to investigate the behavior when the queue if full, should we catch the exception?
         ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(corePoolSize, maxPoolSize, keepAliveTime,
                 TimeUnit.MILLISECONDS, new LinkedBlockingDeque<Runnable>(maxQueueSize),
-                new NamedThreadFactory("dubbo-metrics-pool"));
+                new NamedThreadFactory("metrics-pool"));
         server.setExecutor(threadPoolExecutor);
         server.createContext(path, handler);
 

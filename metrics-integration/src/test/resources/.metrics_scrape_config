@@ -1,0 +1,56 @@
+[
+  {
+    "port": 8006,
+    "url": "http://127.0.0.1:8006/search",
+    "queries": [
+        {
+            "key": "middleware.product.provider.bucket_count",
+        },
+        {
+            "key": "middleware.product.provider.bucket_sum",
+        },
+        {
+            "key": "middleware.product.provider.success_bucket_count",
+        },
+        {
+            "key": "middleware.product.consumer.bucket_count",
+        },
+        {
+            "key": "middleware.product.consumer.bucket_sum",
+        },
+        {
+            "key": "middleware.product.consumer.success_bucket_count",
+            "tags": {
+                "tag1": "value1"
+            }
+        },
+    ]
+  },
+  {
+      "port": 8007,
+      "url": "http://127.0.0.1:8007/search",
+      "queries": [
+          {
+              "key": "middleware.product.provider.bucket_count",
+          },
+          {
+              "key": "middleware.product.provider.bucket_sum",
+          },
+          {
+              "key": "middleware.product.provider.success_bucket_count",
+          },
+          {
+              "key": "middleware.product.consumer.bucket_count",
+          },
+          {
+              "key": "middleware.product.consumer.bucket_sum",
+          },
+          {
+              "key": "middleware.product.consumer.success_bucket_count",
+              "tags": {
+                  "tag1": "value1"
+              }
+          },
+      ]
+    }
+]
