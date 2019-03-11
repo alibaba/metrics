@@ -36,6 +36,7 @@
     <name>metrics-all</name>
     <version>${metrics.version}</version>
     <description>The metrics library for Alibaba Group</description>
+    <url>https://github.com/dubbo/metrics</url>
     <packaging>pom</packaging>
 
     <modules>
@@ -380,36 +381,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.1.2</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>flatten-maven-plugin</artifactId>
-                <version>1.0.0</version>
-                <configuration>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>flatten</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>flatten</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.3</version>
@@ -430,5 +401,21 @@
             </plugin>
         </plugins>
     </build>
+
+    <scm>
+        <url>https://github.com/dubbo/metrics</url>
+        <connection>scm:git:https://github.com/dubbo/metrics.git</connection>
+        <developerConnection>scm:git:https://github.com/dubbo/metrics.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>dubbo.io</id>
+            <name>The Dubbo Project Contributors</name>
+            <email>dev-subscribe@dubbo.apache.org</email>
+            <url>http://dubbo.apache.org/</url>
+        </developer>
+    </developers>
 
 </project>
