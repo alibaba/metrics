@@ -58,4 +58,4 @@ hello.inc();
 
 具体各个度量器的使用方式可以参考[这里](https://github.com/dubbo/metrics/wiki/quick-start)
 
-默认收集的指标，以及使用http接口进行查看，可以参考[metrics-demo](
+默认收集的指标，以及使用http接口进行查看，可以参考[metrics-demo](https://github.com/dubbo/metrics/wiki/demo)
