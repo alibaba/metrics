@@ -99,7 +99,7 @@ public class MetricNameSetFilter implements MetricFilter {
         fastCompassSuffixSet.add(".rt");
         fastCompassSuffixSet.add(".success_rate");
         fastCompassSuffixSet.add(".bucket_count");
-        fastCompassSuffixSet.add(".category_bucket_count");
+        fastCompassSuffixSet.add(".bucket_sum");
 
         clusterHistogramSuffixSet.add(".cluster_percentile");
     }
@@ -119,24 +119,24 @@ public class MetricNameSetFilter implements MetricFilter {
         for (String nameToMatch: metricNames) {
             boolean success;
             if (metric instanceof Counter) {
-                success = matchInternal(nameToMatch, name, counterSuffixSet);
+                success = matchInternal(nameToMatch, name, counterSuffixSet, false);
             } else if (metric instanceof Meter) {
-                success = matchInternal(nameToMatch, name, meterSuffixSet);
+                success = matchInternal(nameToMatch, name, meterSuffixSet, false);
             } else if (metric instanceof Histogram) {
-                success = matchInternal(nameToMatch, name, histogramSuffixSet);
+                success = matchInternal(nameToMatch, name, histogramSuffixSet, false);
             } else if (metric instanceof Timer) {
-                success = matchInternal(nameToMatch, name, timerSuffixSet);
+                success = matchInternal(nameToMatch, name, timerSuffixSet, false);
             } else if (metric instanceof Compass) {
-                success = matchInternal(nameToMatch, name, compassSuffixSet);
+                success = matchInternal(nameToMatch, name, compassSuffixSet, true);
                 if (!success) {
                     success = matchCompassAddon(nameToMatch, name, (Compass)metric);
                 }
             } else if (metric instanceof Gauge) {
-                success = matchInternal(nameToMatch, name, gaugeSuffixSet);
+                success = matchInternal(nameToMatch, name, gaugeSuffixSet, false);
             } else if (metric instanceof FastCompass) {
-                success = matchInternal(nameToMatch, name, fastCompassSuffixSet);
+                success = matchInternal(nameToMatch, name, fastCompassSuffixSet, true);
             } else if (metric instanceof ClusterHistogram) {
-                success = matchInternal(nameToMatch, name, clusterHistogramSuffixSet);
+                success = matchInternal(nameToMatch, name, clusterHistogramSuffixSet, false);
             } else if (metric == null) {
                 /**
                  * Should only come from {@link com.alibaba.metrics.common.MetricsCollector#addMetric(MetricObject)}
@@ -160,7 +160,7 @@ public class MetricNameSetFilter implements MetricFilter {
         return false;
     }
 
-    private boolean matchInternal(String nameToMatch, MetricName name, Set<String> suffixSet) {
+    private boolean matchInternal(String nameToMatch, MetricName name, Set<String> suffixSet, boolean matchDynamic) {
         if (nameToMatch == null) {
             return false;
         }
@@ -178,6 +178,10 @@ public class MetricNameSetFilter implements MetricFilter {
             if (nameWithSuffix.equals(nameToMatch)) {
                 return true;
             }
+        }
+
+        if (matchDynamic && nameToMatch.endsWith("bucket_count")) {
+            return true;
         }
 
         return false;

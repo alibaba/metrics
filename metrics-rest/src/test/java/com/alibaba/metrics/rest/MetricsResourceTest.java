@@ -348,6 +348,20 @@ public class MetricsResourceTest extends JerseyTest {
     }
 
     @SuppressWarnings("unchecked")
+    @Test
+    public void testFastCompassCustomizedMetric() {
+        FastCompass c1 = MetricManager.getFastCompass("zzz", MetricName.build("test.abc.fc"));
+        c1.record(10, "pushSuccess");
+        c1.record(20, "fail");
+        MetricsResource resource = new MetricsResource();
+        Set<String> metrics = new HashSet<String>();
+        metrics.add("test.abc.fc.pushSuccess_bucket_count");
+        Response response = resource.getMetric(metrics, false);
+        Object dataList = ((Map<String, Object>)response.getEntity()).get("data");
+        Assert.assertEquals(1, ((List<Object>)dataList).size());
+    }
+
+    @SuppressWarnings("unchecked")
     private void assertResponse(String metric, Object value) {
         Response productResponse = target("metrics/specific")
                 .queryParam("metric", metric)
