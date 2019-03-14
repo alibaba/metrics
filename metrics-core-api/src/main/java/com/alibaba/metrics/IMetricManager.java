@@ -177,6 +177,8 @@ public interface IMetricManager {
     SortedMap<MetricName, Compass> getCompasses(String group, MetricFilter filter);
 
     SortedMap<MetricName, FastCompass> getFastCompasses(String group, MetricFilter filter);
+    
+    SortedMap<MetricName, ClusterHistogram> getClusterHistogram(String group, MetricFilter filter);
     /**
      * A map of metric names to metrics.
      *

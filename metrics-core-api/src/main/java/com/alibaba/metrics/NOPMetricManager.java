@@ -908,6 +908,7 @@ public class NOPMetricManager implements IMetricManager {
         Map<MetricName, Timer> timers = Collections.emptyMap();
         Map<MetricName, Compass> compasses = Collections.emptyMap();
         Map<MetricName, FastCompass> fastCompasses = Collections.emptyMap();
+        Map<MetricName, ClusterHistogram> clusterHistogrames = Collections.emptyMap();
 
         result.put(Gauge.class, gauges);
         result.put(Counter.class, counters);
@@ -916,6 +917,7 @@ public class NOPMetricManager implements IMetricManager {
         result.put(Timer.class, timers);
         result.put(Compass.class, compasses);
         result.put(FastCompass.class, fastCompasses);
+        result.put(ClusterHistogram.class, clusterHistogrames);
 
         return result;
     }
@@ -927,6 +929,11 @@ public class NOPMetricManager implements IMetricManager {
 
     @Override
     public Map<Class<? extends Metric>, Map<MetricName, ? extends Metric>> getAllCategoryMetrics(MetricFilter filter) {
+        return emptyMap;
+    }
+
+    @Override
+    public SortedMap<MetricName, ClusterHistogram> getClusterHistogram(String group, MetricFilter filter) {
         return emptyMap;
     }
 

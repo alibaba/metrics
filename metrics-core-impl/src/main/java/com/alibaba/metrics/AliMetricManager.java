@@ -262,6 +262,19 @@ public class AliMetricManager implements IMetricManager {
     }
 
     @Override
+    public SortedMap<MetricName, ClusterHistogram> getClusterHistogram(String group, MetricFilter filter) {
+        if (!this.enabled) {
+            return emptySortedMap;
+        }
+
+        MetricRegistry metricRegistry = this.getMetricRegistryByGroup(group);
+        if (metricRegistry == null) {
+            return emptySortedMap;
+        }
+        return metricRegistry.getClusterHistograms(filter);
+    }
+
+    @Override
     public void register(String group, MetricName name, Metric metric) {
         if (!this.enabled) {
             return;
@@ -317,6 +330,7 @@ public class AliMetricManager implements IMetricManager {
         Map<MetricName, Timer> timers = new HashMap<MetricName, Timer>();
         Map<MetricName, Compass> compasses = new HashMap<MetricName, Compass>();
         Map<MetricName, FastCompass> fastCompasses = new HashMap<MetricName, FastCompass>();
+        Map<MetricName, ClusterHistogram> clusterHistogrames = new HashMap<MetricName, ClusterHistogram>();
 
         for (Entry<String, MetricRegistry> entry : metricRegistryMap.entrySet()) {
 
@@ -326,7 +340,7 @@ public class AliMetricManager implements IMetricManager {
 
             for (Entry<MetricName, Metric> entry1 : metrics.entrySet()) {
 
-                checkAndAdd(entry1, filter, gauges, counters, histograms, meters, timers, compasses, fastCompasses);
+                checkAndAdd(entry1, filter, gauges, counters, histograms, meters, timers, compasses, fastCompasses, clusterHistogrames);
 
             }
         }
@@ -338,6 +352,7 @@ public class AliMetricManager implements IMetricManager {
         result.put(Timer.class, timers);
         result.put(Compass.class, compasses);
         result.put(FastCompass.class, fastCompasses);
+        result.put(ClusterHistogram.class, clusterHistogrames);
 
         return result;
     }
@@ -357,9 +372,10 @@ public class AliMetricManager implements IMetricManager {
         Map<MetricName, Timer> timers = new HashMap<MetricName, Timer>();
         Map<MetricName, Compass> compasses = new HashMap<MetricName, Compass>();
         Map<MetricName, FastCompass> fastCompasses = new HashMap<MetricName, FastCompass>();
+        Map<MetricName, ClusterHistogram> clusterHistogrames = new HashMap<MetricName, ClusterHistogram>();
 
         for (Map.Entry<MetricName, Metric> entry : metrics.entrySet()) {
-            checkAndAdd(entry, filter, gauges, counters, histograms, meters, timers, compasses, fastCompasses);
+            checkAndAdd(entry, filter, gauges, counters, histograms, meters, timers, compasses, fastCompasses, clusterHistogrames);
         }
 
         result.put(Gauge.class, gauges);
@@ -369,13 +385,14 @@ public class AliMetricManager implements IMetricManager {
         result.put(Timer.class, timers);
         result.put(Compass.class, compasses);
         result.put(FastCompass.class, fastCompasses);
+        result.put(ClusterHistogram.class, clusterHistogrames);
 
         return result;
     }
 
     private void checkAndAdd(Map.Entry<MetricName, Metric> entry, MetricFilter filter, Map<MetricName, Gauge> gauges,
             Map<MetricName, Counter> counters, Map<MetricName, Histogram> histograms, Map<MetricName, Meter> meters,
-            Map<MetricName, Timer> timers, Map<MetricName, Compass> compasses, Map<MetricName, FastCompass> fastCompasses) {
+            Map<MetricName, Timer> timers, Map<MetricName, Compass> compasses, Map<MetricName, FastCompass> fastCompasses, Map<MetricName, ClusterHistogram> clusterHistogrames) {
 
         MetricName metricName = entry.getKey();
         Metric metric = entry.getValue();
@@ -393,11 +410,13 @@ public class AliMetricManager implements IMetricManager {
             compasses.put(metricName, (Compass) metric);
         } else if (metric instanceof FastCompass && filter.matches(metricName, metric)) {
             fastCompasses.put(metricName, (FastCompass) metric);
+        } else if (metric instanceof FastCompass && filter.matches(metricName, metric)) {
+            clusterHistogrames.put(metricName, (ClusterHistogram) metric);
         } else if (metric instanceof DynamicMetricSet) {
             DynamicMetricSet dynamicMetricSet = (DynamicMetricSet) metric;
             Map<MetricName, Metric> dynamicMetrics = dynamicMetricSet.getDynamicMetrics();
             for (Map.Entry<MetricName, Metric> dynamicMetricEntry : dynamicMetrics.entrySet()) {
-                checkAndAdd(dynamicMetricEntry, filter, gauges, counters, histograms, meters, timers, compasses, fastCompasses);
+                checkAndAdd(dynamicMetricEntry, filter, gauges, counters, histograms, meters, timers, compasses, fastCompasses, clusterHistogrames);
             }
         }
     }
