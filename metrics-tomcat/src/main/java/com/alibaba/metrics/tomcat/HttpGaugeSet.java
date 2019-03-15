@@ -64,6 +64,10 @@ public class HttpGaugeSet extends CachedMetricSet {
         for (ObjectName connectorName : connectorNames) {
             String name = ObjectName.unquote(connectorName.getKeyProperty("name"));
             Long[] metrics = connectorMetrics.get(name);
+            if (null == metrics) {
+                continue;
+            }
+
             try {
                 metrics[HttpMetrics.REQUEST_COUNT.ordinal()] =
                         Long.valueOf((Integer)mbeanServer.getAttribute(connectorName, "requestCount"));
