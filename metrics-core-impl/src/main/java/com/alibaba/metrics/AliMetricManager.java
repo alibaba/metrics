@@ -410,7 +410,7 @@ public class AliMetricManager implements IMetricManager {
             compasses.put(metricName, (Compass) metric);
         } else if (metric instanceof FastCompass && filter.matches(metricName, metric)) {
             fastCompasses.put(metricName, (FastCompass) metric);
-        } else if (metric instanceof FastCompass && filter.matches(metricName, metric)) {
+        } else if (metric instanceof ClusterHistogram && filter.matches(metricName, metric)) {
             clusterHistogrames.put(metricName, (ClusterHistogram) metric);
         } else if (metric instanceof DynamicMetricSet) {
             DynamicMetricSet dynamicMetricSet = (DynamicMetricSet) metric;

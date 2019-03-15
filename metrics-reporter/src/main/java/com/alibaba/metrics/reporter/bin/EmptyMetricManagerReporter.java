@@ -17,6 +17,7 @@
 package com.alibaba.metrics.reporter.bin;
 
 import com.alibaba.metrics.Clock;
+import com.alibaba.metrics.ClusterHistogram;
 import com.alibaba.metrics.Compass;
 import com.alibaba.metrics.Counter;
 import com.alibaba.metrics.FastCompass;
@@ -60,8 +61,12 @@ public class EmptyMetricManagerReporter extends MetricManagerReporter {
     @Override
     public void report(Map<MetricName, Gauge> gauges, Map<MetricName, Counter> counters,
             Map<MetricName, Histogram> histograms, Map<MetricName, Meter> meters, Map<MetricName, Timer> timers,
-            Map<MetricName, Compass> compasses, Map<MetricName, FastCompass> fastCompasses) {
-        //donothing
+            Map<MetricName, Compass> compasses, Map<MetricName, FastCompass> fastCompasses,
+            Map<MetricName, ClusterHistogram> clusterHistogrames) {
+        // TODO Auto-generated method stub
+        
     }
+    
+
 
 }

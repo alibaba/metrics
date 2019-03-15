@@ -447,6 +447,11 @@ public class MetricRegistryImpl extends MetricRegistry {
     }
 
     @Override
+    public SortedMap<MetricName, ClusterHistogram> getClusterHistograms() {
+        return getMetrics(ClusterHistogram.class, MetricFilter.ALL);
+    }
+    
+    @Override
     public SortedMap<MetricName, Metric> getMetrics(MetricFilter filter) {
         final TreeMap<MetricName, Metric> filteredMetrics = new TreeMap<MetricName, Metric>();
         filteredMetrics.putAll(getCounters(filter));
@@ -456,6 +461,7 @@ public class MetricRegistryImpl extends MetricRegistry {
         filteredMetrics.putAll(getTimers(filter));
         filteredMetrics.putAll(getCompasses(filter));
         filteredMetrics.putAll(getFastCompasses(filter));
+        filteredMetrics.putAll(getClusterHistograms(filter));
         return Collections.unmodifiableSortedMap(filteredMetrics);
     }
 
@@ -474,6 +480,7 @@ public class MetricRegistryImpl extends MetricRegistry {
         metrics.putAll(getTimers(MetricFilter.ALL));
         metrics.putAll(getCompasses(MetricFilter.ALL));
         metrics.putAll(getFastCompasses(MetricFilter.ALL));
+        metrics.putAll(getClusterHistograms(MetricFilter.ALL));
         for (Map.Entry<MetricName, Metric> entry: metrics.entrySet()) {
             if (latest < entry.getValue().lastUpdateTime()) {
                 latest = entry.getValue().lastUpdateTime();

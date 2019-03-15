@@ -377,6 +377,13 @@ public abstract class MetricRegistry implements MetricSet {
      * @param filter    the metric filter to match
      * @return all the {@link ClusterHistogram} in the registry
      */
+    public abstract SortedMap<MetricName, ClusterHistogram> getClusterHistograms();
+    /**
+     * Returns a map of all the {@link ClusterHistogram} in the registry and their names which match the given filter.
+     *
+     * @param filter    the metric filter to match
+     * @return all the {@link ClusterHistogram} in the registry
+     */
     public abstract SortedMap<MetricName, ClusterHistogram> getClusterHistograms(MetricFilter filter);
 
 

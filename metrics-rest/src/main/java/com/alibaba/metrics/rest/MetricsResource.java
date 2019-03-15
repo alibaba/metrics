@@ -409,7 +409,7 @@ public class MetricsResource {
         }
 
         SortedMap<MetricName, ClusterHistogram> clusterHistograms = filter == null ?
-                registry.getClusterHistograms(MetricFilter.ALL) : registry.getClusterHistograms(filter);
+                registry.getClusterHistograms() : registry.getClusterHistograms(filter);
         for (Map.Entry<MetricName, ClusterHistogram> entry : clusterHistograms.entrySet()) {
             collector.collect(entry.getKey(), entry.getValue(), ts);
         }

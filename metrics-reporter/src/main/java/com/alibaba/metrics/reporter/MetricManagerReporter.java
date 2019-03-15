@@ -16,6 +16,7 @@
  */
 package com.alibaba.metrics.reporter;
 
+import com.alibaba.metrics.ClusterHistogram;
 import com.alibaba.metrics.Compass;
 import com.alibaba.metrics.Counter;
 import com.alibaba.metrics.FastCompass;
@@ -267,7 +268,8 @@ public abstract class MetricManagerReporter implements Closeable {
                     (Map<MetricName, Meter>) categoryMetrics.get(Meter.class),
                     (Map<MetricName, Timer>) categoryMetrics.get(Timer.class),
                     (Map<MetricName, Compass>) categoryMetrics.get(Compass.class),
-                    (Map<MetricName, FastCompass>) categoryMetrics.get(FastCompass.class));
+                    (Map<MetricName, FastCompass>) categoryMetrics.get(FastCompass.class),
+                    (Map<MetricName, ClusterHistogram>) categoryMetrics.get(ClusterHistogram.class));
         }
     }
 
@@ -287,7 +289,8 @@ public abstract class MetricManagerReporter implements Closeable {
                                 Map<MetricName, Meter> meters,
                                 Map<MetricName, Timer> timers,
                                 Map<MetricName, Compass> compasses,
-                                Map<MetricName, FastCompass> fastCompasses);
+                                Map<MetricName, FastCompass> fastCompasses,
+                                Map<MetricName, ClusterHistogram> clusterHistogrames);
 
     protected String getRateUnit() {
         return rateUnit;

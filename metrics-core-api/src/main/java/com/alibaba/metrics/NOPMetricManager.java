@@ -884,6 +884,12 @@ public class NOPMetricManager implements IMetricManager {
         public long lastUpdateTime() {
             return 0;
         }
+
+        @Override
+        public SortedMap<MetricName, ClusterHistogram> getClusterHistograms() {
+            return emptyMap;
+        }
+
     };
 
     @Override

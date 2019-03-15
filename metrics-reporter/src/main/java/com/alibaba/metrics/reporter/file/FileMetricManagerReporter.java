@@ -18,6 +18,7 @@ package com.alibaba.metrics.reporter.file;
 
 import com.alibaba.metrics.Clock;
 import com.alibaba.metrics.Compass;
+import com.alibaba.metrics.ClusterHistogram;
 import com.alibaba.metrics.Counter;
 import com.alibaba.metrics.FastCompass;
 import com.alibaba.metrics.Gauge;
@@ -249,7 +250,7 @@ public class FileMetricManagerReporter extends MetricManagerReporter {
     @Override
     public void report(Map<MetricName, Gauge> gauges, Map<MetricName, Counter> counters,
             Map<MetricName, Histogram> histograms, Map<MetricName, Meter> meters,
-            Map<MetricName, Timer> timers, Map<MetricName, Compass> compasses, Map<MetricName, FastCompass> fastCompasses) {
+            Map<MetricName, Timer> timers, Map<MetricName, Compass> compasses, Map<MetricName, FastCompass> fastCompasses, Map<MetricName, ClusterHistogram> clusterHistogrames) {
 
         long timestamp = clock.getTime();
 

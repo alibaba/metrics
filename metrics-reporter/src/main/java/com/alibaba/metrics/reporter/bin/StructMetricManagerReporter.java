@@ -17,6 +17,7 @@
 package com.alibaba.metrics.reporter.bin;
 
 import com.alibaba.metrics.Clock;
+import com.alibaba.metrics.ClusterHistogram;
 import com.alibaba.metrics.Compass;
 import com.alibaba.metrics.Counter;
 import com.alibaba.metrics.FastCompass;
@@ -115,7 +116,7 @@ public class StructMetricManagerReporter extends MetricManagerReporter {
     @Override
     public void report(Map<MetricName, Gauge> gauges, Map<MetricName, Counter> counters,
             Map<MetricName, Histogram> histograms, Map<MetricName, Meter> meters, Map<MetricName, Timer> timers,
-            Map<MetricName, Compass> compasses, Map<MetricName, FastCompass> fastCompasses) {
+            Map<MetricName, Compass> compasses, Map<MetricName, FastCompass> fastCompasses, Map<MetricName, ClusterHistogram> clusterHistogrames) {
 
         long timestamp = clock.getTime();
 
@@ -160,6 +161,10 @@ public class StructMetricManagerReporter extends MetricManagerReporter {
             collector.collect(entry.getKey(), entry.getValue(), timestamp);
         }
 
+        for (Entry<MetricName, ClusterHistogram> entry : clusterHistogrames.entrySet()) {
+            collector.collect(entry.getKey(), entry.getValue(), timestamp);
+        }
+        
         Map<MetricLevel, Map<Long, List<MetricObject>>> metrics = ((ClassifiedMetricsCollector) collector).getMetrics();
 
         if (metrics.size() <= 0) {
