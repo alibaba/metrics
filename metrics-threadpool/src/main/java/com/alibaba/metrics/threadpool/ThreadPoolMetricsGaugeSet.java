@@ -19,12 +19,6 @@ public class ThreadPoolMetricsGaugeSet extends CachedMetricSet implements Dynami
 
     private static final String[] THREAD_POOL_METRICS_GUAGES = new String[]{"active", "queued", "completed", "pool"};
 
-    private static final String[] THREAD_POOL_METRICS_TAGS = new String[]{
-            "The approximate number of threads that are actively executing tasks",
-            "The approximate number of threads that are queued for execution",
-            "The approximate total number of tasks that have completed execution",
-            "The current number of threads in the pool"};
-
 
     private long[] threadPoolMetrics;
     private final ThreadPoolExecutor threadPoolExecutor;
