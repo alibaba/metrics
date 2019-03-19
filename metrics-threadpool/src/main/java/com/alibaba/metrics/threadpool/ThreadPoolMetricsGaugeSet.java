@@ -19,14 +19,14 @@ import java.util.concurrent.TimeUnit;
  **/
 public class ThreadPoolMetricsGaugeSet extends CachedMetricSet {
 
-
+    // metrics name
     private static final String[] THREAD_POOL_METRICS_GUAGES = new String[]{"active", "queued", "completed", "pool"};
-
+    // use short ttl
+    private static long DEFAULT_DATA_TTL = 10;
 
     private long[] threadPoolMetrics;
     private final ThreadPoolExecutor threadPoolExecutor;
-    // use short ttl
-    private static long DEFAULT_DATA_TTL = 10;
+    private final Map<MetricName, Metric> metrics;
 
     public ThreadPoolMetricsGaugeSet(ThreadPoolExecutor threadPoolExecutor) {
         this(DEFAULT_DATA_TTL, TimeUnit.MILLISECONDS, Clock.defaultClock(), threadPoolExecutor);
@@ -43,6 +43,8 @@ public class ThreadPoolMetricsGaugeSet extends CachedMetricSet {
         }
         threadPoolMetrics = new long[THREAD_POOL_METRICS_GUAGES.length];
         this.threadPoolExecutor = threadPoolExecutor;
+        metrics = new HashMap<MetricName, Metric>(4);
+        populateGauges();
     }
 
     @Override
@@ -63,14 +65,16 @@ public class ThreadPoolMetricsGaugeSet extends CachedMetricSet {
 
     @Override
     public Map<MetricName, Metric> getMetrics() {
-        Map<MetricName, Metric> metrics = new HashMap<MetricName, Metric>();
+        return metrics;
+    }
+
+    private void populateGauges() {
+        // populate guages
         for (int i = 0; i < THREAD_POOL_METRICS_GUAGES.length; i++) {
             metrics.put(
                     MetricName.build(THREAD_POOL_METRICS_GUAGES[i])
                     , new ThreadPoolGauge(i));
         }
-
-        return metrics;
     }
 
 
