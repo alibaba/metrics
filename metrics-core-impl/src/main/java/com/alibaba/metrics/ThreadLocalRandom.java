@@ -5,7 +5,6 @@
  *
  * http://gee.cs.oswego.edu/cgi-bin/viewcvs.cgi/jsr166/src/main/java/util/concurrent/ThreadLocalRandom.java?view=markup
  */
-
 package com.alibaba.metrics;
 
 import java.util.Random;
