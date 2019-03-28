@@ -108,7 +108,7 @@ public class MetricsSearchService {
     }
 
     public String search(String metricsSearch) {
-        logger.info(metricsSearch);
+        logger.debug(metricsSearch);
         String result = "";
 
         try {
