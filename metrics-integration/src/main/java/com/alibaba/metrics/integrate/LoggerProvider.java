@@ -24,10 +24,16 @@ public class LoggerProvider {
 
     private static final Logger JERSEY_LOGGER = LoggerFactory.getLogger("org.glassfish.jersey");
     private static final Logger METRICS_LOGGER = LoggerFactory.getLogger("com.alibaba.metrics");
+    private static final String LOG_SIZE = "100MB";
+    private static final int LOG_NUMBER = 10;
 
     public static void initLogger() {
+        initLogger(LOG_SIZE, LOG_NUMBER);
+    }
+
+    public static void initLogger(String logSize, int logNumber) {
         JERSEY_LOGGER.setLevel(Level.WARN);
-        JERSEY_LOGGER.activateAppender("metrics", "jersey-info.log", "UTF-8");
+        JERSEY_LOGGER.activateAppenderWithSizeRolling("metrics", "jersey-info.log", "UTF-8", logSize, logNumber);
         JERSEY_LOGGER.setAdditivity(false);
         METRICS_LOGGER.setLevel(Level.INFO);
         METRICS_LOGGER.activateAppender("metrics", "metrics-info.log", "UTF-8");
