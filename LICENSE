@@ -200,5 +200,14 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
-This product contains a modified portion of 'dropwizard metrics', a java implement Capturing JVM- and application-level metrics. also
- under a "Apache License 2.0" license, see https://github.com/dropwizard/metrics/blob/4.1-development/LICENSE
+This product contains a modified portion of 'dropwizard metrics', a java 
+implementation to capture JVM and application-level metrics, which is 
+also under a "Apache License 2.0" license, 
+see https://github.com/dropwizard/metrics/blob/4.1-development/LICENSE
+
+For the com.alibaba.metrics.reporter.opentsdb:
+* com.alibaba.metrics.reporter.opentsdb.OpenTsdb
+* com.alibaba.metrics.reporter.opentsdb.OpentsdbMetric
+* com.alibaba.metrics.reporter.opentsdb.OpenTsdbReporter
+This product contains files of metrics-opentsdb, which under a "Apache License 2.0" license, 
+see https://github.com/sps/metrics-opentsdb/blob/master/LICENSE.txt
