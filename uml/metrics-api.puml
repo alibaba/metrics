@@ -47,22 +47,22 @@ abstract class MetricRegistry {
 Counting -[hidden]> Metric
 Sampling -[hidden]> Metric
 
-interface Metered -up-|> Metric
-interface Metered -up-|> Counting
+'interface Metered -up-|> Metric
+'interface Metered -up-|> Counting
 
-interface Gauge -up--|> Metric
+'interface Gauge -up--|> Metric
 
-interface Counter -up--|> Metric
-interface Counter -up-|> Counting
+'interface Counter -up--|> Metric
+'interface Counter -up-|> Counting
 
-interface Histogram -up--|> Metric
-interface Histogram -up-|> Counting
-interface Histogram -up-|> Sampling
-interface Meter -up-|> Metered
-interface Timer -up-|> Metered
-interface Timer -up-|> Sampling
+'interface Histogram -up--|> Metric
+'interface Histogram -up-|> Counting
+'interface Histogram -up-|> Sampling
+'interface Meter -up-|> Metered
+'interface Timer -up-|> Metered
+'interface Timer -up-|> Sampling
 
-interface MetricSet -left-|> Metric
+'interface MetricSet -left-|> Metric
 
 'interface DynamicMetricSet -up-|> Metric
 
