@@ -45,7 +45,7 @@
         </dependency>
         <dependency>
             <groupId>com.alibaba.middleware</groupId>
-            <artifactId>metrics-jvm</artifactId>
+            <artifactId>metrics-openjdk</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>com.alibaba.middleware</groupId>
-            <artifactId>metrics-jvm</artifactId>
+            <artifactId>metrics-openjdk</artifactId>
         </dependency>
         <dependency>
             <groupId>com.alibaba.middleware</groupId>
@@ -31,7 +31,7 @@
         </dependency>
         <dependency>
             <groupId>com.alibaba.middleware</groupId>
-            <artifactId>metrics-tomcat</artifactId>
+            <artifactId>metrics-apache-tomcat</artifactId>
         </dependency>
         <dependency>
             <groupId>com.alibaba.middleware</groupId>

@@ -23,7 +23,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.6</maven.compiler.source>
         <maven.compiler.target>1.6</maven.compiler.target>
-        <metrics.version>2.0.2-SNAPSHOT</metrics.version>
+        <metrics.version>2.0.2</metrics.version>
         <jersey.version>2.27</jersey.version>
         <fastjson.version>1.2.48</fastjson.version>
         <!-- be careful that higher version might not support JDK6 -->
@@ -44,10 +44,10 @@
         <module>metrics-common</module>
         <module>metrics-core-impl</module>
         <module>metrics-bin</module>
-        <module>metrics-jvm</module>
+        <module>metrics-openjdk</module>
         <module>metrics-os</module>
         <module>metrics-nginx</module>
-        <module>metrics-tomcat</module>
+        <module>metrics-apache-tomcat</module>
         <module>metrics-integration</module>
         <module>metrics-reporter</module>
         <module>metrics-rest</module>
@@ -93,7 +93,7 @@
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>metrics-jvm</artifactId>
+                <artifactId>metrics-openjdk</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -123,7 +123,7 @@
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>metrics-tomcat</artifactId>
+                <artifactId>metrics-apache-tomcat</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
