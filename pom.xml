@@ -437,10 +437,19 @@
 
     <developers>
         <developer>
-            <id>dubbo.io</id>
-            <name>The Dubbo Project Contributors</name>
-            <email>dev-subscribe@dubbo.apache.org</email>
-            <url>http://dubbo.apache.org/</url>
+            <id>ralf0131</id>
+            <name>Huxing Zhang</name>
+            <email>huxing.zhang@gmail.com</email>
+        </developer>
+        <developer>
+            <id>nzomkxia</id>
+            <name>Minxuan Zhuang</name>
+            <email>z82507200@gmail.com</email>
+        </developer>
+        <developer>
+            <id>xhghost</id>
+            <name>Hao Xu</name>
+            <email></email>
         </developer>
     </developers>
 
