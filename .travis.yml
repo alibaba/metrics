@@ -4,6 +4,13 @@ sudo: false # faster builds
 jdk:
   - oraclejdk8
   - oraclejdk11
+
+cache:
+  directories:
+    - $HOME/.m2
+
+install: true
+
 script:
   - travis_wait 30 mvn clean package
 
