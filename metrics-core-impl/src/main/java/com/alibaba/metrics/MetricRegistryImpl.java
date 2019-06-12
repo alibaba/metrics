@@ -66,6 +66,19 @@ public class MetricRegistryImpl extends MetricRegistry {
     }
 
     /**
+     * 〈unRegister all metrics.〉
+     *
+     *  eg:
+     *      When collecting remote machine JVM metrics through the JMX port, May be due to network jitter or
+     *      remote process restart, Need to cancel the previously collected metrics and re-register.
+     *
+     * @date 2019.06.06 14:35:45
+     */
+    public void unRegisterAll() {
+        metrics.clear();
+    }
+
+    /**
      * Given a {@link Metric}, registers it under the given name.
      *
      * @param name   the name of the metric
