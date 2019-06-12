@@ -36,7 +36,7 @@ public class DubboMetricsExports extends Collector {
     @Override
     public List<MetricFamilySamples> collect() {
         List<String> groups = MetricManager.getIMetricManager().listMetricGroups();
-        List<MetricFamilySamples> metricFamilySamples = new ArrayList<>();
+        List<MetricFamilySamples> metricFamilySamples = new ArrayList<MetricFamilySamples>();
         for (String group : groups) {
             MetricRegistry metricRegistry = MetricManager.getIMetricManager().getMetricRegistryByGroup(group);
             metricRegistry.getCounters();
@@ -69,7 +69,7 @@ public class DubboMetricsExports extends Collector {
     }
 
     public MetricFamilySamples fromCounter(MetricName metricName, Counter counter) {
-        MetricFamilySamples.Sample sample = sampleBuilder.createSample(metricName, "", new ArrayList<>(), new ArrayList<>(), new Long(counter.getCount()).doubleValue());
+        MetricFamilySamples.Sample sample = sampleBuilder.createSample(metricName, "", new ArrayList<String>(), new ArrayList<String>(), new Long(counter.getCount()).doubleValue());
         return new MetricFamilySamples(sample.name, Type.COUNTER, getHelpMessage(metricName.getKey(), counter), Arrays.asList(sample));
     }
 
@@ -94,7 +94,7 @@ public class DubboMetricsExports extends Collector {
     }
 
     public MetricFamilySamples fromMeter(MetricName metricName, Meter meter) {
-        MetricFamilySamples.Sample sample = sampleBuilder.createSample(metricName, "_total", new ArrayList<>(), new ArrayList<>(), meter.getCount());
+        MetricFamilySamples.Sample sample = sampleBuilder.createSample(metricName, "_total", new ArrayList<String>(), new ArrayList<String>(), meter.getCount());
         return new MetricFamilySamples(sample.name, Type.COUNTER, getHelpMessage(metricName.getKey(), meter), Arrays.asList
                 (sample));
     }
@@ -105,7 +105,7 @@ public class DubboMetricsExports extends Collector {
     }
 
     public MetricFamilySamples fromClusterHistogram(MetricName metricName, ClusterHistogram clusterHistogram) {
-        List<MetricFamilySamples.Sample> samples = new ArrayList<>();
+        List<MetricFamilySamples.Sample> samples = new ArrayList<MetricFamilySamples.Sample>();
         Map<Long, Map<Long, Long>> buckets = clusterHistogram.getBucketValues(0L);
         for (Map.Entry<Long, Map<Long, Long>> entry : buckets.entrySet()) {
             String suffix = "_time" + entry.getKey().toString();
@@ -122,7 +122,7 @@ public class DubboMetricsExports extends Collector {
         int bucketInterval = compass.getInstantCountInterval();
         long start = getNormalizedStartTime(lastUpdateTime, bucketInterval);
         BucketCounter successCounter = compass.getBucketSuccessCount();
-        List<MetricFamilySamples.Sample> samples = new ArrayList<>();
+        List<MetricFamilySamples.Sample> samples = new ArrayList<MetricFamilySamples.Sample>();
         for (Map.Entry<String, BucketCounter> entry : compass.getErrorCodeCounts().entrySet()) {
             String tag = entry.getKey();
             long count = entry.getValue().getBucketCounts().get(start);
@@ -142,7 +142,7 @@ public class DubboMetricsExports extends Collector {
         long lastUpdateTime = fastCompass.lastUpdateTime();
         int bucketInterval = fastCompass.getBucketInterval();
         long start = getNormalizedStartTime(lastUpdateTime, bucketInterval);
-        List<MetricFamilySamples.Sample> samples = new ArrayList<>();
+        List<MetricFamilySamples.Sample> samples = new ArrayList<MetricFamilySamples.Sample>();
         Map<String, Map<Long, Long>> countPerCategory = fastCompass.getMethodCountPerCategory(start);
         for (Map.Entry<String, Map<Long, Long>> entry: countPerCategory.entrySet()) {
             if (entry.getValue().containsKey(start)) {
@@ -170,7 +170,7 @@ public class DubboMetricsExports extends Collector {
                 sampleBuilder.createSample(metricName, "", Arrays.asList("quantile"), Arrays.asList("0.98"), snapshot.get98thPercentile() * factor),
                 sampleBuilder.createSample(metricName, "", Arrays.asList("quantile"), Arrays.asList("0.99"), snapshot.get99thPercentile() * factor),
                 sampleBuilder.createSample(metricName, "", Arrays.asList("quantile"), Arrays.asList("0.999"), snapshot.get999thPercentile() * factor),
-                sampleBuilder.createSample(metricName, "_count", new ArrayList<>(), new ArrayList<>(), count)
+                sampleBuilder.createSample(metricName, "_count", new ArrayList<String>(), new ArrayList<String>(), count)
         );
         return new MetricFamilySamples(samples.get(0).name, Type.SUMMARY, helpMessage, samples);
     }

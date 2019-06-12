@@ -14,8 +14,8 @@ public class DefaultSampleBuilder implements SampleBuilder{
         String name = metricName.getKey();
         String nameSuffix = suffix == null ? "" : suffix;
         Map<String, String> tags = metricName.getTags();
-        List<String> tagNames = labelNames == null ? new ArrayList<>() : labelNames;
-        List<String> tagValues = labelValues == null ? new ArrayList<>() : labelValues;
+        List<String> tagNames = labelNames == null ? new ArrayList<String>() : labelNames;
+        List<String> tagValues = labelValues == null ? new ArrayList<String>() : labelValues;
         if (tags != null && tags.size() > 0) {
             for (Map.Entry<String, String> entry : tags.entrySet()) {
                 tagNames.add(entry.getKey());
