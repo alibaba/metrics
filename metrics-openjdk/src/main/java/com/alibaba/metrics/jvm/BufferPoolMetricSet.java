@@ -25,8 +25,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.management.JMException;
-import javax.management.MBeanServer;
+import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,10 +43,10 @@ public class BufferPoolMetricSet implements MetricSet {
     private static final String[] NAMES = { "count", "used", "capacity" };
     private static final String[] POOLS = { "direct", "mapped" };
 
-    private final MBeanServer mBeanServer;
+    private final MBeanServerConnection mBeanServerConnection;
 
-    public BufferPoolMetricSet(MBeanServer mBeanServer) {
-        this.mBeanServer = mBeanServer;
+    public BufferPoolMetricSet(MBeanServerConnection mBeanServerConnection) {
+        this.mBeanServerConnection = mBeanServerConnection;
     }
 
     @Override
@@ -55,14 +56,14 @@ public class BufferPoolMetricSet implements MetricSet {
             for (int i = 0; i < ATTRIBUTES.length; i++) {
                 final String attribute = ATTRIBUTES[i];
                 final String name = NAMES[i];
-
                 try {
                     final ObjectName on = new ObjectName("java.nio:type=BufferPool,name=" + pool);
-                    mBeanServer.getMBeanInfo(on);
-                    gauges.put(MetricRegistry.name(pool, name),
-                               new JmxAttributeGauge(mBeanServer, on, attribute));
+                    mBeanServerConnection.getMBeanInfo(on);
+                    gauges.put(MetricRegistry.name(pool, name), new JmxAttributeGauge(mBeanServerConnection, on, attribute));
                 } catch (JMException ignored) {
                     LOGGER.debug("Unable to load buffer pool MBeans, possibly running on Java 6");
+                } catch (IOException ioException) {
+                    LOGGER.debug("Unable to load buffer pool MBeans, an exception occur, cause of", ioException);
                 }
             }
         }
