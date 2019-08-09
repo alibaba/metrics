@@ -55,6 +55,9 @@ public class CpuUsageGaugeSet extends CachedMetricSet {
 
     private String filePath;
 
+    // the number of processors that JVM is running on.
+    private int numOfProcessors;
+
     private enum CpuUsage {
         USER, NICE, SYSTEM, IDLE, IOWAIT, IRQ, SOFTIRQ, STEAL, GUEST
     }
@@ -114,10 +117,15 @@ public class CpuUsageGaugeSet extends CachedMetricSet {
     }
 
     public CpuUsageGaugeSet(long dataTTL, TimeUnit unit, String filePath, Clock clock) {
+        this(dataTTL, unit, filePath, clock, Runtime.getRuntime().availableProcessors());
+    }
+
+    public CpuUsageGaugeSet(long dataTTL, TimeUnit unit, String filePath, Clock clock, int numOfProcessors) {
         super(dataTTL, unit, clock);
         cpuUsage = new float[CpuUsage.values().length];
         lastCollectedCpuInfo = new CpuInfo();
         this.filePath = filePath;
+        this.numOfProcessors = numOfProcessors;
         populateMetrics();
     }
 
@@ -320,7 +328,13 @@ public class CpuUsageGaugeSet extends CachedMetricSet {
 
     private float getUsage(long current, long last, CpuInfo curInfo, CpuInfo lastInfo) {
         try {
-            float f = 100.0f * (current - last) / (curInfo.totalTime - lastInfo.totalTime);
+            int cpuShare = numOfProcessors;
+            try {
+                cpuShare = Integer.parseInt(System.getenv("LEGACY_CONTAINER_SIZE_CPU_COUNT"));
+            } catch (Exception e) {
+                // ignore
+            }
+            float f = 100.0f * (current - last) * numOfProcessors / (curInfo.totalTime - lastInfo.totalTime) / cpuShare;
             return FormatUtils.formatFloat(f);
         } catch (Exception e) {
             return 0.0f;

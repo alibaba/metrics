@@ -22,7 +22,9 @@ import com.alibaba.metrics.Metric;
 import com.alibaba.metrics.MetricName;
 import com.alibaba.metrics.os.utils.FormatUtils;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.contrib.java.lang.system.EnvironmentVariables;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -30,6 +32,10 @@ import java.util.concurrent.TimeUnit;
 import static com.alibaba.metrics.Constants.NOT_AVAILABLE;
 
 public class CpuUsageGaugeSetTest {
+
+    @Rule
+    public final EnvironmentVariables environmentVariables
+            = new EnvironmentVariables();
 
     @SuppressWarnings("unchecked")
     @Test
@@ -118,6 +124,50 @@ public class CpuUsageGaugeSetTest {
     }
 
     @Test
+    public void testCpuShare() {
+        int cpuShareCount = 3;
+        environmentVariables.set("LEGACY_CONTAINER_SIZE_CPU_COUNT", String.valueOf(cpuShareCount));
+        ManualClock clock = new ManualClock();
+        CpuUsageGaugeSet cpuUsageGaugeSet = new CpuUsageGaugeSet(
+                5, TimeUnit.SECONDS, "src/test/resources/proc_stat", clock, 9);
+        Map<MetricName, Metric> metrics = cpuUsageGaugeSet.getMetrics();
+        Assert.assertEquals(13, metrics.keySet().size());
+        clock.addSeconds(6);
+
+        Gauge<Float> user = (Gauge)metrics.get(MetricName.build("cpu.user"));
+
+        long[] init = new long[9];
+        long[] first = new long[]{161458220L, 18100L, 123669465L, 24676619894L, 11864776L, 2275215L, 3576999L, 12366444L, 22366444L,};
+        long[] delta = new long[9];
+        long total = 0L;
+
+        for (int i=0; i < delta.length; i++) {
+            delta[i] = first[i] - init[i];
+            total += delta[i];
+        }
+
+        /**
+         * At the very first time before collection, the init cpuInfo is all set to 0
+         */
+        Assert.assertEquals(getUsage(delta[0], total, 9, cpuShareCount), user.getValue(), 0.0001f);
+
+
+        long[] second = new long[]{161464658L, 18100L, 123674792L, 24676879507L, 11865415L, 2275298L, 3577096L, 15366444L, 23366444L};
+        total = 0L;
+
+        for (int i=0; i < delta.length; i++) {
+            delta[i] = second[i] - first[i];
+            total += delta[i];
+        }
+
+        clock.addSeconds(6);
+
+        cpuUsageGaugeSet.setFilePath("src/test/resources/proc_stat_2");
+
+        Assert.assertEquals(getUsage(delta[0], total, 9, cpuShareCount), user.getValue(), 0.0001f);
+    }
+
+    @Test
     public void testSubstring() {
         String data = "intr 19385871162 204 7 0 0 0 0 2 0 0 0 0 0 102 0 0 0 314 125889916 3547347777 0 0 0 0 22 0";
         Assert.assertEquals("19385871162",
@@ -151,6 +201,10 @@ public class CpuUsageGaugeSetTest {
     }
 
     private float getUsage(long delta, long total) {
-        return FormatUtils.formatFloat(100.0f * delta / total);
+        return getUsage(delta, total, 1, 1);
+    }
+
+    private float getUsage(long delta, long total, int numberOfProcessor, int cpuShareCount) {
+        return FormatUtils.formatFloat(100.0f * delta * numberOfProcessor / total/ cpuShareCount);
     }
 }
