@@ -59,14 +59,11 @@ public class MetricsOnDisk extends MetricsDataStore {
 
         boolean dataBlockExceeded = false;
 
-        logger.info("MetricLevel:" + level);
         for (Entry<Long, IndexData> indexEntry : indexs.entrySet()) {
 
             long timestamp = indexEntry.getKey();
             long indexStart = indexEntry.getValue().getIndexStart();
             long indexEnd = indexEntry.getValue().getIndexEnd();
-            logger.info("indexStart:" + indexStart);
-            logger.info("indexEnd:" + indexEnd);
             List<MetricResult> currentResult = result.get(timestamp);
 
             int length = (int) (indexEnd - indexStart);
@@ -77,7 +74,6 @@ public class MetricsOnDisk extends MetricsDataStore {
             }
 
             byte[] b = new byte[length];
-            logger.info("byte[] b:" + length);
             AbstractFileBackend backend = getFileBackend(timestamp, level);
 
             try {
