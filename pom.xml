@@ -4,13 +4,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>9</version>
-    </parent>
-
-
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
@@ -308,6 +301,18 @@
     <profiles>
         <profile>
             <id>release</id>
+
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>alibaba</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+                </snapshotRepository>
+                <repository>
+                    <id>alibaba</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
+
             <build>
                 <plugins>
                     <plugin>
