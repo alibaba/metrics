@@ -136,6 +136,18 @@ public class CpuUsageGaugeSetTest {
         clock.addSeconds(6);
 
         Gauge<Float> user = (Gauge)metrics.get(MetricName.build("cpu.user"));
+        Gauge<Float> nice = (Gauge)metrics.get(MetricName.build("cpu.nice"));
+        Gauge<Float> system = (Gauge)metrics.get(MetricName.build("cpu.system"));
+        Gauge<Float> idle = (Gauge)metrics.get(MetricName.build("cpu.idle"));
+        Gauge<Float> iowait = (Gauge)metrics.get(MetricName.build("cpu.iowait"));
+        Gauge<Float> irq = (Gauge)metrics.get(MetricName.build("cpu.irq"));
+        Gauge<Float> softirq = (Gauge)metrics.get(MetricName.build("cpu.softirq"));
+        Gauge<Float> steal = (Gauge)metrics.get(MetricName.build("cpu.steal"));
+        Gauge<Float> guest = (Gauge)metrics.get(MetricName.build("cpu.guest"));
+        Gauge<Double> intr = (Gauge)metrics.get(MetricName.build("interrupts"));
+        Gauge<Double> ctxt = (Gauge)metrics.get(MetricName.build("context_switches"));
+        Gauge<Long> procRunning = (Gauge)metrics.get(MetricName.build("process.running"));
+        Gauge<Long> procBlocked = (Gauge)metrics.get(MetricName.build("process.blocked"));
 
         long[] init = new long[10];
         long[] first = new long[]{15082458L, 2647L, 3990865L, 984247164L, 4817551L, 0L, 730647L, 1714974561L, 0L, 0L};
@@ -151,7 +163,20 @@ public class CpuUsageGaugeSetTest {
          * At the very first time before collection, the init cpuInfo is all set to 0
          */
         Assert.assertEquals(getUsage(delta[0], total, numbOfProcessors, cpuShareCount), user.getValue(), 0.0001f);
+        Assert.assertEquals(getUsage(delta[1], total, numbOfProcessors, cpuShareCount), nice.getValue(), 0.0001f);
+        Assert.assertEquals(getUsage(delta[2], total, numbOfProcessors, cpuShareCount), system.getValue(), 0.0001f);
+        Assert.assertEquals(getUsage(delta[3], total, numbOfProcessors, cpuShareCount), idle.getValue(), 0.0001f);
+        Assert.assertEquals(getUsage(delta[4], total, numbOfProcessors, cpuShareCount), iowait.getValue(), 0.0001f);
+        Assert.assertEquals(getUsage(delta[5], total, numbOfProcessors, cpuShareCount), irq.getValue(), 0.0001f);
+        Assert.assertEquals(getUsage(delta[6], total, numbOfProcessors, cpuShareCount), softirq.getValue(), 0.0001f);
+        System.out.println("Steal: " + steal.getValue());
+        Assert.assertEquals(getUsage(delta[7], total, numbOfProcessors, cpuShareCount), steal.getValue(), 0.0001f);
+        Assert.assertEquals(getUsage(delta[8], total, numbOfProcessors, cpuShareCount), guest.getValue(), 0.0001f);
 
+        Assert.assertEquals(0, intr.getValue().longValue());
+        Assert.assertEquals(0, ctxt.getValue().longValue());
+        Assert.assertEquals(2, procRunning.getValue().longValue());
+        Assert.assertEquals(0, procBlocked.getValue().longValue());
 
         long[] second = new long[]{15082928L, 2647L, 3991002L, 984276731L, 4817643L, 0L, 730668L, 1715025774L, 0L, 0L};
         total = 0L;
@@ -165,6 +190,19 @@ public class CpuUsageGaugeSetTest {
 
         cpuUsageGaugeSet.setFilePath("src/test/resources/proc_cpushare_stat_2");
         Assert.assertEquals(getUsage(delta[0], total, numbOfProcessors, cpuShareCount), user.getValue(), 0.0001f);
+        Assert.assertEquals(getUsage(delta[1], total, numbOfProcessors, cpuShareCount), nice.getValue(), 0.0001f);
+        Assert.assertEquals(getUsage(delta[2], total, numbOfProcessors, cpuShareCount), system.getValue(), 0.0001f);
+        Assert.assertEquals(getUsage(delta[3], total, numbOfProcessors, cpuShareCount), idle.getValue(), 0.0001f);
+        Assert.assertEquals(getUsage(delta[4], total, numbOfProcessors, cpuShareCount), iowait.getValue(), 0.0001f);
+        Assert.assertEquals(getUsage(delta[5], total, numbOfProcessors, cpuShareCount), irq.getValue(), 0.0001f);
+        Assert.assertEquals(getUsage(delta[6], total, numbOfProcessors, cpuShareCount), softirq.getValue(), 0.0001f);
+        Assert.assertEquals(getUsage(delta[7], total, numbOfProcessors, cpuShareCount), steal.getValue(), 0.0001f);
+        Assert.assertEquals(getUsage(delta[8], total, numbOfProcessors, cpuShareCount), guest.getValue(), 0.0001f);
+
+        Assert.assertEquals((894671457982L - 894665249505L) / 6.0d, intr.getValue().doubleValue(), 0.0001f);
+        Assert.assertEquals((1634898471L - 1634849924L) / 6.0d, ctxt.getValue().doubleValue(), 0.0001f);
+        Assert.assertEquals(10, procRunning.getValue().intValue());
+        Assert.assertEquals(2, procBlocked.getValue().intValue());
     }
 
     @Test
