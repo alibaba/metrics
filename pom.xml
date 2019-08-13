@@ -36,7 +36,7 @@
     <name>metrics-all</name>
     <version>${metrics.version}</version>
     <description>The metrics library for Alibaba Group</description>
-    <url>https://github.com/dubbo/metrics</url>
+    <url>https://github.com/alibaba/metrics</url>
     <packaging>pom</packaging>
 
     <modules>
@@ -435,9 +435,9 @@
     </build>
 
     <scm>
-        <url>https://github.com/dubbo/metrics</url>
-        <connection>scm:git:https://github.com/dubbo/metrics.git</connection>
-        <developerConnection>scm:git:https://github.com/dubbo/metrics.git</developerConnection>
+        <url>https://github.com/alibaba/metrics</url>
+        <connection>scm:git:https://github.com/alibaba/metrics.git</connection>
+        <developerConnection>scm:git:https://github.com/alibaba/metrics.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
