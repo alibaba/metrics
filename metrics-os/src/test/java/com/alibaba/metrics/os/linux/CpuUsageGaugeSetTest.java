@@ -125,20 +125,21 @@ public class CpuUsageGaugeSetTest {
 
     @Test
     public void testCpuShare() {
-        int cpuShareCount = 3;
+        int cpuShareCount = 4;
+        int numbOfProcessors = 64;
         environmentVariables.set("LEGACY_CONTAINER_SIZE_CPU_COUNT", String.valueOf(cpuShareCount));
         ManualClock clock = new ManualClock();
         CpuUsageGaugeSet cpuUsageGaugeSet = new CpuUsageGaugeSet(
-                5, TimeUnit.SECONDS, "src/test/resources/proc_stat", clock, 9);
+                5, TimeUnit.SECONDS, "src/test/resources/proc_cpushare_stat", clock);
         Map<MetricName, Metric> metrics = cpuUsageGaugeSet.getMetrics();
         Assert.assertEquals(13, metrics.keySet().size());
         clock.addSeconds(6);
 
         Gauge<Float> user = (Gauge)metrics.get(MetricName.build("cpu.user"));
 
-        long[] init = new long[9];
-        long[] first = new long[]{161458220L, 18100L, 123669465L, 24676619894L, 11864776L, 2275215L, 3576999L, 12366444L, 22366444L,};
-        long[] delta = new long[9];
+        long[] init = new long[10];
+        long[] first = new long[]{15082458L, 2647L, 3990865L, 984247164L, 4817551L, 0L, 730647L, 1714974561L, 0L, 0L};
+        long[] delta = new long[10];
         long total = 0L;
 
         for (int i=0; i < delta.length; i++) {
@@ -149,10 +150,10 @@ public class CpuUsageGaugeSetTest {
         /**
          * At the very first time before collection, the init cpuInfo is all set to 0
          */
-        Assert.assertEquals(getUsage(delta[0], total, 9, cpuShareCount), user.getValue(), 0.0001f);
+        Assert.assertEquals(getUsage(delta[0], total, numbOfProcessors, cpuShareCount), user.getValue(), 0.0001f);
 
 
-        long[] second = new long[]{161464658L, 18100L, 123674792L, 24676879507L, 11865415L, 2275298L, 3577096L, 15366444L, 23366444L};
+        long[] second = new long[]{15082928L, 2647L, 3991002L, 984276731L, 4817643L, 0L, 730668L, 1715025774L, 0L, 0L};
         total = 0L;
 
         for (int i=0; i < delta.length; i++) {
@@ -162,9 +163,8 @@ public class CpuUsageGaugeSetTest {
 
         clock.addSeconds(6);
 
-        cpuUsageGaugeSet.setFilePath("src/test/resources/proc_stat_2");
-
-        Assert.assertEquals(getUsage(delta[0], total, 9, cpuShareCount), user.getValue(), 0.0001f);
+        cpuUsageGaugeSet.setFilePath("src/test/resources/proc_cpushare_stat_2");
+        Assert.assertEquals(getUsage(delta[0], total, numbOfProcessors, cpuShareCount), user.getValue(), 0.0001f);
     }
 
     @Test
