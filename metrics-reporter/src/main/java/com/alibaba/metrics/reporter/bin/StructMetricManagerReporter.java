@@ -59,7 +59,11 @@ public class StructMetricManagerReporter extends MetricManagerReporter {
     private static final Charset UTF_8 = Charset.forName("UTF-8");
     private static final byte[] DEFAULT_DELIMITER_BYTES = "\n".getBytes(UTF_8);
     private static final String appName = System.getProperty("project.name", "DEFAULT_APP");
-    private static final String INIT_FLAG = "com.alibaba.metrics.struct_reporter.init_flag";
+
+    /**
+     * Ensure it is accessible by unit test
+     */
+    static final String INIT_FLAG = "com.alibaba.metrics.struct_reporter.init_flag";
 
     private final Clock clock;
     private final Map<String, String> globalTags;
