@@ -17,7 +17,7 @@ public class PrometheusExport {
     public static void main(String[] args) throws Exception{
         Counter counter = MetricManager.getCounter(GROUP, new MetricName(NAME));
         counter.inc();
-        CollectorRegistry.defaultRegistry.register(new DubboMetricsExports());
+        CollectorRegistry.defaultRegistry.register(new AlibabaMetricsExports());
         Server server = new Server(9000);
         ServletContextHandler context = new ServletContextHandler();
         context.setContextPath("/");

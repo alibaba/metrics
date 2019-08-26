@@ -20,16 +20,17 @@ import io.prometheus.client.Collector;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class DubboMetricsExports extends Collector {
+public class AlibabaMetricsExports extends Collector {
 
     private SampleBuilder sampleBuilder;
 
 
-    public DubboMetricsExports() {
+    public AlibabaMetricsExports() {
         this.sampleBuilder = new DefaultSampleBuilder();
     }
 
@@ -39,7 +40,6 @@ public class DubboMetricsExports extends Collector {
         List<MetricFamilySamples> metricFamilySamples = new ArrayList<MetricFamilySamples>();
         for (String group : groups) {
             MetricRegistry metricRegistry = MetricManager.getIMetricManager().getMetricRegistryByGroup(group);
-            metricRegistry.getCounters();
             for (Map.Entry<MetricName, Counter> entry : metricRegistry.getCounters().entrySet()) {
                 metricFamilySamples.add(fromCounter(entry.getKey(), entry.getValue()));
             }
@@ -90,13 +90,17 @@ public class DubboMetricsExports extends Collector {
 
     public MetricFamilySamples fromTimer(MetricName metricName, Timer timer) {
         return fromSnapshotAndCount(metricName, timer.getSnapshot(), timer.getCount(),
-                1.0D / TimeUnit.SECONDS.toNanos(1L), getHelpMessage(metricName.getKey(), timer));
+                1.0D / TimeUnit.MILLISECONDS.toNanos(1L), getHelpMessage(metricName.getKey(), timer));
     }
 
     public MetricFamilySamples fromMeter(MetricName metricName, Meter meter) {
-        MetricFamilySamples.Sample sample = sampleBuilder.createSample(metricName, "_total", new ArrayList<String>(), new ArrayList<String>(), meter.getCount());
-        return new MetricFamilySamples(sample.name, Type.COUNTER, getHelpMessage(metricName.getKey(), meter), Arrays.asList
-                (sample));
+        List<MetricFamilySamples.Sample> samples = Arrays.asList(
+                sampleBuilder.createSample(metricName, "_total", Collections.EMPTY_LIST, Collections.EMPTY_LIST, meter.getCount()),
+                sampleBuilder.createSample(metricName, "_m1", Collections.EMPTY_LIST, Collections.EMPTY_LIST, meter.getOneMinuteRate()),
+                sampleBuilder.createSample(metricName, "_m5", Collections.EMPTY_LIST, Collections.EMPTY_LIST, meter.getFiveMinuteRate()),
+                sampleBuilder.createSample(metricName, "_m15", Collections.EMPTY_LIST, Collections.EMPTY_LIST, meter.getFifteenMinuteRate())
+        );
+        return new MetricFamilySamples(samples.get(0).name, Type.COUNTER, getHelpMessage(metricName.getKey(), meter), samples);
     }
 
     public MetricFamilySamples fromHistogram(MetricName metricName, Histogram histogram) {
@@ -106,15 +110,15 @@ public class DubboMetricsExports extends Collector {
 
     public MetricFamilySamples fromClusterHistogram(MetricName metricName, ClusterHistogram clusterHistogram) {
         List<MetricFamilySamples.Sample> samples = new ArrayList<MetricFamilySamples.Sample>();
-        Map<Long, Map<Long, Long>> buckets = clusterHistogram.getBucketValues(0L);
+        Map<Long, Map<Long, Long>> buckets = clusterHistogram.getBucketValues(System.currentTimeMillis());
         for (Map.Entry<Long, Map<Long, Long>> entry : buckets.entrySet()) {
-            String suffix = "_time" + entry.getKey().toString();
+            String suffix = "_cluster_percentile";
             Map<Long, Long> bucket = entry.getValue();
             for (Map.Entry<Long, Long> entry1 : bucket.entrySet()) {
                 samples.add(sampleBuilder.createSample(metricName, suffix, Arrays.asList("bucket"), Arrays.asList(entry1.getKey().toString()), entry1.getValue()));
             }
         }
-        return new MetricFamilySamples(samples.get(0).name, Type.SUMMARY, getHelpMessage(metricName.getKey(), clusterHistogram), samples);
+        return new MetricFamilySamples(samples.get(0).name, Type.HISTOGRAM, getHelpMessage(metricName.getKey(), clusterHistogram), samples);
     }
 
     public MetricFamilySamples fromCompass(MetricName metricName, Compass compass) {
@@ -125,16 +129,23 @@ public class DubboMetricsExports extends Collector {
         List<MetricFamilySamples.Sample> samples = new ArrayList<MetricFamilySamples.Sample>();
         for (Map.Entry<String, BucketCounter> entry : compass.getErrorCodeCounts().entrySet()) {
             String tag = entry.getKey();
-            long count = entry.getValue().getBucketCounts().get(start);
-            samples.add(sampleBuilder.createSample(metricName, "_bucket_count", Arrays.asList("category"), Arrays.asList(tag), count));
+            if (entry.getValue().getBucketCounts().get(start) != null) {
+                samples.add(sampleBuilder.createSample(metricName, "_bucket_count", Arrays.asList("category"), Arrays.asList(tag),
+                        entry.getValue().getBucketCounts().get(start)));
+            }
         }
         for (Map.Entry<String, BucketCounter> entry : compass.getAddonCounts().entrySet()) {
             String tag = entry.getKey();
-            long count = entry.getValue().getBucketCounts().get(start);
-            samples.add(sampleBuilder.createSample(metricName, "_bucket_count", Arrays.asList("category"), Arrays.asList(tag), count));
+            if (entry.getValue().getBucketCounts().get(start) != null) {
+                samples.add(sampleBuilder.createSample(metricName, "_bucket_count", Arrays.asList("category"), Arrays.asList(tag),
+                        entry.getValue().getBucketCounts().get(start)));
+            }
         }
-        long count = successCounter.getBucketCounts().get(start);
-        samples.add(sampleBuilder.createSample(metricName, "_bucket_count", Arrays.asList("category"), Arrays.asList("success"), count));
+        if (successCounter.getBucketCounts().get(start) != null) {
+            samples.add(sampleBuilder.createSample(metricName, "_bucket_count", Arrays.asList("category"), Arrays.asList("success"),
+                    successCounter.getBucketCounts().get(start)));
+
+        }
         return new MetricFamilySamples(samples.get(0).name, Type.COUNTER, getHelpMessage(metricName.getKey(), compass), samples);
     }
 
@@ -148,14 +159,14 @@ public class DubboMetricsExports extends Collector {
             if (entry.getValue().containsKey(start)) {
                 String tag = entry.getKey();
                 long count = entry.getValue().get(start);
-                samples.add(sampleBuilder.createSample(metricName, "bucket_count", Arrays.asList("category"), Arrays.asList(tag), count));
+                samples.add(sampleBuilder.createSample(metricName, "_bucket_count", Arrays.asList("category"), Arrays.asList(tag), count));
             }
         }
         for (Map.Entry<String, Map<Long, Long>> entry: fastCompass.getMethodRtPerCategory(start).entrySet()) {
             if (entry.getValue().containsKey(start)) {
                 String tag = entry.getKey();
                 long rt = entry.getValue().get(start);
-                samples.add(sampleBuilder.createSample(metricName, "bucket_sum", Arrays.asList("category"), Arrays.asList(tag), rt));
+                samples.add(sampleBuilder.createSample(metricName, "_bucket_sum", Arrays.asList("category"), Arrays.asList(tag), rt));
             }
         }
         return new MetricFamilySamples(samples.get(0).name, Type.COUNTER, getHelpMessage(metricName.getKey(), fastCompass),

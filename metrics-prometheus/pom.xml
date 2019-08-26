@@ -5,7 +5,8 @@
     <parent>
         <artifactId>metrics-all</artifactId>
         <groupId>com.alibaba.middleware</groupId>
-        <version>2.0.3-SNAPSHOT</version>
+        <version>${metrics.version}</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
