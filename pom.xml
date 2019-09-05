@@ -18,7 +18,7 @@
         <maven.compiler.target>1.6</maven.compiler.target>
         <metrics.version>2.0.7-SNAPSHOT</metrics.version>
         <jersey.version>2.27</jersey.version>
-        <fastjson.version>1.2.58</fastjson.version>
+        <fastjson.version>1.2.60</fastjson.version>
         <!-- be careful that higher version might not support JDK6 -->
         <jmh.version>1.10.3</jmh.version>
         <spring.version>4.3.4.RELEASE</spring.version>
