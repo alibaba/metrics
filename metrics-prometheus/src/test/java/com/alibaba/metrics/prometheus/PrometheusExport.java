@@ -1,5 +1,6 @@
 package com.alibaba.metrics.prometheus;
 
+import com.alibaba.metrics.Clock;
 import com.alibaba.metrics.Counter;
 import com.alibaba.metrics.MetricManager;
 import com.alibaba.metrics.MetricName;
@@ -17,7 +18,7 @@ public class PrometheusExport {
     public static void main(String[] args) throws Exception{
         Counter counter = MetricManager.getCounter(GROUP, new MetricName(NAME));
         counter.inc();
-        CollectorRegistry.defaultRegistry.register(new AlibabaMetricsExports());
+        CollectorRegistry.defaultRegistry.register(new AlibabaMetricsExports(Clock.defaultClock()));
         Server server = new Server(9000);
         ServletContextHandler context = new ServletContextHandler();
         context.setContextPath("/");

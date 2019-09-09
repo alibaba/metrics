@@ -1,6 +1,7 @@
 package com.alibaba.metrics.prometheus;
 
 import com.alibaba.metrics.BucketCounter;
+import com.alibaba.metrics.Clock;
 import com.alibaba.metrics.ClusterHistogram;
 import com.alibaba.metrics.Compass;
 import com.alibaba.metrics.Counter;
@@ -28,23 +29,25 @@ import java.util.concurrent.TimeUnit;
 public class AlibabaMetricsExports extends Collector {
 
     private SampleBuilder sampleBuilder;
+    private Clock clock;
 
-
-    public AlibabaMetricsExports() {
+    public AlibabaMetricsExports(Clock clock) {
         this.sampleBuilder = new DefaultSampleBuilder();
+        this.clock = clock;
     }
 
     @Override
     public List<MetricFamilySamples> collect() {
         List<String> groups = MetricManager.getIMetricManager().listMetricGroups();
         List<MetricFamilySamples> metricFamilySamples = new ArrayList<MetricFamilySamples>();
+        long curTs = clock.getTime();
         for (String group : groups) {
             MetricRegistry metricRegistry = MetricManager.getIMetricManager().getMetricRegistryByGroup(group);
             for (Map.Entry<MetricName, Counter> entry : metricRegistry.getCounters().entrySet()) {
                 metricFamilySamples.add(fromCounter(entry.getKey(), entry.getValue()));
             }
             for (Map.Entry<MetricName, Meter> entry : metricRegistry.getMeters().entrySet()) {
-                metricFamilySamples.add(fromMeter(entry.getKey(), entry.getValue()));
+                metricFamilySamples.add(fromMeter(entry.getKey(), entry.getValue(), curTs));
             }
             for (Map.Entry<MetricName, Gauge> entry : metricRegistry.getGauges().entrySet()) {
                 metricFamilySamples.add(fromGauge(entry.getKey(), entry.getValue()));
@@ -93,14 +96,22 @@ public class AlibabaMetricsExports extends Collector {
                 1.0D / TimeUnit.MILLISECONDS.toNanos(1L), getHelpMessage(metricName.getKey(), timer));
     }
 
-    public MetricFamilySamples fromMeter(MetricName metricName, Meter meter) {
+    public MetricFamilySamples fromMeter(MetricName metricName, Meter meter, long timestamp) {
         List<MetricFamilySamples.Sample> samples = Arrays.asList(
                 sampleBuilder.createSample(metricName, "_total", Collections.EMPTY_LIST, Collections.EMPTY_LIST, meter.getCount()),
                 sampleBuilder.createSample(metricName, "_m1", Collections.EMPTY_LIST, Collections.EMPTY_LIST, meter.getOneMinuteRate()),
                 sampleBuilder.createSample(metricName, "_m5", Collections.EMPTY_LIST, Collections.EMPTY_LIST, meter.getFiveMinuteRate()),
                 sampleBuilder.createSample(metricName, "_m15", Collections.EMPTY_LIST, Collections.EMPTY_LIST, meter.getFifteenMinuteRate())
         );
-        return new MetricFamilySamples(samples.get(0).name, Type.COUNTER, getHelpMessage(metricName.getKey(), meter), samples);
+        long start = getNormalizedStartTime(timestamp, meter.getInstantCountInterval());
+        if (meter.getInstantCount().containsKey(start)) {
+            samples.add(sampleBuilder.createSample(metricName, "_bucket_count", Collections.EMPTY_LIST,
+                    Collections.EMPTY_LIST, meter.getInstantCount().get(start)));
+        } else {
+            samples.add(sampleBuilder.createSample(metricName, "_bucket_count", Collections.EMPTY_LIST,
+                    Collections.EMPTY_LIST, 0));
+        }
+        return new MetricFamilySamples(samples.get(0).name, Type.GAUGE, getHelpMessage(metricName.getKey(), meter), samples);
     }
 
     public MetricFamilySamples fromHistogram(MetricName metricName, Histogram histogram) {
@@ -112,10 +123,10 @@ public class AlibabaMetricsExports extends Collector {
         List<MetricFamilySamples.Sample> samples = new ArrayList<MetricFamilySamples.Sample>();
         Map<Long, Map<Long, Long>> buckets = clusterHistogram.getBucketValues(System.currentTimeMillis());
         for (Map.Entry<Long, Map<Long, Long>> entry : buckets.entrySet()) {
-            String suffix = "_cluster_percentile";
             Map<Long, Long> bucket = entry.getValue();
             for (Map.Entry<Long, Long> entry1 : bucket.entrySet()) {
-                samples.add(sampleBuilder.createSample(metricName, suffix, Arrays.asList("bucket"), Arrays.asList(entry1.getKey().toString()), entry1.getValue()));
+                samples.add(sampleBuilder.createSample(metricName, "_cluster_percentile",
+                        Arrays.asList("bucket"), Arrays.asList(entry1.getKey().toString()), entry1.getValue()));
             }
         }
         return new MetricFamilySamples(samples.get(0).name, Type.HISTOGRAM, getHelpMessage(metricName.getKey(), clusterHistogram), samples);
@@ -146,7 +157,7 @@ public class AlibabaMetricsExports extends Collector {
                     successCounter.getBucketCounts().get(start)));
 
         }
-        return new MetricFamilySamples(samples.get(0).name, Type.COUNTER, getHelpMessage(metricName.getKey(), compass), samples);
+        return new MetricFamilySamples(samples.get(0).name, Type.GAUGE, getHelpMessage(metricName.getKey(), compass), samples);
     }
 
     public MetricFamilySamples fromFastCompass(MetricName metricName, FastCompass fastCompass) {
@@ -181,13 +192,13 @@ public class AlibabaMetricsExports extends Collector {
                 sampleBuilder.createSample(metricName, "", Arrays.asList("quantile"), Arrays.asList("0.98"), snapshot.get98thPercentile() * factor),
                 sampleBuilder.createSample(metricName, "", Arrays.asList("quantile"), Arrays.asList("0.99"), snapshot.get99thPercentile() * factor),
                 sampleBuilder.createSample(metricName, "", Arrays.asList("quantile"), Arrays.asList("0.999"), snapshot.get999thPercentile() * factor),
-                sampleBuilder.createSample(metricName, "_count", new ArrayList<String>(), new ArrayList<String>(), count)
+                sampleBuilder.createSample(metricName, "_count", Collections.<String>emptyList(), Collections.<String>emptyList(), count)
         );
         return new MetricFamilySamples(samples.get(0).name, Type.SUMMARY, helpMessage, samples);
     }
 
     private String getHelpMessage(String metricName, Metric metric) {
-        return String.format("Generated from dubbo metric import (metric=%s, type=%s)",
+        return String.format("Generated from Alibaba metrics exporter (metric=%s, type=%s)",
                 metricName, metric.getClass().getName());
     }
 

@@ -6,5 +6,6 @@ import io.prometheus.client.Collector;
 import java.util.List;
 
 public interface SampleBuilder {
-    Collector.MetricFamilySamples.Sample createSample(MetricName metricName, String suffix, List<String> labelNames, List<String> labelValues, double value);
+    Collector.MetricFamilySamples.Sample createSample(MetricName metricName, String suffix, List<String> labelNames,
+                                                      List<String> labelValues, double value);
 }

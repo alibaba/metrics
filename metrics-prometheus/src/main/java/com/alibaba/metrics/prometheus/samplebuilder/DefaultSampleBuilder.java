@@ -10,7 +10,9 @@ import java.util.Map;
 public class DefaultSampleBuilder implements SampleBuilder{
 
     @Override
-    public Collector.MetricFamilySamples.Sample createSample(MetricName metricName, String suffix, List<String> labelNames, List<String> labelValues, double value) {
+    public Collector.MetricFamilySamples.Sample createSample(MetricName metricName, String suffix,
+                                                             List<String> labelNames, List<String> labelValues,
+                                                             double value) {
         String name = metricName.getKey();
         String nameSuffix = suffix == null ? "" : suffix;
         Map<String, String> tags = metricName.getTags();
