@@ -50,6 +50,7 @@
         <module>metrics-druid</module>
         <module>metrics-demo</module>
         <module>metrics-threadpool</module>
+        <module>metrics-prometheus</module>
     </modules>
 
     <dependencyManagement>
