@@ -87,7 +87,7 @@ public class PrometheusExport {
             }
         }).start();
 
-        CollectorRegistry.defaultRegistry.register(new AlibabaMetricsExports(Clock.defaultClock()));
+        CollectorRegistry.defaultRegistry.register(new AlibabaMetricsExports());
         Server server = new Server(9000);
         ServletContextHandler context = new ServletContextHandler();
         context.setContextPath("/");

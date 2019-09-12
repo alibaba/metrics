@@ -38,6 +38,10 @@ public class AlibabaMetricsExports extends Collector {
     private Clock clock;
     private MetricsCollectPeriodConfig metricsCollectPeriodConfig;
 
+    public AlibabaMetricsExports() {
+        this(Clock.defaultClock());
+    }
+
     public AlibabaMetricsExports(Clock clock) {
         this.sampleBuilder = new DefaultSampleBuilder();
         this.clock = clock;
