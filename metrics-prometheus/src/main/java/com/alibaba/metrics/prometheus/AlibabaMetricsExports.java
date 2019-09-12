@@ -9,15 +9,19 @@ import com.alibaba.metrics.FastCompass;
 import com.alibaba.metrics.Gauge;
 import com.alibaba.metrics.Histogram;
 import com.alibaba.metrics.Meter;
+import com.alibaba.metrics.Metered;
 import com.alibaba.metrics.Metric;
 import com.alibaba.metrics.MetricManager;
 import com.alibaba.metrics.MetricName;
 import com.alibaba.metrics.MetricRegistry;
 import com.alibaba.metrics.Snapshot;
 import com.alibaba.metrics.Timer;
+import com.alibaba.metrics.common.config.MetricsCollectPeriodConfig;
 import com.alibaba.metrics.prometheus.samplebuilder.DefaultSampleBuilder;
 import com.alibaba.metrics.prometheus.samplebuilder.SampleBuilder;
 import io.prometheus.client.Collector;
+import io.prometheus.client.CounterMetricFamily;
+import io.prometheus.client.GaugeMetricFamily;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,55 +32,70 @@ import java.util.concurrent.TimeUnit;
 
 public class AlibabaMetricsExports extends Collector {
 
+    private static final List EMPTY_LIST = Collections.EMPTY_LIST;
+
     private SampleBuilder sampleBuilder;
     private Clock clock;
+    private MetricsCollectPeriodConfig metricsCollectPeriodConfig;
 
     public AlibabaMetricsExports(Clock clock) {
         this.sampleBuilder = new DefaultSampleBuilder();
         this.clock = clock;
+        this.metricsCollectPeriodConfig = new MetricsCollectPeriodConfig();
     }
 
     @Override
     public List<MetricFamilySamples> collect() {
         List<String> groups = MetricManager.getIMetricManager().listMetricGroups();
-        List<MetricFamilySamples> metricFamilySamples = new ArrayList<MetricFamilySamples>();
+        List<MetricFamilySamples> samples = new ArrayList<MetricFamilySamples>();
         long curTs = clock.getTime();
         for (String group : groups) {
             MetricRegistry metricRegistry = MetricManager.getIMetricManager().getMetricRegistryByGroup(group);
             for (Map.Entry<MetricName, Counter> entry : metricRegistry.getCounters().entrySet()) {
-                metricFamilySamples.add(fromCounter(entry.getKey(), entry.getValue()));
+                fromCounter(samples, entry.getKey(), entry.getValue(), curTs);
             }
             for (Map.Entry<MetricName, Meter> entry : metricRegistry.getMeters().entrySet()) {
-                metricFamilySamples.add(fromMeter(entry.getKey(), entry.getValue(), curTs));
+                fromMeter(samples, entry.getKey(), entry.getValue(), curTs, true);
             }
             for (Map.Entry<MetricName, Gauge> entry : metricRegistry.getGauges().entrySet()) {
-                metricFamilySamples.add(fromGauge(entry.getKey(), entry.getValue()));
+                fromGauge(samples, entry.getKey(), entry.getValue());
             }
             for (Map.Entry<MetricName, Timer> entry : metricRegistry.getTimers().entrySet()) {
-                metricFamilySamples.add(fromTimer(entry.getKey(), entry.getValue()));
+                fromTimer(samples, entry.getKey(), entry.getValue(), curTs);
             }
             for (Map.Entry<MetricName, Histogram> entry : metricRegistry.getHistograms().entrySet()) {
-                metricFamilySamples.add(fromHistogram(entry.getKey(), entry.getValue()));
+                fromHistogram(samples, entry.getKey(), entry.getValue());
             }
             for (Map.Entry<MetricName, ClusterHistogram> entry : metricRegistry.getClusterHistograms().entrySet()) {
-                metricFamilySamples.add(fromClusterHistogram(entry.getKey(), entry.getValue()));
+                fromClusterHistogram(samples, entry.getKey(), entry.getValue(), curTs);
             }
             for (Map.Entry<MetricName, Compass> entry : metricRegistry.getCompasses().entrySet()) {
-                metricFamilySamples.add(fromCompass(entry.getKey(), entry.getValue()));
+                fromCompass(samples, entry.getKey(), entry.getValue(), curTs);
             }
             for (Map.Entry<MetricName, FastCompass> entry : metricRegistry.getFastCompasses().entrySet()) {
-                metricFamilySamples.add(fromFastCompass(entry.getKey(), entry.getValue()));
+                fromFastCompass(samples, entry.getKey(), entry.getValue(), curTs);
             }
         }
-        return metricFamilySamples;
+        return samples;
     }
 
-    public MetricFamilySamples fromCounter(MetricName metricName, Counter counter) {
-        MetricFamilySamples.Sample sample = sampleBuilder.createSample(metricName, "", new ArrayList<String>(), new ArrayList<String>(), new Long(counter.getCount()).doubleValue());
-        return new MetricFamilySamples(sample.name, Type.COUNTER, getHelpMessage(metricName.getKey(), counter), Arrays.asList(sample));
+    public void fromCounter(List<MetricFamilySamples> samples, MetricName metricName, Counter counter, long timestamp) {
+        samples.add(new CounterMetricFamily(normalizeName(metricName.getKey()) + "_count",
+                getHelpMessage(metricName.getKey(), counter), counter.getCount()));
+        if (counter instanceof BucketCounter) {
+            long start = getNormalizedStartTime(timestamp, ((BucketCounter) counter).getBucketInterval());
+
+            if (((BucketCounter) counter).getBucketCounts().containsKey(start)) {
+                samples.add(new GaugeMetricFamily(normalizeName(metricName.getKey()) + "_bucket_count",
+                        getHelpMessage(metricName.getKey(), counter), ((BucketCounter) counter).getBucketCounts().get(start)));
+            } else {
+                samples.add(new GaugeMetricFamily(normalizeName(metricName.getKey()) + "_bucket_count",
+                        getHelpMessage(metricName.getKey(), counter), 0));
+            }
+        }
     }
 
-    public MetricFamilySamples fromGauge(MetricName metricName, Gauge gauge) {
+    public void fromGauge(List<MetricFamilySamples> samples, MetricName metricName, Gauge gauge) {
         Object o = gauge.getValue();
         double value;
         if (o instanceof Number) {
@@ -84,117 +103,179 @@ public class AlibabaMetricsExports extends Collector {
         } else if (o instanceof Boolean) {
             value = ((Boolean) o) ? 1: 0;
         } else {
-            return null;
+            value = 0;
         }
-        MetricFamilySamples.Sample sample = sampleBuilder.createSample(metricName, "", new ArrayList<String>(), new ArrayList<String>(), value);
-        return new MetricFamilySamples(sample.name, Type.GAUGE, getHelpMessage(metricName.getKey(), gauge), Arrays.asList
-                (sample));
+        samples.add(new GaugeMetricFamily(normalizeName(metricName.getKey()), getHelpMessage(metricName.getKey(), gauge), value));
     }
 
-    public MetricFamilySamples fromTimer(MetricName metricName, Timer timer) {
-        return fromSnapshotAndCount(metricName, timer.getSnapshot(), timer.getCount(),
-                1.0D / TimeUnit.MILLISECONDS.toNanos(1L), getHelpMessage(metricName.getKey(), timer));
+    public void fromTimer(List<MetricFamilySamples> samples, MetricName metricName, Timer timer, long timestamp) {
+        String helpMessage = getHelpMessage(metricName.getKey(), timer);
+        fromSnapshot(samples, metricName, timer.getSnapshot(), 1.0d / TimeUnit.MILLISECONDS.toNanos(1L),
+                helpMessage);
+        fromMeter(samples, metricName, timer, timestamp, true);
     }
 
-    public MetricFamilySamples fromMeter(MetricName metricName, Meter meter, long timestamp) {
-        List<MetricFamilySamples.Sample> samples = Arrays.asList(
-                sampleBuilder.createSample(metricName, "_total", Collections.EMPTY_LIST, Collections.EMPTY_LIST, meter.getCount()),
-                sampleBuilder.createSample(metricName, "_m1", Collections.EMPTY_LIST, Collections.EMPTY_LIST, meter.getOneMinuteRate()),
-                sampleBuilder.createSample(metricName, "_m5", Collections.EMPTY_LIST, Collections.EMPTY_LIST, meter.getFiveMinuteRate()),
-                sampleBuilder.createSample(metricName, "_m15", Collections.EMPTY_LIST, Collections.EMPTY_LIST, meter.getFifteenMinuteRate())
-        );
+    public void fromMeter(List<MetricFamilySamples> samples, MetricName metricName, Metered meter, long timestamp,
+                          boolean collectBucketCount) {
+        samples.add(new CounterMetricFamily(normalizeName(metricName.getKey()) + "_count",
+                getHelpMessage(metricName.getKey(), meter), meter.getCount()));
+        samples.add(new GaugeMetricFamily(normalizeName(metricName.getKey()) + "_m1",
+                getHelpMessage(metricName.getKey(), meter), meter.getOneMinuteRate()));
+        samples.add(new GaugeMetricFamily(normalizeName(metricName.getKey()) + "_m5",
+                getHelpMessage(metricName.getKey(), meter), meter.getFiveMinuteRate()));
+        samples.add(new GaugeMetricFamily(normalizeName(metricName.getKey()) + "_m15",
+                getHelpMessage(metricName.getKey(), meter), meter.getFifteenMinuteRate()));
+
+        if (!collectBucketCount) {
+            return;
+        }
+
         long start = getNormalizedStartTime(timestamp, meter.getInstantCountInterval());
         if (meter.getInstantCount().containsKey(start)) {
-            samples.add(sampleBuilder.createSample(metricName, "_bucket_count", Collections.EMPTY_LIST,
-                    Collections.EMPTY_LIST, meter.getInstantCount().get(start)));
+            samples.add(new GaugeMetricFamily(normalizeName(metricName.getKey()) + "_bucket_count",
+                    getHelpMessage(metricName.getKey(), meter), meter.getInstantCount().get(start)));
         } else {
-            samples.add(sampleBuilder.createSample(metricName, "_bucket_count", Collections.EMPTY_LIST,
-                    Collections.EMPTY_LIST, 0));
+            samples.add(new GaugeMetricFamily(normalizeName(metricName.getKey()) + "_bucket_count",
+                    getHelpMessage(metricName.getKey(), meter), 0));
         }
-        return new MetricFamilySamples(samples.get(0).name, Type.GAUGE, getHelpMessage(metricName.getKey(), meter), samples);
     }
 
-    public MetricFamilySamples fromHistogram(MetricName metricName, Histogram histogram) {
-        return fromSnapshotAndCount(metricName, histogram.getSnapshot(), histogram.getCount(), 1.0,
-                getHelpMessage(metricName.getKey(), histogram));
+    public void fromHistogram(List<MetricFamilySamples> samples, MetricName metricName, Histogram histogram) {
+        String helpMessage = getHelpMessage(metricName.getKey(), histogram);
+        fromSnapshot(samples, metricName, histogram.getSnapshot(), 1.0d,
+                helpMessage);
+        samples.add(new CounterMetricFamily(normalizeName(metricName.getKey()) + "_count", helpMessage, histogram.getCount()));
     }
 
-    public MetricFamilySamples fromClusterHistogram(MetricName metricName, ClusterHistogram clusterHistogram) {
-        List<MetricFamilySamples.Sample> samples = new ArrayList<MetricFamilySamples.Sample>();
-        Map<Long, Map<Long, Long>> buckets = clusterHistogram.getBucketValues(System.currentTimeMillis());
-        for (Map.Entry<Long, Map<Long, Long>> entry : buckets.entrySet()) {
-            Map<Long, Long> bucket = entry.getValue();
-            for (Map.Entry<Long, Long> entry1 : bucket.entrySet()) {
-                samples.add(sampleBuilder.createSample(metricName, "_cluster_percentile",
-                        Arrays.asList("bucket"), Arrays.asList(entry1.getKey().toString()), entry1.getValue()));
+    public void fromClusterHistogram(List<MetricFamilySamples> samples, MetricName metricName,
+                                     ClusterHistogram clusterHistogram, long timestamp) {
+        List<MetricFamilySamples.Sample> bucketSamples = new ArrayList<MetricFamilySamples.Sample>();
+        long start = getNormalizedStartTime(timestamp, metricsCollectPeriodConfig.period(metricName.getMetricLevel()));
+        Map<Long, Map<Long, Long>> bucketValues = clusterHistogram.getBucketValues(start);
+        long[] buckets = clusterHistogram.getBuckets();
+
+        if (bucketValues.containsKey(start)) {
+            Map<Long, Long> bucketAndValues = bucketValues.get(start);
+            for (long bucket: buckets) {
+                bucketSamples.add(sampleBuilder.createSample(metricName, "_cluster_percentile",
+                        Arrays.asList("bucket"), Arrays.asList(bucket == Long.MAX_VALUE ? "+Inf" : Long.toString(bucket)),
+                        bucketAndValues.containsKey(bucket) ? bucketAndValues.get(bucket) : 0L));
             }
+        } else {
+            bucketSamples.add(sampleBuilder.createSample(metricName, "_cluster_percentile",
+                    EMPTY_LIST, EMPTY_LIST, 0L));
         }
-        return new MetricFamilySamples(samples.get(0).name, Type.HISTOGRAM, getHelpMessage(metricName.getKey(), clusterHistogram), samples);
+
+        samples.add(new MetricFamilySamples(bucketSamples.get(0).name, Type.HISTOGRAM,
+                    getHelpMessage(metricName.getKey(), clusterHistogram), bucketSamples));
     }
 
-    public MetricFamilySamples fromCompass(MetricName metricName, Compass compass) {
-        long lastUpdateTime = compass.lastUpdateTime();
+    public void fromCompass(List<MetricFamilySamples> samples, MetricName metricName, Compass compass, long timestamp) {
+        String helpMessage = getHelpMessage(metricName.getKey(), compass);
+        fromSnapshot(samples, metricName, compass.getSnapshot(), 1.0d / TimeUnit.MILLISECONDS.toNanos(1L),
+                helpMessage);
+        fromMeter(samples, metricName, compass, timestamp, false);
+
+        List<MetricFamilySamples.Sample> bucketSamples = new ArrayList<MetricFamilySamples.Sample>();
         int bucketInterval = compass.getInstantCountInterval();
-        long start = getNormalizedStartTime(lastUpdateTime, bucketInterval);
+        long start = getNormalizedStartTime(timestamp, bucketInterval);
+
+        // success count
         BucketCounter successCounter = compass.getBucketSuccessCount();
-        List<MetricFamilySamples.Sample> samples = new ArrayList<MetricFamilySamples.Sample>();
+
+        if (successCounter.getBucketCounts().containsKey(start)) {
+            bucketSamples.add(sampleBuilder.createSample(metricName, "_bucket_count",
+                    Arrays.asList("category"), Arrays.asList("success"),
+                    successCounter.getBucketCounts().get(start)));
+        } else {
+            bucketSamples.add(sampleBuilder.createSample(metricName, "_bucket_count",
+                    Arrays.asList("category"), Arrays.asList("success"), 0));
+        }
+
+        // error count
         for (Map.Entry<String, BucketCounter> entry : compass.getErrorCodeCounts().entrySet()) {
             String tag = entry.getKey();
-            if (entry.getValue().getBucketCounts().get(start) != null) {
-                samples.add(sampleBuilder.createSample(metricName, "_bucket_count", Arrays.asList("category"), Arrays.asList(tag),
+            // error bucket count
+            if (entry.getValue().getBucketCounts().containsKey(start)) {
+                bucketSamples.add(sampleBuilder.createSample(metricName, "_bucket_count",
+                        Arrays.asList("category"), Arrays.asList(tag),
                         entry.getValue().getBucketCounts().get(start)));
+            } else {
+                bucketSamples.add(sampleBuilder.createSample(metricName, "_bucket_count",
+                        Arrays.asList("category"), Arrays.asList(tag), 0));
             }
         }
+
+        samples.add(new MetricFamilySamples(bucketSamples.get(0).name, Type.GAUGE, helpMessage, bucketSamples));
+
+        List<MetricFamilySamples.Sample> addonSamples = new ArrayList<MetricFamilySamples.Sample>();
+
+        // addon count
         for (Map.Entry<String, BucketCounter> entry : compass.getAddonCounts().entrySet()) {
             String tag = entry.getKey();
-            if (entry.getValue().getBucketCounts().get(start) != null) {
-                samples.add(sampleBuilder.createSample(metricName, "_bucket_count", Arrays.asList("category"), Arrays.asList(tag),
+            if (entry.getValue().getBucketCounts().containsKey(start)) {
+                addonSamples.add(sampleBuilder.createSample(metricName, "_addon_bucket_count",
+                        Arrays.asList("addon"), Arrays.asList(tag),
                         entry.getValue().getBucketCounts().get(start)));
+            } else {
+                addonSamples.add(sampleBuilder.createSample(metricName, "_addon_bucket_count",
+                        Arrays.asList("addon"), Arrays.asList(tag), 0));
             }
         }
-        if (successCounter.getBucketCounts().get(start) != null) {
-            samples.add(sampleBuilder.createSample(metricName, "_bucket_count", Arrays.asList("category"), Arrays.asList("success"),
-                    successCounter.getBucketCounts().get(start)));
 
-        }
-        return new MetricFamilySamples(samples.get(0).name, Type.GAUGE, getHelpMessage(metricName.getKey(), compass), samples);
+        samples.add(new MetricFamilySamples(addonSamples.get(0).name, Type.GAUGE, helpMessage, addonSamples));
     }
 
-    public MetricFamilySamples fromFastCompass(MetricName metricName, FastCompass fastCompass) {
-        long lastUpdateTime = fastCompass.lastUpdateTime();
+    public void fromFastCompass(List<MetricFamilySamples> samples, MetricName metricName,
+                                FastCompass fastCompass, long timestamp) {
         int bucketInterval = fastCompass.getBucketInterval();
-        long start = getNormalizedStartTime(lastUpdateTime, bucketInterval);
-        List<MetricFamilySamples.Sample> samples = new ArrayList<MetricFamilySamples.Sample>();
+        long start = getNormalizedStartTime(timestamp, bucketInterval);
+        List<MetricFamilySamples.Sample> bucketSamples = new ArrayList<MetricFamilySamples.Sample>();
         Map<String, Map<Long, Long>> countPerCategory = fastCompass.getMethodCountPerCategory(start);
         for (Map.Entry<String, Map<Long, Long>> entry: countPerCategory.entrySet()) {
+            String tag = entry.getKey();
             if (entry.getValue().containsKey(start)) {
-                String tag = entry.getKey();
                 long count = entry.getValue().get(start);
-                samples.add(sampleBuilder.createSample(metricName, "_bucket_count", Arrays.asList("category"), Arrays.asList(tag), count));
+                bucketSamples.add(sampleBuilder.createSample(metricName, "_bucket_count",
+                        Arrays.asList("category"), Arrays.asList(tag), count));
+            } else {
+                bucketSamples.add(sampleBuilder.createSample(metricName, "_bucket_count",
+                        Arrays.asList("category"), Arrays.asList(tag), 0));
             }
         }
         for (Map.Entry<String, Map<Long, Long>> entry: fastCompass.getMethodRtPerCategory(start).entrySet()) {
+            String tag = entry.getKey();
             if (entry.getValue().containsKey(start)) {
-                String tag = entry.getKey();
                 long rt = entry.getValue().get(start);
-                samples.add(sampleBuilder.createSample(metricName, "_bucket_sum", Arrays.asList("category"), Arrays.asList(tag), rt));
+                bucketSamples.add(sampleBuilder.createSample(metricName, "_bucket_sum",
+                        Arrays.asList("category"), Arrays.asList(tag), rt));
+            } else {
+                bucketSamples.add(sampleBuilder.createSample(metricName, "_bucket_sum",
+                        Arrays.asList("category"), Arrays.asList(tag), 0));
             }
         }
-        return new MetricFamilySamples(samples.get(0).name, Type.COUNTER, getHelpMessage(metricName.getKey(), fastCompass),
-                samples);
+
+        samples.add(new MetricFamilySamples(bucketSamples.get(0).name, Type.GAUGE,
+                    getHelpMessage(metricName.getKey(), fastCompass), bucketSamples));
     }
 
-    private MetricFamilySamples fromSnapshotAndCount(MetricName metricName, Snapshot snapshot, long count, double factor, String helpMessage) {
-        List<MetricFamilySamples.Sample> samples = Arrays.asList(
-                sampleBuilder.createSample(metricName, "", Arrays.asList("quantile"), Arrays.asList("0.5"), snapshot.getMedian() * factor),
-                sampleBuilder.createSample(metricName, "", Arrays.asList("quantile"), Arrays.asList("0.75"), snapshot.get75thPercentile() * factor),
-                sampleBuilder.createSample(metricName, "", Arrays.asList("quantile"), Arrays.asList("0.95"), snapshot.get95thPercentile() * factor),
-                sampleBuilder.createSample(metricName, "", Arrays.asList("quantile"), Arrays.asList("0.98"), snapshot.get98thPercentile() * factor),
-                sampleBuilder.createSample(metricName, "", Arrays.asList("quantile"), Arrays.asList("0.99"), snapshot.get99thPercentile() * factor),
-                sampleBuilder.createSample(metricName, "", Arrays.asList("quantile"), Arrays.asList("0.999"), snapshot.get999thPercentile() * factor),
-                sampleBuilder.createSample(metricName, "_count", Collections.<String>emptyList(), Collections.<String>emptyList(), count)
+    private void fromSnapshot(List<MetricFamilySamples> samples, MetricName metricName, Snapshot snapshot,
+                              double factor, String helpMessage) {
+        List<MetricFamilySamples.Sample> snapshotSamples = Arrays.asList(
+                sampleBuilder.createSample(metricName, "_summary", Arrays.asList("quantile"), Arrays.asList("0.5"),
+                        snapshot.getMedian() * factor),
+                sampleBuilder.createSample(metricName, "_summary", Arrays.asList("quantile"), Arrays.asList("0.75"),
+                        snapshot.get75thPercentile() * factor),
+                sampleBuilder.createSample(metricName, "_summary", Arrays.asList("quantile"), Arrays.asList("0.95"),
+                        snapshot.get95thPercentile() * factor),
+                sampleBuilder.createSample(metricName, "_summary", Arrays.asList("quantile"), Arrays.asList("0.99"),
+                        snapshot.get99thPercentile() * factor)
         );
-        return new MetricFamilySamples(samples.get(0).name, Type.SUMMARY, helpMessage, samples);
+        samples.add(new MetricFamilySamples(snapshotSamples.get(0).name, Type.SUMMARY, helpMessage, snapshotSamples));
+        samples.add(new GaugeMetricFamily(normalizeName(metricName.getKey() + "_min"), helpMessage, snapshot.getMin() * factor));
+        samples.add(new GaugeMetricFamily(normalizeName(metricName.getKey() + "_max"), helpMessage, snapshot.getMax() * factor));
+        samples.add(new GaugeMetricFamily(normalizeName(metricName.getKey() + "_mean"), helpMessage, snapshot.getMean() * factor));
+        samples.add(new GaugeMetricFamily(normalizeName(metricName.getKey() + "_stddev"), helpMessage, snapshot.getStdDev() * factor));
     }
 
     private String getHelpMessage(String metricName, Metric metric) {
@@ -204,6 +285,10 @@ public class AlibabaMetricsExports extends Collector {
 
     private long getNormalizedStartTime(long current, int interval) {
         return (TimeUnit.MILLISECONDS.toSeconds(current) - interval) / interval * interval * 1000;
+    }
+
+    private String normalizeName(String name) {
+        return Collector.sanitizeMetricName(name);
     }
 
 }
