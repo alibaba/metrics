@@ -1,8 +1,8 @@
 # Metrics简介
 
-[![Build Status](https://travis-ci.org/dubbo/metrics.svg?branch=master)](https://travis-ci.org/dubbo/metrics)
-[![codecov](https://codecov.io/gh/dubbo/metrics/branch/master/graph/badge.svg)](https://codecov.io/gh/dubbo/metrics)
-![license](https://img.shields.io/github/license/dubbo/metrics.svg)
+[![Build Status](https://travis-ci.org/alibaba/metrics.svg?branch=master)](https://travis-ci.org/alibaba/metrics)
+[![codecov](https://codecov.io/gh/alibaba/metrics/branch/master/graph/badge.svg)](https://codecov.io/gh/alibaba/metrics)
+![license](https://img.shields.io/github/license/alibaba/metrics.svg)
 
 随着微服务的兴起，如何对微服务进行监控，了解微服务当前的运行指标和健康状态，已经成为必备的能力。Metrics作为微服务中的重要的组件，为微服务的监控提供了数据基础。Metrics是一套标准度量库， 用于提供对从操作系统， 虚拟机， 容器，到应用的全方位, 多维度, 实时, 准确的度量服务。
 
@@ -28,13 +28,13 @@ metrics全面支持了从操作系统，JVM，中间件，再到应用层面的�
 - Druid: sql执行次数，错误数，执行时间，影响行数等
 - Nginx: 接受，活跃连接数，读，写请求数，排队数，请求qps，平均rt等
 
-更详细的指标可以参考[这里](https://github.com/dubbo/metrics/wiki/supported-metrics-list),  后续会陆续添加对Dubbo, Nacos, Sentinel, Fescar等的支持。
+更详细的指标可以参考[这里](https://github.com/alibaba/metrics/wiki/supported-metrics-list),  后续会陆续添加对Dubbo, Nacos, Sentinel, Fescar等的支持。
 
 
 
 ## REST支持
 
-metrics提供了基于JAX-RS的REST接口暴露，可以轻松查询内部的各种指标，既可以独立启动HTTP Server提供服务（默认提供了一个基于Jersey+ sun Http server的简单实现)，也可以嵌入已有的HTTP Server进行暴露指标。具体的接口可以参考[这里](https://github.com/dubbo/metrics/wiki/query-from-http)   
+metrics提供了基于JAX-RS的REST接口暴露，可以轻松查询内部的各种指标，既可以独立启动HTTP Server提供服务（默认提供了一个基于Jersey+ sun Http server的简单实现)，也可以嵌入已有的HTTP Server进行暴露指标。具体的接口可以参考[这里](https://github.com/alibaba/metrics/wiki/query-from-http)   
 
 ### 如何使用
 
@@ -56,6 +56,6 @@ hello.inc();
 - FastCompass(一种快速高效统计吞吐率，平均响应时间，成功率和错误码的度量器)
 - ClusterHistogram(集群分位数度量器)     
 
-具体各个度量器的使用方式可以参考[这里](https://github.com/dubbo/metrics/wiki/quick-start)
+具体各个度量器的使用方式可以参考[这里](https://github.com/alibaba/metrics/wiki/quick-start)
 
-默认收集的指标，以及使用http接口进行查看，可以参考[metrics-demo](https://github.com/dubbo/metrics/wiki/demo)
+默认收集的指标，以及使用http接口进行查看，可以参考[metrics-demo](https://github.com/alibaba/metrics/wiki/demo)
