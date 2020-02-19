@@ -92,7 +92,7 @@ public class SystemInfoUtils {
         if (path.indexOf("!") > 0)  {
             path = path.substring(0, path.substring(0, path.indexOf("!")).lastIndexOf("/")) + resource;
         }
-        if (path.indexOf(":") > 0 && !osName.contains("Windows")) {
+        if (path.indexOf(":") > 0) {
             path = path.substring(path.indexOf(":") + 1);
         }
 
