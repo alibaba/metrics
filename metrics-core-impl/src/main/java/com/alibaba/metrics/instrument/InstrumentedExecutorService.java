@@ -19,6 +19,7 @@ package com.alibaba.metrics.instrument;
 import com.alibaba.metrics.Counter;
 import com.alibaba.metrics.Meter;
 import com.alibaba.metrics.MetricRegistry;
+import com.alibaba.metrics.ReservoirType;
 import com.alibaba.metrics.Timer;
 
 import java.util.ArrayList;
@@ -74,6 +75,23 @@ public class InstrumentedExecutorService implements ExecutorService {
         this.running = registry.counter(MetricRegistry.name(name, "running"));
         this.completed = registry.meter(MetricRegistry.name(name, "completed"));
         this.duration = registry.timer(MetricRegistry.name(name, "duration"));
+        this.rejected = registry.meter(MetricRegistry.name(name, "rejected"));
+    }
+
+    /**
+     * Wraps an {@link ExecutorService} with an explicit name.
+     *
+     * @param delegate      {@link ExecutorService} to wrap.
+     * @param registry      {@link MetricRegistry} that will contain the metrics.
+     * @param name          name for this executor service.
+     * @param reservoirType reservoirType for timer inner Histogram metric.
+     */
+    public InstrumentedExecutorService(ExecutorService delegate, MetricRegistry registry, String name, ReservoirType reservoirType) {
+        this.delegate = delegate;
+        this.submitted = registry.meter(MetricRegistry.name(name, "submitted"));
+        this.running = registry.counter(MetricRegistry.name(name, "running"));
+        this.completed = registry.meter(MetricRegistry.name(name, "completed"));
+        this.duration = registry.timer(MetricRegistry.name(name, "duration"), reservoirType);
         this.rejected = registry.meter(MetricRegistry.name(name, "rejected"));
     }
 
