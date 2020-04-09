@@ -50,6 +50,8 @@ public class FileMetricManagerReporter extends MetricManagerReporter {
 
     private static final Charset UTF_8 = Charset.forName("UTF-8");
     private static final byte[] DEFAULT_DELIMITER_BYTES = "\n".getBytes(UTF_8);
+    private static final String INIT_FLAG = "com.alibaba.metrics.file_reporter.init_flag";
+
 
     private final Logger logger = LoggerFactory.getLogger(FileMetricManagerReporter.class);
     private final Clock clock;
@@ -245,6 +247,25 @@ public class FileMetricManagerReporter extends MetricManagerReporter {
                     fileAppender, clock, rateUnit, timestampPrecision, durationUnit, filter,
                     metricsReportPeriodConfig, globalTags, metricFormat, collectLevel);
         }
+    }
+
+    @Override
+    public void start(long period, TimeUnit unit) {
+
+        String initFlag = System.getProperty(INIT_FLAG);
+
+        if ("false".equals(initFlag)) {
+            logger.info("FileMetricManagerReporter disabled...");
+            return;
+        }
+
+        if (initFlag == null) {
+            System.setProperty(INIT_FLAG, "true");
+            super.start(period, unit);
+        } else {
+            logger.info("FileMetricManagerReporter has been started...");
+        }
+
     }
 
     @Override

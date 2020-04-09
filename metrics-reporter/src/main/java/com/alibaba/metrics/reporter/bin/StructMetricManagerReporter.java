@@ -60,6 +60,11 @@ public class StructMetricManagerReporter extends MetricManagerReporter {
     private static final byte[] DEFAULT_DELIMITER_BYTES = "\n".getBytes(UTF_8);
     private static final String appName = System.getProperty("project.name", "DEFAULT_APP");
 
+    /**
+     * Ensure it is accessible by unit test
+     */
+    static final String INIT_FLAG = "com.alibaba.metrics.struct_reporter.init_flag";
+
     private final Clock clock;
     private final Map<String, String> globalTags;
     private final MetricFilter filter;
@@ -114,9 +119,29 @@ public class StructMetricManagerReporter extends MetricManagerReporter {
     }
 
     @Override
+    public void start(long period, TimeUnit unit) {
+
+        String initFlag = System.getProperty(INIT_FLAG);
+
+        if ("false".equals(initFlag)) {
+            logger.info("StructMetricManagerReporter disabled...");
+            return;
+        }
+
+        if (initFlag == null) {
+            System.setProperty(INIT_FLAG, "true");
+            super.start(period, unit);
+        } else {
+            logger.info("StructMetricManagerReporter has been started...");
+        }
+
+    }
+
+    @Override
     public void report(Map<MetricName, Gauge> gauges, Map<MetricName, Counter> counters,
             Map<MetricName, Histogram> histograms, Map<MetricName, Meter> meters, Map<MetricName, Timer> timers,
-            Map<MetricName, Compass> compasses, Map<MetricName, FastCompass> fastCompasses, Map<MetricName, ClusterHistogram> clusterHistogrames) {
+            Map<MetricName, Compass> compasses, Map<MetricName, FastCompass> fastCompasses,
+                       Map<MetricName, ClusterHistogram> clusterHistogrames) {
 
         long timestamp = clock.getTime();
 

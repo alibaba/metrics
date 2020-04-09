@@ -27,11 +27,13 @@ import com.alibaba.metrics.common.CollectLevel;
 import com.alibaba.metrics.common.config.MetricsCollectPeriodConfig;
 import com.alibaba.metrics.reporter.file.JsonMetricFormat;
 import com.alibaba.metrics.reporter.file.RollingFileAppender;
+import org.junit.After;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
+import static com.alibaba.metrics.reporter.bin.StructMetricManagerReporter.INIT_FLAG;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.mock;
@@ -109,5 +111,10 @@ public class StructMetricManagerReporterTest {
         TimeUnit.MILLISECONDS.sleep(2200);
 
         verify(fileAppender, times(0)).append((byte[]) any());
+    }
+
+    @After
+    public void clear() {
+        System.clearProperty(INIT_FLAG);
     }
 }
