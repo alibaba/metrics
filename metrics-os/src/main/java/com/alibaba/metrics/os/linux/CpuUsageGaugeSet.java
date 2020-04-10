@@ -55,6 +55,9 @@ public class CpuUsageGaugeSet extends CachedMetricSet {
 
     private String filePath;
 
+    // the number of processors that JVM is running on.
+    private int numOfProcessors;
+
     private enum CpuUsage {
         USER, NICE, SYSTEM, IDLE, IOWAIT, IRQ, SOFTIRQ, STEAL, GUEST
     }
@@ -138,33 +141,14 @@ public class CpuUsageGaugeSet extends CachedMetricSet {
             return;
         }
 
+        // exclude the first line
+        int numOfProcessors = -1;
+        String cpuLine = null;
         for (String line: lines) {
-            if (line.startsWith("cpu ")) {
-                try {
-                    CpuInfo current = collectCpuInfo(line);
-
-                    cpuUsage[CpuUsage.USER.ordinal()] =
-                            getUsage(current.userTime, lastCollectedCpuInfo.userTime, current, lastCollectedCpuInfo);
-                    cpuUsage[CpuUsage.NICE.ordinal()] =
-                            getUsage(current.niceTime, lastCollectedCpuInfo.niceTime, current, lastCollectedCpuInfo);
-                    cpuUsage[CpuUsage.SYSTEM.ordinal()] =
-                            getUsage(current.systemTime, lastCollectedCpuInfo.systemTime, current, lastCollectedCpuInfo);
-                    cpuUsage[CpuUsage.IDLE.ordinal()] =
-                            getUsage(current.idleTime, lastCollectedCpuInfo.idleTime, current, lastCollectedCpuInfo);
-                    cpuUsage[CpuUsage.IOWAIT.ordinal()] =
-                            getUsage(current.iowaitTime, lastCollectedCpuInfo.iowaitTime, current, lastCollectedCpuInfo);
-                    cpuUsage[CpuUsage.IRQ.ordinal()] =
-                            getUsage(current.irqTime, lastCollectedCpuInfo.irqTime, current, lastCollectedCpuInfo);
-                    cpuUsage[CpuUsage.SOFTIRQ.ordinal()] =
-                            getUsage(current.softirqTime, lastCollectedCpuInfo.softirqTime, current, lastCollectedCpuInfo);
-                    cpuUsage[CpuUsage.STEAL.ordinal()] =
-                            getUsage(current.stealTime, lastCollectedCpuInfo.stealTime, current, lastCollectedCpuInfo);
-                    cpuUsage[CpuUsage.GUEST.ordinal()] =
-                            getUsage(current.guestTIme, lastCollectedCpuInfo.guestTIme, current, lastCollectedCpuInfo);
-
-                    lastCollectedCpuInfo = current;
-                } catch (Exception e) {
-                    logger.warn("Error parsing cpu info: ", e);
+            if (line.startsWith("cpu")) {
+                numOfProcessors++;
+                if (line.startsWith("cpu ")) {
+                    cpuLine = line;
                 }
             } else if (line.startsWith("intr")) {
                 try {
@@ -225,6 +209,42 @@ public class CpuUsageGaugeSet extends CachedMetricSet {
                     logger.warn("Error parsing process blocked info: ", e);
                 }
             }
+        }
+
+        if (numOfProcessors > 0) {
+            this.numOfProcessors = numOfProcessors;
+        }
+
+        if (cpuLine == null) {
+            logger.error("Could not find cpu line, this should not happen");
+            return;
+        }
+        // finally we calculate cpu usage
+        try {
+            CpuInfo current = collectCpuInfo(cpuLine);
+
+            cpuUsage[CpuUsage.USER.ordinal()] =
+                    getUsage(current.userTime, lastCollectedCpuInfo.userTime, current, lastCollectedCpuInfo);
+            cpuUsage[CpuUsage.NICE.ordinal()] =
+                    getUsage(current.niceTime, lastCollectedCpuInfo.niceTime, current, lastCollectedCpuInfo);
+            cpuUsage[CpuUsage.SYSTEM.ordinal()] =
+                    getUsage(current.systemTime, lastCollectedCpuInfo.systemTime, current, lastCollectedCpuInfo);
+            cpuUsage[CpuUsage.IDLE.ordinal()] =
+                    getUsage(current.idleTime, lastCollectedCpuInfo.idleTime, current, lastCollectedCpuInfo);
+            cpuUsage[CpuUsage.IOWAIT.ordinal()] =
+                    getUsage(current.iowaitTime, lastCollectedCpuInfo.iowaitTime, current, lastCollectedCpuInfo);
+            cpuUsage[CpuUsage.IRQ.ordinal()] =
+                    getUsage(current.irqTime, lastCollectedCpuInfo.irqTime, current, lastCollectedCpuInfo);
+            cpuUsage[CpuUsage.SOFTIRQ.ordinal()] =
+                    getUsage(current.softirqTime, lastCollectedCpuInfo.softirqTime, current, lastCollectedCpuInfo);
+            cpuUsage[CpuUsage.STEAL.ordinal()] =
+                    getUsage(current.stealTime, lastCollectedCpuInfo.stealTime, current, lastCollectedCpuInfo);
+            cpuUsage[CpuUsage.GUEST.ordinal()] =
+                    getUsage(current.guestTIme, lastCollectedCpuInfo.guestTIme, current, lastCollectedCpuInfo);
+
+            lastCollectedCpuInfo = current;
+        } catch (Exception e) {
+            logger.warn("Error parsing cpu info: ", e);
         }
 
     }
@@ -320,7 +340,13 @@ public class CpuUsageGaugeSet extends CachedMetricSet {
 
     private float getUsage(long current, long last, CpuInfo curInfo, CpuInfo lastInfo) {
         try {
-            float f = 100.0f * (current - last) / (curInfo.totalTime - lastInfo.totalTime);
+            int cpuShare = numOfProcessors;
+            try {
+                cpuShare = Integer.parseInt(System.getenv("LEGACY_CONTAINER_SIZE_CPU_COUNT"));
+            } catch (Exception e) {
+                // ignore
+            }
+            float f = 100.0f * (current - last) * numOfProcessors / (curInfo.totalTime - lastInfo.totalTime) / cpuShare;
             return FormatUtils.formatFloat(f);
         } catch (Exception e) {
             return 0.0f;

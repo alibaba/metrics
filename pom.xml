@@ -4,13 +4,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>9</version>
-    </parent>
-
-
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
@@ -23,9 +16,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.6</maven.compiler.source>
         <maven.compiler.target>1.6</maven.compiler.target>
-        <metrics.version>2.0.3-SNAPSHOT</metrics.version>
+        <metrics.version>2.1.0-SNAPSHOT</metrics.version>
         <jersey.version>2.27</jersey.version>
-        <fastjson.version>1.2.48</fastjson.version>
+        <fastjson.version>1.2.60</fastjson.version>
         <!-- be careful that higher version might not support JDK6 -->
         <jmh.version>1.10.3</jmh.version>
         <spring.version>4.3.4.RELEASE</spring.version>
@@ -36,7 +29,7 @@
     <name>metrics-all</name>
     <version>${metrics.version}</version>
     <description>The metrics library for Alibaba Group</description>
-    <url>https://github.com/dubbo/metrics</url>
+    <url>https://github.com/alibaba/metrics</url>
     <packaging>pom</packaging>
 
     <modules>
@@ -57,6 +50,7 @@
         <module>metrics-druid</module>
         <module>metrics-demo</module>
         <module>metrics-threadpool</module>
+        <module>metrics-prometheus</module>
     </modules>
 
     <dependencyManagement>
@@ -267,6 +261,12 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
+                <groupId>com.github.stefanbirkner</groupId>
+                <artifactId>system-rules</artifactId>
+                <version>1.19.0</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-simple</artifactId>
                 <version>1.7.7</version>
@@ -302,6 +302,18 @@
     <profiles>
         <profile>
             <id>release</id>
+
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>alibaba</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+                </snapshotRepository>
+                <repository>
+                    <id>alibaba</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
+
             <build>
                 <plugins>
                     <plugin>
@@ -429,9 +441,9 @@
     </build>
 
     <scm>
-        <url>https://github.com/dubbo/metrics</url>
-        <connection>scm:git:https://github.com/dubbo/metrics.git</connection>
-        <developerConnection>scm:git:https://github.com/dubbo/metrics.git</developerConnection>
+        <url>https://github.com/alibaba/metrics</url>
+        <connection>scm:git:https://github.com/alibaba/metrics.git</connection>
+        <developerConnection>scm:git:https://github.com/alibaba/metrics.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
