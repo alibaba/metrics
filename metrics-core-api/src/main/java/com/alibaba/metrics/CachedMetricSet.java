@@ -46,7 +46,7 @@ public abstract class CachedMetricSet implements MetricSet {
     public CachedMetricSet(long dataTTL, TimeUnit unit, Clock clock) {
         this.dataTTL = unit.toMillis(dataTTL);
         this.clock = clock;
-        this.lastCollectTime = new AtomicLong(clock.getTime());
+        this.lastCollectTime = new AtomicLong(0);
     }
 
     /**
