@@ -96,6 +96,11 @@ public class SystemInfoUtils {
             path = path.substring(path.indexOf(":") + 1);
         }
 
+        //fix windows sigar
+        if(path != null && path.startsWith("file:/")) {
+            path = path.substring(6);
+        }
+
         File file = new File(path);
 
         if (!file.exists()) {
