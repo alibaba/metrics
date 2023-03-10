@@ -123,6 +123,10 @@ public class MetricsSearchService {
     }
 
     public MetricsSearchResponse search(MetricsSearchRequest request) {
+        return searchWithTime(request, System.currentTimeMillis());
+    }
+
+    public MetricsSearchResponse searchWithTime(MetricsSearchRequest request, long currentTimeStamp) {
 
         long startTime = request.getStartTime();
         long endTime = request.getEndTime();
@@ -131,7 +135,6 @@ public class MetricsSearchService {
         List<MetricSearch> metricNames = request.getQueries();
         boolean zeroIgnore = request.isZeroIgnore();
 
-        long currentTimeStamp = System.currentTimeMillis();
         long todayBaseTime = FigureUtil.getTodayStartTimestamp(currentTimeStamp);
 
         MetricsSearchResponse response = new MetricsSearchResponse();
@@ -258,7 +261,7 @@ public class MetricsSearchService {
                 results = cache.getDataFromCache(results, dataSourcesYesterday, cacheStartTime, todayBaseTime - 1000,
                         precision);
 
-            } else if (startTime < todayBaseTime && todayBaseTime < endTime) {
+            } else if (todayBaseTime > startTime && todayBaseTime > endTime) {
                 passedDayAccess.inc();
                 // 数据都是昨天的
                 LogDescriptionRegister logDescribeYesterday = logDescriptionManager

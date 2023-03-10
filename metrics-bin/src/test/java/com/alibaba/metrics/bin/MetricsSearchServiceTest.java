@@ -47,7 +47,7 @@ public class MetricsSearchServiceTest {
 
     private MetricsCollectPeriodConfig metricsCollectPeriodConfig = new MetricsCollectPeriodConfig();
     private LogDescriptionManager logDescriptionManager = new LogDescriptionManager(logRootPath);
-    private MetricsMemoryCache cache = new MetricsMemoryCache(Constants.DATA_CACHE_TIME);
+    private MetricsMemoryCache cache = new MetricsMemoryCache(Constants.DATA_CACHE_TIME * 10);
 
     private static Map<MetricLevel, Long> lastUpdateTime = new HashMap<MetricLevel, Long>(){{
         put(MetricLevel.CRITICAL, 0L);
@@ -59,7 +59,7 @@ public class MetricsSearchServiceTest {
 
     private MetricsSearchService service = MetricsSearchService.getInstance();
 
-    @Ignore
+//    @Ignore
     @Test
     public void mainServer() {
 
@@ -68,6 +68,7 @@ public class MetricsSearchServiceTest {
             initData();
             dataInCurrentOneDay();
             dataInPassedDay();
+            dataInCrossDayWithCache();
             dataInAnyDay();
             hasNoData();
         } finally {
@@ -98,6 +99,9 @@ public class MetricsSearchServiceTest {
             long baseTimestamp = FigureUtil.getTodayStartTimestamp(timestampx);
 
             for (int i = 0; i < 86400000; i = i + 1000) {
+                if (i > 120000 && timestampx == startTimestamps[2]) {
+                    continue;
+                }
 
                 long timestamp = baseTimestamp + i;
 
@@ -138,6 +142,38 @@ public class MetricsSearchServiceTest {
     }
 
     public void dataInCache(){
+
+    }
+
+    public void dataInCrossDayWithCache() {
+
+        long timstamp = FigureUtil.getTodayStartTimestamp(System.currentTimeMillis());
+
+        long startTime = timstamp - 15000;
+        long endTime = startTime + 14000;
+
+        MetricsSearchRequest request = new MetricsSearchRequest();
+        request.setStartTime(startTime);
+        request.setEndTime(endTime);
+        request.setLimit(0);
+        request.setPrecision(60);
+
+        List<MetricSearch> searchKey = new ArrayList<MetricSearch>();
+        for(int i = 0; i <= 0; i++){
+
+            for(MetricLevel level : MetricLevel.values()){
+                MetricSearch metricSearch = new MetricSearch("METRIC_TEST_" + level + "_" + i, new HashMap<String, String>());
+                searchKey.add(metricSearch);
+            }
+
+        }
+
+        request.setQueries(searchKey);
+
+        MetricsSearchResponse response = service.searchWithTime(request, request.getStartTime()+30000L);
+        System.out.println(response);
+        System.out.println(response.getResult().size());
+        assert response.getResult().size() == 19;
 
     }
 
