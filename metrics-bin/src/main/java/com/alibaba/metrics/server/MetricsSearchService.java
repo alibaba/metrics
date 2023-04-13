@@ -135,8 +135,6 @@ public class MetricsSearchService {
         List<MetricSearch> metricNames = request.getQueries();
         boolean zeroIgnore = request.isZeroIgnore();
 
-        long todayBaseTime = FigureUtil.getTodayStartTimestamp(currentTimeStamp);
-
         MetricsSearchResponse response = new MetricsSearchResponse();
         List<MetricResult> resultList = new ArrayList<MetricResult>();
 
