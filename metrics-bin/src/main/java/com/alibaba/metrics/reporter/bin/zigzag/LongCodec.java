@@ -65,9 +65,7 @@ public abstract class LongCodec {
     }
 
     public long[] decompress(byte[] src) {
-        logger.info(Arrays.toString(src));
         LongBuffer srcBuf = ByteBuffer.wrap(src).asLongBuffer();
-        logger.info(Arrays.toString(srcBuf.array()));
         int len = decompressLength(srcBuf);
         LongArrayOutputStream dst = (len < 0)
             ? new LongArrayOutputStream() : new LongArrayOutputStream(len);

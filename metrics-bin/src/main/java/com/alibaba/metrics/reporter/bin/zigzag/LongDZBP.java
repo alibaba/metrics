@@ -192,7 +192,6 @@ public class LongDZBP extends LongCodec
         src.mark();
         final int outLen = (int)src.get();
         src.reset();
-        logger.info("outLen:" + outLen);
         return outLen;
     }
 

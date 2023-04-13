@@ -16,7 +16,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.6</maven.compiler.source>
         <maven.compiler.target>1.6</maven.compiler.target>
-        <metrics.version>2.1.0-SNAPSHOT</metrics.version>
+        <metrics.version>2.0.7</metrics.version>
         <jersey.version>2.27</jersey.version>
         <fastjson.version>1.2.60</fastjson.version>
         <!-- be careful that higher version might not support JDK6 -->
@@ -440,6 +440,12 @@
         </plugins>
     </build>
 
+    <distributionManagement>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <url>http://mvnrepo.alibaba-inc.com/mvn/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
     <scm>
         <url>https://github.com/alibaba/metrics</url>
         <connection>scm:git:https://github.com/alibaba/metrics.git</connection>
